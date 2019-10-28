@@ -14,4 +14,55 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArquivoBinario\ArquivoProduto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArquivoBinario\Produto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsumoEnergetico.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EntradaESaida.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ArquivoBinario\ArquivoBinario.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoBinario\ArquivoProduto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoTexto\ArquivoTexto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoBinario\Produto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsumoEnergetico.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EntradaESaida.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="xpdf\pdftotext.exe">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

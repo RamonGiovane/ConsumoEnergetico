@@ -18,6 +18,27 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp" />
+    <ClCompile Include="ArquivoBinario\ArquivoProduto.cpp" />
+    <ClCompile Include="ArquivoBinario\Produto.cpp" />
+    <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp" />
+    <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp" />
+    <ClCompile Include="ConsumoEnergetico.cpp" />
+    <ClCompile Include="EntradaESaida.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ArquivoBinario\ArquivoBinario.h" />
+    <ClInclude Include="ArquivoBinario\ArquivoProduto.h" />
+    <ClInclude Include="ArquivoBinario\Produto.h" />
+    <ClInclude Include="ArquivoTexto\ArquivoTexto.h" />
+    <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h" />
+    <ClInclude Include="ConsumoEnergetico.h" />
+    <ClInclude Include="EntradaESaida.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="xpdf\pdftotext.exe" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BB02CE97-A2FB-4D8A-A48D-ABF5F9FD3EFB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -145,8 +166,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
