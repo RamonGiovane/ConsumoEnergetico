@@ -9,7 +9,8 @@ ConsumoEnergetico::ConsumoEnergetico()
 
 int ConsumoEnergetico::iniciar() {
 	EntradaESaida::mudarLocalizacao();
-	menu();
+	return menu();
+
 }
 
 int ConsumoEnergetico::menu()
@@ -36,12 +37,15 @@ int ConsumoEnergetico::menu()
 			break;
 		}
 	}
-	return 0
+	return 0;
 }
 
-bool lerContaDigital() {
+bool ConsumoEnergetico::lerContaDigital() {
 	string caminho = EntradaESaida::lerString("--Insira o caminho do arquivo---\n>>");
-	EntradaESaida::PDFToText(caminho);
+	EntradaESaida::removerArquivo(ConsumoEnergetico::ARQUIVO_SAIDA);
+	cout << "\nO arquivo de saída será criado...";
+	EntradaESaida::PDFToText(caminho, ConsumoEnergetico::ARQUIVO_SAIDA);
+	return true;
 }
 
 int main() {

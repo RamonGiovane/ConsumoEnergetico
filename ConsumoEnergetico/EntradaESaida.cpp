@@ -1,12 +1,12 @@
 #include "EntradaESaida.h"
-
-
+#include <string>
+using namespace std;
 string EntradaESaida::lerString(string mensagem) {
 	string linha;
-	do {
-		cout << mensagem;
+	cout << mensagem;
+	while (linha == ""){
 		getline(cin, linha);
-	} while (linha == "");
+	}
 	return linha;
 }
 int EntradaESaida::lerInteiro(string mensagem) {
@@ -21,7 +21,15 @@ void EntradaESaida::mudarLocalizacao() {
 }
 
 int EntradaESaida::PDFToText(string caminhoArquivo, string arquivoDestino) {
-	string command = "xpdf\\pdftotext.exe -raw " + caminhoArquivo + arquivoDestino;
-	return system(command.c_str);
+	string command = "xpdf\\pdftotext.exe -raw " + caminhoArquivo + " " + arquivoDestino;
+	return system(command.c_str());
+}
+
+int EntradaESaida::removerArquivo(string caminhoArquivo) {
+	
+	char command[150];
+	sprintf_s(command, 150,  "del %s" , caminhoArquivo.c_str());
+	strcat_s(command, " > nul");
+	return system(command);
 }
 

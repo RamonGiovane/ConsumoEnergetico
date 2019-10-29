@@ -8,7 +8,7 @@ public:
 	static int lerInteiro(string mensagem);
 	static void mudarLocalizacao();
 	static int PDFToText(string caminhoArquivo, string arquivoDestino);
-	
+	static int removerArquivo(string caminhoArquivo);
 
 };
 
