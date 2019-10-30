@@ -1,5 +1,8 @@
 #include "EntradaESaida.h"
 #include <string>
+#include <fstream>
+#include <cstdio>
+
 using namespace std;
 string EntradaESaida::lerString(string mensagem) {
 	string linha;
@@ -20,16 +23,17 @@ void EntradaESaida::mudarLocalizacao() {
 	setlocale(LC_ALL, "pt-BR");
 }
 
+/**/
 int EntradaESaida::PDFToText(string caminhoArquivo, string arquivoDestino) {
 	string command = "xpdf\\pdftotext.exe -raw " + caminhoArquivo + " " + arquivoDestino;
 	return system(command.c_str());
 }
 
-int EntradaESaida::removerArquivo(string caminhoArquivo) {
+/*Remove um arquivo do disco rígido. Se a operação for bem sucedida, retorna true. Se o arquivo não existir ou um erro ocorrer, 
+retorna false.*/
+bool EntradaESaida::removerArquivo(string caminhoArquivo) {
+
+	return remove(caminhoArquivo.c_str()) != 0 ? false : true;
 	
-	char command[150];
-	sprintf_s(command, 150,  "del %s" , caminhoArquivo.c_str());
-	strcat_s(command, " > nul");
-	return system(command);
 }
 

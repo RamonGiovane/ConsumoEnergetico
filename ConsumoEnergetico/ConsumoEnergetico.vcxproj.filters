@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Modelo">
+      <UniqueIdentifier>{a8970eba-913f-4f61-b495-16a323097f77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Modelo">
+      <UniqueIdentifier>{e1bf3823-9ffb-475c-9156-d8b69ff8f20a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp">
@@ -36,6 +42,21 @@
     <ClCompile Include="EntradaESaida.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bandeira.cpp">
+      <Filter>Source Files\Modelo</Filter>
+    </ClCompile>
+    <ClCompile Include="Encargo.cpp">
+      <Filter>Source Files\Modelo</Filter>
+    </ClCompile>
+    <ClCompile Include="Fatura.cpp">
+      <Filter>Source Files\Modelo</Filter>
+    </ClCompile>
+    <ClCompile Include="ValorFaturado.cpp">
+      <Filter>Source Files\Modelo</Filter>
+    </ClCompile>
+    <ClCompile Include="Cliente.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArquivoBinario\ArquivoBinario.h">
@@ -50,13 +71,28 @@
     <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ArquivoBinario\Produto.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ConsumoEnergetico.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EntradaESaida.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fatura.h">
+      <Filter>Modelo</Filter>
+    </ClInclude>
+    <ClInclude Include="Encargo.h">
+      <Filter>Modelo</Filter>
+    </ClInclude>
+    <ClInclude Include="Bandeira.h">
+      <Filter>Modelo</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoBinario\Produto.h">
+      <Filter>Modelo</Filter>
+    </ClInclude>
+    <ClInclude Include="ValorFaturado.h">
+      <Filter>Modelo</Filter>
+    </ClInclude>
+    <ClInclude Include="Cliente.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -64,5 +100,10 @@
     <None Include="xpdf\pdftotext.exe">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ConsumoEnergetico.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

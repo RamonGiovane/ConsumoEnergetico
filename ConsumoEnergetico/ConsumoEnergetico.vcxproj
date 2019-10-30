@@ -24,8 +24,13 @@
     <ClCompile Include="ArquivoBinario\Produto.cpp" />
     <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp" />
     <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp" />
+    <ClCompile Include="Bandeira.cpp" />
+    <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="ConsumoEnergetico.cpp" />
+    <ClCompile Include="Encargo.cpp" />
     <ClCompile Include="EntradaESaida.cpp" />
+    <ClCompile Include="Fatura.cpp" />
+    <ClCompile Include="ValorFaturado.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArquivoBinario\ArquivoBinario.h" />
@@ -33,11 +38,19 @@
     <ClInclude Include="ArquivoBinario\Produto.h" />
     <ClInclude Include="ArquivoTexto\ArquivoTexto.h" />
     <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h" />
+    <ClInclude Include="Bandeira.h" />
+    <ClInclude Include="Cliente.h" />
     <ClInclude Include="ConsumoEnergetico.h" />
+    <ClInclude Include="Encargo.h" />
     <ClInclude Include="EntradaESaida.h" />
+    <ClInclude Include="Fatura.h" />
+    <ClInclude Include="ValorFaturado.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="xpdf\pdftotext.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ConsumoEnergetico.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BB02CE97-A2FB-4D8A-A48D-ABF5F9FD3EFB}</ProjectGuid>

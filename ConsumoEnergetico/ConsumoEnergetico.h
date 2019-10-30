@@ -17,6 +17,7 @@ private:
 	const static string CAMINHO_SAIDA;
 	int menu();
 	bool lerContaDigital();
+	bool interpretarSaidaConversor(int codigoSaida);
 };
 
 
