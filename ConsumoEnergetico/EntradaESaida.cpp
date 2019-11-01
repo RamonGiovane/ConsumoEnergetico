@@ -37,3 +37,7 @@ bool EntradaESaida::removerArquivo(string caminhoArquivo) {
 	
 }
 
+void EntradaESaida::exibirAbortarOperacao() {
+	cout << "\nA operação foi abortada." << endl << endl;
+}
+

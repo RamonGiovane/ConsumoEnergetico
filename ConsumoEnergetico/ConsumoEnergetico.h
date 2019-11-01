@@ -1,7 +1,7 @@
 #ifndef CONSUMO_H
 #define CONSUMO_H
 #include <string>
-
+#include <vector>
 using namespace std;
 
 class ConsumoEnergetico
@@ -17,6 +17,9 @@ private:
 	const static string CAMINHO_SAIDA;
 	int menu();
 	bool lerContaDigital();
+	bool lerArquivoTexto(string & conteudoArquivo);
+	bool obterInformacoes(vector<string>& linhasArquivo, const string & conteudoArquivo);
+	bool obterInformacoes(vector<string>& linhasArquivo);
 	bool interpretarSaidaConversor(int codigoSaida);
 };
 

@@ -8,6 +8,13 @@ class Fatura
 public:
 	Fatura();
 	~Fatura();
+
+	bool adicionarValorFaturado(string descricao,
+		int consumo,
+		double tarifa,
+		double valor,
+		double tarifaAplicada);
+
 private:
 	ValorFaturado* valoresFaturados;
 	Bandeira* bandeiras;

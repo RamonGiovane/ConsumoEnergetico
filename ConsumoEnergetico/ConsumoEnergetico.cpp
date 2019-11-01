@@ -1,7 +1,8 @@
 #include "ConsumoEnergetico.h"
 #include "EntradaESaida.h"
-
-
+#include "ArquivoTexto\ArquivoTexto.h"
+#include <sstream>
+#include <vector>
 
 ConsumoEnergetico::ConsumoEnergetico()
 {
@@ -42,20 +43,59 @@ int ConsumoEnergetico::menu()
 
 bool ConsumoEnergetico::lerContaDigital() {
 	string caminho = EntradaESaida::lerString("Insira o caminho do arquivo PDF:\n>>");
-		
+	string conteudoConta;
+	vector<string> linhasArquivo;
+
 	EntradaESaida::removerArquivo(ConsumoEnergetico::ARQUIVO_SAIDA);
 	
 	cout << "\nConvertendo PDF... ";
 	if (!interpretarSaidaConversor(EntradaESaida::PDFToText(caminho, ConsumoEnergetico::ARQUIVO_SAIDA))) {
-		cout << "\nA operação foi abortada." << endl << endl;
+		
+		EntradaESaida::exibirAbortarOperacao();
 		return false;
 	}
 
-	cout << "\nLendo a conta digital...";
-	//lerContaDigital()
+	cout << "\nLendo a conta digital... ";
+	if (!lerArquivoTexto(conteudoConta)) {
+		cout << "\nFALHA: O conteúdo da conta não pôde ser lido. Possivelmente o arquivo está corrompido.";
+		EntradaESaida::exibirAbortarOperacao();
+		return false;
+	}
+	cout << "\nObtendo informações da conta... ";
+	if (obterInformacoes(linhasArquivo, conteudoConta) ){
+	
+	}
+	return true;
+}
+
+bool ConsumoEnergetico::lerArquivoTexto(string& conteudoArquivo) {
+	ArquivoTexto arquivo;
+	arquivo.abrir(ConsumoEnergetico::ARQUIVO_SAIDA, TipoDeAcesso::LEITURA);
+	conteudoArquivo = arquivo.ler();
+	return conteudoArquivo == "NULL" ? false : true;
+}
+bool ConsumoEnergetico::obterInformacoes(vector<string>& linhasArquivo, const string & conteudoArquivo)
+{
+	
+	stringstream ss(conteudoArquivo);
+	string linha;
+	char delim = '\n';
+
+	while (getline(ss, linha, delim)) {
+		linhasArquivo.push_back(linha);
+		
+	}
 	
 	return true;
 }
+
+bool ConsumoEnergetico::obterInformacoes(vector<string>& linhasArquivo) {
+	
+	extrairValoresFaturados(linhasArquivo)
+
+
+}
+
 
 
 static const string SEM_ERROS = "Sucesso.";
@@ -69,6 +109,7 @@ bool ConsumoEnergetico::interpretarSaidaConversor(int codigoSaida) {
 	case EntradaESaida::CodigoDeSaida::SEM_ERROS:
 		cout << SEM_ERROS;
 		return true;
+
 	case EntradaESaida::ERRO_ABRIR_ARQUIVO_PDF:
 		cout << ERRO_ABRIR_ARQUIVO_PDF;
 		return false;
