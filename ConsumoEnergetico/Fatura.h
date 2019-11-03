@@ -1,7 +1,7 @@
 #ifndef FATURA_H
 #define FATURA_H
 #include "Bandeira.h"
-#include "ValorFaturado.h"
+#include "FaturaEnergia.h"
 #include "Encargo.h"
 class Fatura
 {
@@ -15,9 +15,11 @@ public:
 		double valor,
 		double tarifaAplicada);
 
+
+
 private:
-	ValorFaturado* valoresFaturados;
-	Bandeira* bandeiras;
+	
+	bool adicionarValorFaturado(FaturaEnergia valorFaturado);
 
 };
 

@@ -2,6 +2,9 @@
 #define CONSUMO_H
 #include <string>
 #include <vector>
+#include "Fatura.h"
+#include "Cliente.h"
+#include "ContaDigital.h"
 using namespace std;
 
 class ConsumoEnergetico
@@ -19,8 +22,28 @@ private:
 	bool lerContaDigital();
 	bool lerArquivoTexto(string & conteudoArquivo);
 	bool obterInformacoes(vector<string>& linhasArquivo, const string & conteudoArquivo);
+	
 	bool obterInformacoes(vector<string>& linhasArquivo);
+
+	bool obterDemaisInformacoes(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
+
+	bool obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
+
+	bool obterValoresFaturados(vector<string>& linhasArquivo, FaturaEnergia & fatura, int & posicaoAtual);
+	
+	string procurarItem(const vector<string>& linhasArquivo, const string & termoPesquisado,
+						int & posicaoAtual, const string & termoFinal = "");
+	vector<string>& procurarLinha(const vector<string> & linhasArquivo, const string & termoPesquisado,
+						int & posicaoAtual, const string & termoFinal = "");
+	
+	double extrairValoresFaturados(vector<string>& linhasArquivo, int & posicaoAtual);
+	//bool extrairValoresFaturados(vector<string>& linhasArquivo, int posicaoAtual);
 	bool interpretarSaidaConversor(int codigoSaida);
+
+	
+
+	//Fatura fatura;
+	ContaDigital conta;
 };
 
 

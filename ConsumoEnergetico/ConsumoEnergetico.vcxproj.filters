@@ -51,10 +51,13 @@
     <ClCompile Include="Fatura.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
-    <ClCompile Include="ValorFaturado.cpp">
+    <ClCompile Include="Cliente.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
-    <ClCompile Include="Cliente.cpp">
+    <ClCompile Include="FaturaEnergia.cpp">
+      <Filter>Source Files\Modelo</Filter>
+    </ClCompile>
+    <ClCompile Include="ContaDigital.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,10 +92,13 @@
     <ClInclude Include="ArquivoBinario\Produto.h">
       <Filter>Modelo</Filter>
     </ClInclude>
-    <ClInclude Include="ValorFaturado.h">
+    <ClInclude Include="Cliente.h">
       <Filter>Modelo</Filter>
     </ClInclude>
-    <ClInclude Include="Cliente.h">
+    <ClInclude Include="FaturaEnergia.h">
+      <Filter>Modelo</Filter>
+    </ClInclude>
+    <ClInclude Include="ContaDigital.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

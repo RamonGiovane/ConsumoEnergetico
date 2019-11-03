@@ -27,10 +27,11 @@
     <ClCompile Include="Bandeira.cpp" />
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="ConsumoEnergetico.cpp" />
+    <ClCompile Include="ContaDigital.cpp" />
     <ClCompile Include="Encargo.cpp" />
     <ClCompile Include="EntradaESaida.cpp" />
     <ClCompile Include="Fatura.cpp" />
-    <ClCompile Include="ValorFaturado.cpp" />
+    <ClCompile Include="FaturaEnergia.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArquivoBinario\ArquivoBinario.h" />
@@ -41,10 +42,11 @@
     <ClInclude Include="Bandeira.h" />
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="ConsumoEnergetico.h" />
+    <ClInclude Include="ContaDigital.h" />
     <ClInclude Include="Encargo.h" />
     <ClInclude Include="EntradaESaida.h" />
     <ClInclude Include="Fatura.h" />
-    <ClInclude Include="ValorFaturado.h" />
+    <ClInclude Include="FaturaEnergia.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="xpdf\pdftotext.exe" />
