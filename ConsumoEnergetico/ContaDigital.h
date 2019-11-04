@@ -1,15 +1,19 @@
 #ifndef CONTA_DIGITAL_H
 #define CONTA_DIGITAL_H
 #include <string>
+
 #include "Cliente.h"
+#include "Consumo.h"
 #include "FaturaEnergia.h"
+
+#define CAPACIDADE_HISTORICO_CONSUMO 13
 
 using namespace std;
 class ContaDigital
 {
 public:
+	
 	ContaDigital();
-
 
 	string getNumeroInstalacao();
 	void setNumeroInstalacao(string numeroInstalacao);
@@ -23,15 +27,24 @@ public:
 	void setCliente(Cliente cliente);
 	FaturaEnergia getDadosFatura();
 	void setDadosFatura(FaturaEnergia dadosFatura);
+	
+	bool adicionarHistoricoConsumo(Consumo consumo);
 
+	string obterHistoricoConsumo();
+
+	Consumo obterConsumoDoMes();
+
+	string toString();
 
 private:
+	Consumo historicoConsumo[CAPACIDADE_HISTORICO_CONSUMO];
 	string numeroInstalacao;
 	string dataVencimento;
 	double valorAPagar;
 	string mesReferente;
 	Cliente cliente;
 	FaturaEnergia dadosFatura;
+	
 
 };
 

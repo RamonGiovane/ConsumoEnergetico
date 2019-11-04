@@ -57,8 +57,11 @@
     <ClCompile Include="FaturaEnergia.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
+    <ClCompile Include="Consumo.cpp">
+      <Filter>Source Files\Modelo</Filter>
+    </ClCompile>
     <ClCompile Include="ContaDigital.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Modelo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,8 +101,11 @@
     <ClInclude Include="FaturaEnergia.h">
       <Filter>Modelo</Filter>
     </ClInclude>
+    <ClInclude Include="Consumo.h">
+      <Filter>Modelo</Filter>
+    </ClInclude>
     <ClInclude Include="ContaDigital.h">
-      <Filter>Header Files</Filter>
+      <Filter>Modelo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -23,6 +23,8 @@ public:
 
 	FaturaEnergia& definirAdicionais(double bandeiraAmarela, double bandeiraVermleha);
 	
+	string toString();
+
 private:
 	int consumo;
 	double valorFaturado;

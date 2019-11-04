@@ -44,20 +44,20 @@ int ConsumoEnergetico::menu()
 
 bool ConsumoEnergetico::lerContaDigital() {
 	string caminho = ES::lerString("Insira o caminho do arquivo PDF:\n>>");
-	
-	
+
+
 	caminho = "C:/Users/ramon/Desktop/fat.pdf";
-	
-	
+
+
 	string conteudoConta;
 	vector<string> linhasArquivo;
 	const char  DELIMITADOR = '\n';
 
 	ES::removerArquivo(ConsumoEnergetico::ARQUIVO_SAIDA);
-	
+
 	cout << "\nConvertendo PDF... ";
 	if (!interpretarSaidaConversor(ES::PDFToText(caminho, ConsumoEnergetico::ARQUIVO_SAIDA))) {
-		
+
 		ES::exibirAbortarOperacao();
 		return false;
 	}
@@ -70,8 +70,8 @@ bool ConsumoEnergetico::lerContaDigital() {
 	}
 	cout << "\nObtendo informações da conta... ";
 	ES::quebrarTexto(linhasArquivo, conteudoConta, DELIMITADOR);
-	if (obterInformacoes(linhasArquivo)){
-	
+	if (obterInformacoes(linhasArquivo)) {
+
 	}
 	return true;
 }
@@ -85,7 +85,7 @@ bool ConsumoEnergetico::lerArquivoTexto(string& conteudoArquivo) {
 
 
 bool ConsumoEnergetico::obterInformacoes(vector<string>& linhasArquivo) {
-	
+
 	if (linhasArquivo[0] != "Valores Faturados") return false;
 
 	FaturaEnergia fatura;
@@ -93,10 +93,16 @@ bool ConsumoEnergetico::obterInformacoes(vector<string>& linhasArquivo) {
 	int posicaoAtual = 0;
 
 	obterValoresFaturados(linhasArquivo, fatura, posicaoAtual);
+	obterHistoricoConsumo(linhasArquivo, posicaoAtual);
 	obterCliente(linhasArquivo, cliente, posicaoAtual);
 	obterDemaisInformacoes(linhasArquivo, cliente, posicaoAtual);
-	cout << cliente.toString();
-	
+
+	conta.setCliente(cliente);
+	conta.setDadosFatura(fatura);
+
+	cout << conta.toString();
+
+	return true;
 }
 bool ConsumoEnergetico::obterDemaisInformacoes(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual)
 {
@@ -104,7 +110,7 @@ bool ConsumoEnergetico::obterDemaisInformacoes(vector<string>& linhasArquivo, Cl
 
 	//Separando Numero do cliente e numero da instalacao
 	ES::quebrarTexto(linha, linhasArquivo[++posicaoAtual], ' ');
-	
+
 	cliente.setNumero(linha[0]);
 	conta.setNumeroInstalacao(linha[1]);
 
@@ -119,8 +125,9 @@ bool ConsumoEnergetico::obterDemaisInformacoes(vector<string>& linhasArquivo, Cl
 	conta.setDataVencimento(linha[1]);
 	conta.setValorAPagar(ES::strToDouble(linha[2]));
 
+
 	return true;
-	
+
 }
 bool ConsumoEnergetico::obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual) {
 
@@ -130,9 +137,9 @@ bool ConsumoEnergetico::obterCliente(vector<string>& linhasArquivo, Cliente & cl
 	cliente.setNome(linhasArquivo[++posicaoAtual]);
 	cliente.setRua(linhasArquivo[++posicaoAtual]);
 	cliente.setBairro(linhasArquivo[++posicaoAtual]);
-	
+
 	vector<string> linha;
-	
+
 	//Separando CEP de Cidade
 	ES::quebrarTexto(linha, linhasArquivo[++posicaoAtual], ' ');
 	cliente.setCEP(linha[0]).setCidade(linha[1] + " " + linha[2]);
@@ -148,8 +155,8 @@ bool ConsumoEnergetico::obterValoresFaturados(vector<string>& linhasArquivo, Fat
 	double valor, preco, iluminacao, bandeiraAmarela, bandeiraVermelha;
 	int consumo;
 
-	vector<string> linhaEnergiaEletrica = 
-			procurarLinha(linhasArquivo, "Energia Elétrica kWh", posicaoAtual, "Encargos/Cobranças");
+	vector<string> linhaEnergiaEletrica =
+		procurarLinha(linhasArquivo, "Energia Elétrica kWh", posicaoAtual, "Encargos/Cobranças");
 
 	if (linhaEnergiaEletrica.empty()) {
 		detalheErro = "Impossível computar linha sobre Energia Elétrica kWh";
@@ -171,21 +178,60 @@ bool ConsumoEnergetico::obterValoresFaturados(vector<string>& linhasArquivo, Fat
 	return true;
 }
 
+bool ConsumoEnergetico::obterHistoricoConsumo(vector<string>& linhasArquivo, int & posicaoAtual) {
+	string termo = "MÊS/ANO CONSUMO kWh MÉDIA kWh/Dia Dias";
+	posicaoAtual = procurarNumeroLinha(linhasArquivo, termo, posicaoAtual);
+	if (posicaoAtual == -1) return false;
+	for (int i = 0; i < 13; i++)
+		if (!obterHistoricoConsumo(linhasArquivo[++posicaoAtual]))
+			return false;
+	return true;
+}
+
+bool ConsumoEnergetico::obterHistoricoConsumo(const string & linha) {
+	vector<string> dados;
+	ES::quebrarTexto(dados, linha, ' ');
+
+	if (dados.size() != 4) return false;
+
+	Consumo consumo;
+	if (!consumo.definirMesAno(dados[0])) return false;
+
+	consumo.setConsumoKWh(ES::strToInt(dados[1]));
+	consumo.setMediaConsumoDiario(ES::strToDouble(dados[2]));
+	consumo.setDias(ES::strToInt(dados[3]));
+
+	conta.adicionarHistoricoConsumo(consumo);
+
+	return true;
+}
+
+int ConsumoEnergetico::procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoAtual) {
+	cout << linhasArquivo[posicaoAtual];
+	for (; posicaoAtual < linhasArquivo.size() - 1; posicaoAtual++) {
+		if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos)
+			return posicaoAtual;
+	}
+	return -1;
+
+}
+
+
 
 /*
 	Procura nas linhas do arquivo (const vector<string> & linhasArquivo) o valor correpondente à um termo pesquisado, a partir do numero de uma linha
 	até uma linha em que seu conteúdo seja especificado por um termo de parada (const string & termoFinal).
 	Por exemplo, pesquisando o termo "Bandeira Vermelha", sendo as linhas subseguintes à posição especificada:
-		
+
 		"Energia Elétrica kWh 0,66833000
 		Adicional Bandeiras - Já incluído no Valor a Pagar
 		Bandeira Vermelha 9,81
 		Histórico de Consumo
 		MÊS/ANO CONSUMO kWh MÉDIA kWh/Dia Dias
 		SET/19 162 5,22 31"
-		
+
 	Seria retornado o valor "9,81" como string. A pesquisa seria feita até o termo final "Histórico de Consumo" ou até o final do vector.
-	O valor a ser retornado é sempre o último item da linha separado por espaços em branco. Importante notar que a referência contendo o número 
+	O valor a ser retornado é sempre o último item da linha separado por espaços em branco. Importante notar que a referência contendo o número
 	da linha atual na chamada da função será alterada, passando a ter o número da linha em que a pesquisa finalizou.
 	Se o termo final for uma string vazia, a pesquisa é finalizada na próxima posição após àquela que corresponder ao termo correto ou
 	ao final do arquivo.
@@ -197,32 +243,32 @@ string ConsumoEnergetico::procurarItem(const vector<string> & linhasArquivo, con
 	vector<string> linhasValores = procurarLinha(linhasArquivo, termoPesquisado, posicaoAtual, termoFinal);
 	if (!linhasValores.empty())
 		return linhasValores[linhasValores.size() - 1];
-	
+
 	return string("");
 
 }
 
-vector<string>& ConsumoEnergetico::procurarLinha(const vector<string> & linhasArquivo, const string & termoPesquisado, 
-								int & posicaoAtual, const string & termoFinal) {
-	
+vector<string>& ConsumoEnergetico::procurarLinha(const vector<string> & linhasArquivo, const string & termoPesquisado,
+	int & posicaoAtual, const string & termoFinal) {
+
 	static vector<string> linhasValores;
 	linhasValores = vector<string>();
 	string descricao, item;
 	int posicao = posicaoAtual;
 
 	//Iterar pelas linhas até encontrar o fim
-	for (;  linhasArquivo[posicaoAtual] != termoFinal && posicaoAtual < (int)linhasArquivo.size() - 1; posicaoAtual++) {
-		
+	for (; linhasArquivo[posicaoAtual] != termoFinal && posicaoAtual < (int)linhasArquivo.size() - 1; posicaoAtual++) {
+
 		if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos) {
-			
+
 			ES::quebrarTexto(linhasValores, linhasArquivo[posicaoAtual], ' ');
-			
+
 			return linhasValores;
 
 		}
 	}
 
-	 posicaoAtual = posicao;
+	posicaoAtual = posicao;
 
 	return linhasValores;
 }
@@ -237,10 +283,10 @@ double ConsumoEnergetico::extrairValoresFaturados(vector<string>& linhasArquivo,
 
 	while (linhasArquivo[posicaoAtual] != "Encargos/Cobranças") {
 		ES::quebrarTexto(linhasValores, linhasArquivo[posicaoAtual], ' ');
-		
+
 		//Verifica se a linha atual se trata de Energia Elétrica KwH
 		int i = 0;
-		for (; i < (int) linhasValores.size(); i++) {
+		for (; i < (int)linhasValores.size(); i++) {
 			if (!ES::isNumber(linhasValores[i]))
 				descricao.append(linhasValores[i] + " ");
 			else break;
@@ -248,7 +294,7 @@ double ConsumoEnergetico::extrairValoresFaturados(vector<string>& linhasArquivo,
 
 		if (descricao != "Energia Elétrica KwH")
 			continue;
-		
+
 		valor = ES::strToDouble(linhasValores[linhasValores.size() - 1]);
 	}
 	return valor;
@@ -283,7 +329,7 @@ bool ConsumoEnergetico::interpretarSaidaConversor(int codigoSaida) {
 		return false;
 	}
 	return false;
-	
+
 }
 
 int main() {

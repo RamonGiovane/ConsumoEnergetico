@@ -47,6 +47,15 @@ FaturaEnergia & FaturaEnergia::definirAdicionais(double bandeiraAmarela, double 
 	return *this;
 }
 
+string FaturaEnergia::toString()
+{
+	char str[500];
+	sprintf_s(str, 500,
+		"Preço da energia elétrica: R$%1.8f\nConsumo faturado este mês: %d kWh\nValor da fatura: R$% 1.2f\nValor de contribuição de iluminação pública: R$ %1.2f\nAdicionais já inclusos no preço:\nBandeira Amarela: R$ %1.2f\nBandeira Vermelha: R$ %1.2f",
+		preco, consumo, valorFaturado, iluminacaoPublica, bandeiraAmarela.getValor(), bandeiraVermelha.getValor());
+	return str;
+}
+
 
 
 int FaturaEnergia::getConsumo()
