@@ -5,7 +5,7 @@
 
 
 
-ExtratorDeDados::ExtratorDeDados(){}
+ExtratorDeDados::ExtratorDeDados(){ }
 
 bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo) {
 	ArquivoTexto arquivo;
@@ -17,7 +17,10 @@ bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo) {
 
 bool ExtratorDeDados::obterInformacoes(vector<string>& linhasArquivo) {
 
-	if (linhasArquivo[0] != "Valores Faturados") return false;
+	if (linhasArquivo[0] != "Valores Faturados") {
+		mensagemErro = "Este arquivo pdf não corresponde a uma conta de luz CEMIG";
+		return false;
+	}
 
 	ValoresFaturados fatura;
 	Cliente cliente;
@@ -81,20 +84,18 @@ bool ExtratorDeDados::obterCliente(vector<string>& linhasArquivo, Cliente & clie
 }
 
 bool ExtratorDeDados::obterValoresFaturados(vector<string>& linhasArquivo, ValoresFaturados & fatura, int & posicaoAtual) {
-	string detalheErro;
 
-	double valor, preco, iluminacao, bandeiraAmarela, bandeiraVermelha;
-	int consumo;
+	double  bandeiraAmarela, bandeiraVermelha;
 
 	vector<string> linhaEnergiaEletrica =
 		procurarLinha(linhasArquivo, "Energia Elétrica kWh", posicaoAtual, "Encargos/Cobranças");
 
 	if (linhaEnergiaEletrica.empty()) {
-		detalheErro = "Impossível computar linha sobre Energia Elétrica kWh";
+		mensagemErro = "Impossível computar linha sobre Energia Elétrica kWh";
 		return false;
 	}
 
-	int tamanhoLinhaEnergia = linhaEnergiaEletrica.size();
+	size_t tamanhoLinhaEnergia = linhaEnergiaEletrica.size();
 
 	fatura.setValorFaturado(ES::strToDouble(linhaEnergiaEletrica[--tamanhoLinhaEnergia]));
 	fatura.setPreco(ES::strToDouble(linhaEnergiaEletrica[--tamanhoLinhaEnergia]));
@@ -112,10 +113,15 @@ bool ExtratorDeDados::obterValoresFaturados(vector<string>& linhasArquivo, Valor
 bool ExtratorDeDados::obterHistoricoConsumo(vector<string>& linhasArquivo, int & posicaoAtual) {
 	string termo = "MÊS/ANO CONSUMO kWh MÉDIA kWh/Dia Dias";
 	posicaoAtual = procurarNumeroLinha(linhasArquivo, termo, posicaoAtual);
-	if (posicaoAtual == -1) return false;
+	if (posicaoAtual == -1) {
+		mensagemErro = "Dados de histórico de consumo não econtrados. ";
+		return false;
+	}
 	for (int i = 0; i < 13; i++) {
-		if (!obterHistoricoConsumo(linhasArquivo[++posicaoAtual]))
+		if (!obterHistoricoConsumo(linhasArquivo[++posicaoAtual])) {
+			mensagemErro = "Dados de histórico de consumo inconsistentes. ";
 			return false;
+		}
 	}
 	return true;
 }
@@ -138,8 +144,8 @@ bool ExtratorDeDados::obterHistoricoConsumo(const string & linha) {
 	return true;
 }
 
+/*Procura o número de uma linha que contém total ou parcialmente o termo pesquisado . Retorna esse número ou -1 caso a linha não seja identificada*/
 int ExtratorDeDados::procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoAtual) {
-	cout << linhasArquivo[posicaoAtual];
 	for (; posicaoAtual < linhasArquivo.size() - 1; posicaoAtual++) {
 		if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos)
 			return posicaoAtual;

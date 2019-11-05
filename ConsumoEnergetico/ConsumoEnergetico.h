@@ -11,8 +11,13 @@ class ConsumoEnergetico
 
 public:
 	
+
 	ConsumoEnergetico();
 	int iniciar();
+	int interpretarComando(int numeroArgumentos, char * argumentos[]);
+	int interpretarComando(char * argumentos[]);
+	void exibirInformacao();
+	int iniciar(int argc, char * argv[]);
 
 private:
 
@@ -32,5 +37,4 @@ private:
 
 #endif // !CONSUMO__ENERGETICO_H
 
-
-
+int main(int argc, char * argv[]);
