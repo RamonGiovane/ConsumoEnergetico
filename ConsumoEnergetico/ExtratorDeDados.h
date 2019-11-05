@@ -15,11 +15,17 @@ class ExtratorDeDados
 
 public:
 
-	ExtratorDeDados(ContaDigital conta);
+	ExtratorDeDados();
 	
+	//ESTES MÉTODOS DEVEM SER MOVIDOS
 	bool lerArquivoTexto(string & conteudoArquivo);
 
 	bool obterInformacoes(vector<string>& linhasArquivo);
+	///
+
+
+private:
+
 
 	bool obterDemaisInformacoes(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
 
@@ -45,12 +51,9 @@ public:
 	double extrairValoresFaturados(vector<string>& linhasArquivo, int & posicaoAtual);
 
 
-private:
-
-
 	ContaDigital conta;
 
-
+	string mensagemErro;
 
 };
 

@@ -4,10 +4,8 @@
 #include "EntradaESaida.h"
 
 
-ExtratorDeDados::ExtratorDeDados(ContaDigital conta)
-{
-	this->conta = conta;
-}
+
+ExtratorDeDados::ExtratorDeDados(){}
 
 bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo) {
 	ArquivoTexto arquivo;

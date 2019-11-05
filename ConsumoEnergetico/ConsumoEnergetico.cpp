@@ -46,10 +46,11 @@ int ConsumoEnergetico::menu()
 bool ConsumoEnergetico::lerContaDigital() {
 	string caminho = ES::lerString("Insira o caminho do arquivo PDF:\n>>");
 	
-	ExtratorDeDados extrator(conta); 
+	ExtratorDeDados extrator;
 
 	caminho = "C:/Users/ramon/Desktop/fat.pdf";
 
+	//A partir daqui, passar essas operações para o ExtratorDeDados
 
 	string conteudoConta;
 	vector<string> linhasArquivo;
@@ -75,6 +76,7 @@ bool ConsumoEnergetico::lerContaDigital() {
 	if (extrator.obterInformacoes(linhasArquivo)) {
 
 	}
+
 	return true;
 }
 
