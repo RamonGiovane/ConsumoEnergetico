@@ -1,5 +1,7 @@
 #include "ContaDigital.h"
 #include "Consumo.h"
+#include "ValoresFaturados.h"
+
 ContaDigital::ContaDigital()
 {
 }
@@ -43,17 +45,17 @@ void ContaDigital::setCliente(Cliente cliente) {
 	this->cliente = cliente;
 }
 
-FaturaEnergia ContaDigital::getDadosFatura() {
-	return dadosFatura; 
+ValoresFaturados ContaDigital::getValoresFaturados() {
+	return valoresFaturados; 
 }
-void ContaDigital::setDadosFatura(FaturaEnergia dadosFatura) { 
-	this->dadosFatura = dadosFatura; 
+void ContaDigital::setValoresFaturados(ValoresFaturados dadosFatura) { 
+	this->valoresFaturados = dadosFatura; 
 }
 
 bool ContaDigital::adicionarHistoricoConsumo(Consumo consumo)
 {
 	static int pos = 0;
-	if (pos == CAPACIDADE_HISTORICO_CONSUMO - 1)
+	if (pos == CAPACIDADE_HISTORICO_CONSUMO)
 		return false;
 	historicoConsumo[pos++] = consumo;
 	return true;
@@ -66,13 +68,10 @@ string  ContaDigital::obterHistoricoConsumo() {
 }
 
 
-
-
-
 string ContaDigital::toString()
 {
 	char str[2000];
-	sprintf_s(str, 2000, "Número da Instalação:%s\nDados do Cliente:\n%s\nValor a Pagar:%1.2f\nReferente a: %s\tData de Vencimento: %s\nDetalhes da Fatura:%s\nHistórico de Consumo:%s",
-		numeroInstalacao.c_str(), cliente.toString().c_str(), valorAPagar, mesReferente.c_str(), dataVencimento.c_str(), dadosFatura.toString().c_str(), obterHistoricoConsumo().c_str());
+	sprintf_s(str, 2000, "\n\nNúmero da Instalação:%s\nDados do Cliente:\n%s\nValor a Pagar:R$ %1.2f\nReferente a: %s\tData de Vencimento: %s\n\nDetalhes da Fatura:\n%s\n\nHistórico de Consumo:\n%s",
+		numeroInstalacao.c_str(), cliente.toString().c_str(), valorAPagar, mesReferente.c_str(), dataVencimento.c_str(), valoresFaturados.toString().c_str(), obterHistoricoConsumo().c_str());
 	return str;
 }

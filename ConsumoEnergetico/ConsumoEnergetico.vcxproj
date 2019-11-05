@@ -22,6 +22,7 @@
     <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp" />
     <ClCompile Include="ArquivoBinario\ArquivoProduto.cpp" />
     <ClCompile Include="ArquivoBinario\Produto.cpp" />
+    <ClCompile Include="ArquivoContaDigital.cpp" />
     <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp" />
     <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp" />
     <ClCompile Include="Bandeira.cpp" />
@@ -29,10 +30,9 @@
     <ClCompile Include="Consumo.cpp" />
     <ClCompile Include="ConsumoEnergetico.cpp" />
     <ClCompile Include="ContaDigital.cpp" />
-    <ClCompile Include="Encargo.cpp" />
     <ClCompile Include="EntradaESaida.cpp" />
-    <ClCompile Include="Fatura.cpp" />
-    <ClCompile Include="FaturaEnergia.cpp" />
+    <ClCompile Include="ExtratorDeDados.cpp" />
+    <ClCompile Include="ValoresFaturados.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArquivoBinario\ArquivoBinario.h" />
@@ -45,10 +45,9 @@
     <ClInclude Include="Consumo.h" />
     <ClInclude Include="ConsumoEnergetico.h" />
     <ClInclude Include="ContaDigital.h" />
-    <ClInclude Include="Encargo.h" />
     <ClInclude Include="EntradaESaida.h" />
-    <ClInclude Include="Fatura.h" />
-    <ClInclude Include="FaturaEnergia.h" />
+    <ClInclude Include="ExtratorDeDados.h" />
+    <ClInclude Include="ValoresFaturados.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="xpdf\pdftotext.exe" />
@@ -61,6 +60,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ConsumoEnergetico</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>cee</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

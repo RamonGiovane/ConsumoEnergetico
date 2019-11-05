@@ -4,7 +4,7 @@
 
 #include "Cliente.h"
 #include "Consumo.h"
-#include "FaturaEnergia.h"
+#include "ValoresFaturados.h"
 
 #define CAPACIDADE_HISTORICO_CONSUMO 13
 
@@ -25,8 +25,8 @@ public:
 	void setMesReferente(string mesReferente);
 	Cliente getCliente();
 	void setCliente(Cliente cliente);
-	FaturaEnergia getDadosFatura();
-	void setDadosFatura(FaturaEnergia dadosFatura);
+	ValoresFaturados getValoresFaturados();
+	void setValoresFaturados(ValoresFaturados valoresFaturados);
 	
 	bool adicionarHistoricoConsumo(Consumo consumo);
 
@@ -43,7 +43,7 @@ private:
 	double valorAPagar;
 	string mesReferente;
 	Cliente cliente;
-	FaturaEnergia dadosFatura;
+	ValoresFaturados valoresFaturados;
 	
 
 };

@@ -13,48 +13,33 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Modelo">
-      <UniqueIdentifier>{a8970eba-913f-4f61-b495-16a323097f77}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Modelo">
       <UniqueIdentifier>{e1bf3823-9ffb-475c-9156-d8b69ff8f20a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Modelo">
+      <UniqueIdentifier>{a8970eba-913f-4f61-b495-16a323097f77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Arquivo">
+      <UniqueIdentifier>{9194b164-cdbe-4383-92b5-2f1d9430c5b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Arquivo">
+      <UniqueIdentifier>{c8837248-e6a5-468b-b711-4808e5396ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Util">
+      <UniqueIdentifier>{92f9c0ed-2f48-4861-8acd-c4a4957d8f6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Util">
+      <UniqueIdentifier>{d9360924-58cc-45f9-b84a-2c032241576b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ArquivoBinario\ArquivoProduto.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ArquivoBinario\Produto.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ConsumoEnergetico.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EntradaESaida.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Bandeira.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
-    <ClCompile Include="Encargo.cpp">
-      <Filter>Source Files\Modelo</Filter>
-    </ClCompile>
-    <ClCompile Include="Fatura.cpp">
-      <Filter>Source Files\Modelo</Filter>
-    </ClCompile>
     <ClCompile Include="Cliente.cpp">
-      <Filter>Source Files\Modelo</Filter>
-    </ClCompile>
-    <ClCompile Include="FaturaEnergia.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
     <ClCompile Include="Consumo.cpp">
@@ -63,49 +48,73 @@
     <ClCompile Include="ContaDigital.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
+    <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp">
+      <Filter>Source Files\Arquivo</Filter>
+    </ClCompile>
+    <ClCompile Include="ArquivoContaDigital.cpp">
+      <Filter>Source Files\Arquivo</Filter>
+    </ClCompile>
+    <ClCompile Include="ArquivoBinario\ArquivoProduto.cpp">
+      <Filter>Source Files\Arquivo</Filter>
+    </ClCompile>
+    <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp">
+      <Filter>Source Files\Arquivo</Filter>
+    </ClCompile>
+    <ClCompile Include="ValoresFaturados.cpp">
+      <Filter>Source Files\Modelo</Filter>
+    </ClCompile>
+    <ClCompile Include="EntradaESaida.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsumoEnergetico.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtratorDeDados.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ArquivoBinario\ArquivoBinario.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ArquivoBinario\ArquivoProduto.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ArquivoTexto\ArquivoTexto.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ConsumoEnergetico.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EntradaESaida.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Fatura.h">
-      <Filter>Modelo</Filter>
-    </ClInclude>
-    <ClInclude Include="Encargo.h">
-      <Filter>Modelo</Filter>
-    </ClInclude>
     <ClInclude Include="Bandeira.h">
-      <Filter>Modelo</Filter>
+      <Filter>Header Files\Modelo</Filter>
     </ClInclude>
     <ClInclude Include="ArquivoBinario\Produto.h">
-      <Filter>Modelo</Filter>
+      <Filter>Header Files\Modelo</Filter>
     </ClInclude>
     <ClInclude Include="Cliente.h">
-      <Filter>Modelo</Filter>
-    </ClInclude>
-    <ClInclude Include="FaturaEnergia.h">
-      <Filter>Modelo</Filter>
+      <Filter>Header Files\Modelo</Filter>
     </ClInclude>
     <ClInclude Include="Consumo.h">
-      <Filter>Modelo</Filter>
+      <Filter>Header Files\Modelo</Filter>
     </ClInclude>
     <ClInclude Include="ContaDigital.h">
-      <Filter>Modelo</Filter>
+      <Filter>Header Files\Modelo</Filter>
+    </ClInclude>
+    <ClInclude Include="ValoresFaturados.h">
+      <Filter>Header Files\Modelo</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoTexto\ArquivoTexto.h">
+      <Filter>Header Files\Arquivo</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoBinario\ArquivoBinario.h">
+      <Filter>Header Files\Arquivo</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoBinario\ArquivoProduto.h">
+      <Filter>Header Files\Arquivo</Filter>
+    </ClInclude>
+    <ClInclude Include="EntradaESaida.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtratorDeDados.h">
+      <Filter>Header Files\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

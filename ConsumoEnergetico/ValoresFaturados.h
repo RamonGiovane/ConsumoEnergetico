@@ -3,25 +3,25 @@
 #include <string>
 #include "Bandeira.h"
 using namespace std;
-class FaturaEnergia
+class ValoresFaturados
 {
 public:
-	FaturaEnergia();
+	ValoresFaturados();
 	
-	FaturaEnergia(int consumo, double valorFaturado, double preco);
+	ValoresFaturados(int consumo, double valorFaturado, double preco);
 	//ValorFaurado(string descricao, consumo, valor, bandeiraAmarela, bandeiraVermelha);
 	
-	FaturaEnergia& setConsumo(int consumo);
-	FaturaEnergia& setPreco(double preco);
-	FaturaEnergia& setValorFaturado(double valor);
-	FaturaEnergia& setValorIluminacaoPublica(double valor);
+	ValoresFaturados& setConsumo(int consumo);
+	ValoresFaturados& setPreco(double preco);
+	ValoresFaturados& setValorFaturado(double valor);
+	ValoresFaturados& setValorIluminacaoPublica(double valor);
 
 	int getConsumo();
 	double getPreco();
 	double getValorFaturado();
 	double getValorIluminacaoPublica();
 
-	FaturaEnergia& definirAdicionais(double bandeiraAmarela, double bandeiraVermleha);
+	ValoresFaturados& definirAdicionais(double bandeiraAmarela, double bandeiraVermleha);
 	
 	string toString();
 
