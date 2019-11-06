@@ -17,21 +17,14 @@ public:
 
 	ExtratorDeDados();
 
-	Fatura lerContaPDF(string & caminho);
+	Fatura lerFaturaPDF(const string & caminho);
 
-	//Fatura & lerContaPDF(string & conteudoArquivo) const;
-	
+private:
 	bool interpretarSaidaConversor(int codigoSaida);
 
-	//ESTES MÉTODOS DEVEM SER MOVIDOS
 	bool lerArquivoTexto(string & conteudoArquivo);
 
 	bool obterInformacoes(vector<string>& linhasArquivo);
-	///
-
-
-private:
-
 
 	bool obterDemaisInformacoes(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
 
@@ -46,6 +39,8 @@ private:
 
 
 	int procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoInicial);
+
+	int procurarNumeroLinha(const vector<string>& linhasArquivo, int posicaoAtual,  string padraoRegex);
 
 
 	string procurarItem(const vector<string>& linhasArquivo, const string & termoPesquisado,

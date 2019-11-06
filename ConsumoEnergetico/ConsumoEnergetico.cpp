@@ -94,12 +94,12 @@ bool ConsumoEnergetico::lerContaDigital() {
 	//caminho = "C:/Users/Usuario/Desktop/fat.pdf";
 	//A partir daqui, passar essas operações para o ExtratorDeDados
 
-	Fatura f = extrator.lerContaPDF(caminho);
-	Fatura f2  = extrator.lerContaPDF(c1);
+	Fatura f = extrator.lerFaturaPDF(caminho);
+	Fatura f2  = extrator.lerFaturaPDF(c1);
 
-	cout << f.toString();
+	//cout << f.toString();
 
-	cout << f2.toString();
+	//cout << f2.toString();
 
 
 	return true;

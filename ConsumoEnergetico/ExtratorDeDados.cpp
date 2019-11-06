@@ -2,12 +2,11 @@
 #include "Fatura.h"
 #include "ArquivoTexto\ArquivoTexto.h"
 #include "EntradaESaida.h"
-
-
+#include <regex>
 
 ExtratorDeDados::ExtratorDeDados(){ }
 
-Fatura ExtratorDeDados::lerContaPDF(string& caminho) {
+Fatura ExtratorDeDados::lerFaturaPDF(const string& caminho) {
 	string conteudoConta;
 	vector<string> linhasArquivo;
 	const char  DELIMITADOR = '\n';
@@ -92,7 +91,7 @@ bool ExtratorDeDados::obterInformacoes(vector<string>& linhasArquivo) {
 	ValoresFaturados valores;
 	Cliente cliente;
 	int posicaoAtual = 0;
-
+	procurarNumeroLinha(linhasArquivo, 0, "\\s\\d{2}[/]\\d{2}\\s");
 	obterValoresFaturados(linhasArquivo, valores, posicaoAtual);
 	obterHistoricoConsumo(linhasArquivo, posicaoAtual);
 	obterCliente(linhasArquivo, cliente, posicaoAtual);
@@ -101,7 +100,7 @@ bool ExtratorDeDados::obterInformacoes(vector<string>& linhasArquivo) {
 	fatura.setCliente(cliente);
 	fatura.setValoresFaturados(valores);
 
-	cout << fatura.toString();
+	//cout << fatura.toString();
 
 	return true;
 }
@@ -126,14 +125,13 @@ bool ExtratorDeDados::obterDemaisInformacoes(vector<string>& linhasArquivo, Clie
 	fatura.setDataVencimento(linha[1]);
 	fatura.setValorAPagar(ES::strToDouble(linha[2]));
 
-
+	ATENÇÃO: DESCOMENTAR TO STRINGS
 	return true;
 
 }
 bool ExtratorDeDados::obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual) {
 
-	//while (linhasArquivo[posicaoAtual] != "Comprovante de Pagamento")
-	//	posicaoAtual++;
+
 	int pos = posicaoAtual;
 	posicaoAtual = procurarNumeroLinha(linhasArquivo, "Comprovante de Pagamento", posicaoAtual);
 	if (posicaoAtual == -1 )
@@ -229,6 +227,46 @@ int ExtratorDeDados::procurarNumeroLinha(const vector<string>& linhasArquivo, co
 
 }
 
+/*Procura o número de uma linha que contém total ou parcialmente o termo pesquisado . Retorna esse número ou -1 caso a linha não seja identificada*/
+int ExtratorDeDados::procurarNumeroLinha(const vector<string>& linhasArquivo, int posicaoAtual, string padraoRegex) {
+	cout << endl << endl << "REGEX: ";
+	padraoRegex = "\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}";
+	regex r(padraoRegex);
+	string s1;  
+	smatch match;
+	for (; posicaoAtual < linhasArquivo.size() - 1; posicaoAtual++) {
+		//s1 = linhasArquivo[posicaoAtual];
+		//sregex_iterator iter(s1.begin(), s1.end(), r);
+		//sregex_iterator end;
+
+		//while (iter != end)
+		//{
+		//	cout << "size: " << iter->size() << endl;
+
+		//	for (unsigned i = 0; i < iter->size(); ++i)
+		//	{
+		//		cout << "the " << i + 1 << "th match" << ": " << (*iter)[i] << endl;
+		//	}
+		//	++iter;
+		//}
+		//
+		/*while (regex_search(s, match, r)) {
+			
+			for (auto x : match) std::cout << x << " ";
+			std::cout << std::endl;
+			s = match.suffix().str();
+		}*/
+		if (regex_search(linhasArquivo[posicaoAtual], match, r)) {
+			cout << "MATCH " << match.str() << endl;
+			cout << linhasArquivo[posicaoAtual] << endl;
+			//if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos)
+			return posicaoAtual;
+		}
+	}
+	return -1;
+
+}
+
 
 
 /*
@@ -313,3 +351,26 @@ double ExtratorDeDados::extrairValoresFaturados(vector<string>& linhasArquivo, i
 }
 
 
+
+
+//int f()
+//{
+//	string s1("{1,2,3}");
+//	regex e(R"(\d+)");
+//
+//	cout << s1 << endl;
+//
+//	sregex_iterator iter(s1.begin(), s1.end(), e);
+//	sregex_iterator end;
+//
+//	while (iter != end)
+//	{
+//		cout << "size: " << iter->size() << endl;
+//
+//		for (unsigned i = 0; i < iter->size(); ++i)
+//		{
+//			cout << "the " << i + 1 << "th match" << ": " << (*iter)[i] << endl;
+//		}
+//		++iter;
+//	}
+//}
