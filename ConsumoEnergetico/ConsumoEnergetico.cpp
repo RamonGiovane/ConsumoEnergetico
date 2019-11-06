@@ -97,9 +97,9 @@ bool ConsumoEnergetico::lerContaDigital() {
 	Fatura f = extrator.lerFaturaPDF(caminho);
 	Fatura f2  = extrator.lerFaturaPDF(c1);
 
-	//cout << f.toString();
+	cout << f.toString();
 
-	//cout << f2.toString();
+	cout << f2.toString();
 
 
 	return true;

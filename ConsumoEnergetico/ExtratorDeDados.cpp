@@ -91,20 +91,41 @@ bool ExtratorDeDados::obterInformacoes(vector<string>& linhasArquivo) {
 	ValoresFaturados valores;
 	Cliente cliente;
 	int posicaoAtual = 0;
-	procurarNumeroLinha(linhasArquivo, 0, "\\s\\d{2}[/]\\d{2}\\s");
+	
+	
+	//Extraindo todas as informações do arquivo de texto
 	obterValoresFaturados(linhasArquivo, valores, posicaoAtual);
 	obterHistoricoConsumo(linhasArquivo, posicaoAtual);
 	obterCliente(linhasArquivo, cliente, posicaoAtual);
-	obterDemaisInformacoes(linhasArquivo, cliente, posicaoAtual);
-
+	obterNumeroClienteEInstalacao(linhasArquivo, cliente, posicaoAtual);
+	obterMesVencimentoEValor(linhasArquivo, posicaoAtual);
+	obterDatasDeLeitura(linhasArquivo, posicaoAtual);
+	
 	fatura.setCliente(cliente);
 	fatura.setValoresFaturados(valores);
 
-	//cout << fatura.toString();
 
 	return true;
 }
-bool ExtratorDeDados::obterDemaisInformacoes(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual)
+
+bool ExtratorDeDados::obterDatasDeLeitura(vector<string>& linhasArquivo, int & posicaoAtual)
+{
+	string padraoRegex = "\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}";
+	
+	string datas = procurarPadrao(linhasArquivo, posicaoAtual, padraoRegex);
+	if (datas == "") { mensagemErro = "Não foi possível computar as datas de leitura"; return false; }
+
+	vector<string> linha;
+	ES::quebrarTexto(linha, datas, ' ');
+	
+	//Nao pega a posição 0 porque corresponde à um espaço em branco
+	cout << linha[1] << endl;
+	cout << linha[2] << endl;
+	cout << linha[3] << endl;
+
+
+}
+bool ExtratorDeDados::obterNumeroClienteEInstalacao(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual)
 {
 	vector<string> linha;
 
@@ -114,18 +135,24 @@ bool ExtratorDeDados::obterDemaisInformacoes(vector<string>& linhasArquivo, Clie
 	cliente.setNumero(linha[0]);
 	fatura.setNumeroInstalacao(linha[1]);
 
+	return true;
+}
+bool ExtratorDeDados::obterMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual)
+{
 	//Separando Numero do cliente e numero da instalacao
-	ES::quebrarTexto(linha, linhasArquivo[++posicaoAtual], ' ');
+	//ES::quebrarTexto(linha, linhasArquivo[++posicaoAtual], ' ');
 
-	linha = vector<string>();
+	vector<string> linha;
+	posicaoAtual += 2;
 	cout << linhasArquivo[posicaoAtual];
+	
 	//Separando mes, vencimento e valor a pagar
-	ES::quebrarTexto(linha, linhasArquivo[++posicaoAtual], ' ');
+	ES::quebrarTexto(linha, linhasArquivo[posicaoAtual], ' ');
 	fatura.setMesReferente(linha[0]);
 	fatura.setDataVencimento(linha[1]);
 	fatura.setValorAPagar(ES::strToDouble(linha[2]));
 
-	ATENÇÃO: DESCOMENTAR TO STRINGS
+	//ATENÇÃO: DESCOMENTAR TO STRINGS
 	return true;
 
 }
@@ -227,43 +254,23 @@ int ExtratorDeDados::procurarNumeroLinha(const vector<string>& linhasArquivo, co
 
 }
 
-/*Procura o número de uma linha que contém total ou parcialmente o termo pesquisado . Retorna esse número ou -1 caso a linha não seja identificada*/
-int ExtratorDeDados::procurarNumeroLinha(const vector<string>& linhasArquivo, int posicaoAtual, string padraoRegex) {
-	cout << endl << endl << "REGEX: ";
-	padraoRegex = "\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}";
+/*Procura um termo usando expressão regular em uma linha que contenha total ou parcialmente o termo pesquisado . Retorna o termo que case com a expressão 
+ou string vazia se nenhuma linha coincidir com ela*/
+string ExtratorDeDados::procurarPadrao(const vector<string>& linhasArquivo, int & posicaoAtual, string padraoRegex) {
+	
 	regex r(padraoRegex);
 	string s1;  
 	smatch match;
 	for (; posicaoAtual < linhasArquivo.size() - 1; posicaoAtual++) {
-		//s1 = linhasArquivo[posicaoAtual];
-		//sregex_iterator iter(s1.begin(), s1.end(), r);
-		//sregex_iterator end;
-
-		//while (iter != end)
-		//{
-		//	cout << "size: " << iter->size() << endl;
-
-		//	for (unsigned i = 0; i < iter->size(); ++i)
-		//	{
-		//		cout << "the " << i + 1 << "th match" << ": " << (*iter)[i] << endl;
-		//	}
-		//	++iter;
-		//}
-		//
-		/*while (regex_search(s, match, r)) {
-			
-			for (auto x : match) std::cout << x << " ";
-			std::cout << std::endl;
-			s = match.suffix().str();
-		}*/
+		
 		if (regex_search(linhasArquivo[posicaoAtual], match, r)) {
 			cout << "MATCH " << match.str() << endl;
 			cout << linhasArquivo[posicaoAtual] << endl;
-			//if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos)
-			return posicaoAtual;
+
+			return match.str();
 		}
 	}
-	return -1;
+	return "";
 
 }
 

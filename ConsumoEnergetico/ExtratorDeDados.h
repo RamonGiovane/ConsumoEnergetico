@@ -26,7 +26,11 @@ private:
 
 	bool obterInformacoes(vector<string>& linhasArquivo);
 
-	bool obterDemaisInformacoes(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
+	bool obterDatasDeLeitura(vector<string>& linhasArquivo, int & posicaoAtual);
+
+	bool obterNumeroClienteEInstalacao(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
+
+	bool obterMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual);
 
 	bool obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
 
@@ -36,11 +40,10 @@ private:
 
 	bool obterHistoricoConsumo(const string & linha);
 
-
-
 	int procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoInicial);
 
-	int procurarNumeroLinha(const vector<string>& linhasArquivo, int posicaoAtual,  string padraoRegex);
+	string procurarPadrao(const vector<string>& linhasArquivo, int & posicaoAtual, string padraoRegex);
+
 
 
 	string procurarItem(const vector<string>& linhasArquivo, const string & termoPesquisado,
