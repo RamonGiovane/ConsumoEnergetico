@@ -29,7 +29,7 @@
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="Consumo.cpp" />
     <ClCompile Include="ConsumoEnergetico.cpp" />
-    <ClCompile Include="ContaDigital.cpp" />
+    <ClCompile Include="Fatura.cpp" />
     <ClCompile Include="EntradaESaida.cpp" />
     <ClCompile Include="ExtratorDeDados.cpp" />
     <ClCompile Include="ValoresFaturados.cpp" />
@@ -44,7 +44,7 @@
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="Consumo.h" />
     <ClInclude Include="ConsumoEnergetico.h" />
-    <ClInclude Include="ContaDigital.h" />
+    <ClInclude Include="Fatura.h" />
     <ClInclude Include="EntradaESaida.h" />
     <ClInclude Include="ExtratorDeDados.h" />
     <ClInclude Include="ValoresFaturados.h" />

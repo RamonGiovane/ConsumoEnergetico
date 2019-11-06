@@ -45,9 +45,6 @@
     <ClCompile Include="Consumo.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
-    <ClCompile Include="ContaDigital.cpp">
-      <Filter>Source Files\Modelo</Filter>
-    </ClCompile>
     <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp">
       <Filter>Source Files\Arquivo</Filter>
     </ClCompile>
@@ -75,11 +72,11 @@
     <ClCompile Include="ExtratorDeDados.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
+    <ClCompile Include="Fatura.cpp">
+      <Filter>Source Files\Modelo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConsumoEnergetico.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Bandeira.h">
       <Filter>Header Files\Modelo</Filter>
     </ClInclude>
@@ -90,9 +87,6 @@
       <Filter>Header Files\Modelo</Filter>
     </ClInclude>
     <ClInclude Include="Consumo.h">
-      <Filter>Header Files\Modelo</Filter>
-    </ClInclude>
-    <ClInclude Include="ContaDigital.h">
       <Filter>Header Files\Modelo</Filter>
     </ClInclude>
     <ClInclude Include="ValoresFaturados.h">
@@ -115,6 +109,12 @@
     </ClInclude>
     <ClInclude Include="ExtratorDeDados.h">
       <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsumoEnergetico.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fatura.h">
+      <Filter>Header Files\Modelo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

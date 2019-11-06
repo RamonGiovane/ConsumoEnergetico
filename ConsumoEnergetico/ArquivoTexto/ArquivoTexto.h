@@ -15,7 +15,7 @@ using namespace std;
 */
 enum TipoDeAcesso { ACRESCENTAR, ESCRITA, LEITURA };
 
-#define TAMANHO_LINHA 180
+#define TAMANHO_LINHA 380
 
 class ArquivoTexto {
 public: 

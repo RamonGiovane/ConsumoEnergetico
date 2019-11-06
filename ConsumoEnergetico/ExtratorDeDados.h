@@ -4,7 +4,7 @@
 #include <vector>
 #include "Cliente.h"
 #include "ValoresFaturados.h"
-#include "ContaDigital.h"
+#include "Fatura.h"
 const string ARQUIVO_SAIDA = string("saida.txt");
 const string CAMINHO_SAIDA = string("xpdf\\saida.txt");
 
@@ -16,7 +16,13 @@ class ExtratorDeDados
 public:
 
 	ExtratorDeDados();
+
+	Fatura lerContaPDF(string & caminho);
+
+	//Fatura & lerContaPDF(string & conteudoArquivo) const;
 	
+	bool interpretarSaidaConversor(int codigoSaida);
+
 	//ESTES MÉTODOS DEVEM SER MOVIDOS
 	bool lerArquivoTexto(string & conteudoArquivo);
 
@@ -51,7 +57,7 @@ private:
 	double extrairValoresFaturados(vector<string>& linhasArquivo, int & posicaoAtual);
 
 
-	ContaDigital conta;
+	Fatura fatura;
 
 	string mensagemErro;
 

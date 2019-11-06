@@ -2,18 +2,18 @@
 #define CONTA_DIGITAL_H
 #include <string>
 
-#include "Cliente.h"
+
 #include "Consumo.h"
 #include "ValoresFaturados.h"
-
+#include "Cliente.h"
 #define CAPACIDADE_HISTORICO_CONSUMO 13
 
 using namespace std;
-class ContaDigital
+class Fatura
 {
 public:
 	
-	ContaDigital();
+	Fatura();
 
 	string getNumeroInstalacao();
 	void setNumeroInstalacao(string numeroInstalacao);

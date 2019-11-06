@@ -65,7 +65,7 @@ string ArquivoTexto::ler() {
 	// Lê o conteúdo do arquivo até atingir o fim do arquivo.
 	do { // Lê o conteúdo de uma linha limitada a TAMANHO_LINHA caracteres ou até encontrar o caractere nova linha ('\n'). 
 		 inputFile.getline(linha, TAMANHO_LINHA);
-
+		 
 	     // Verifica se atingiu o fim do arquivo. Se não, armazena as linhas lidas do texto em um objeto string.
 		 if (!inputFile.eof()) {
 		    texto.append(linha); 

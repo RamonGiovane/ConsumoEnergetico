@@ -1,66 +1,69 @@
-#include "ContaDigital.h"
+#include "Fatura.h"
 #include "Consumo.h"
 #include "ValoresFaturados.h"
 
-ContaDigital::ContaDigital()
+Fatura::Fatura()
 {
 }
 
 
-string ContaDigital::getNumeroInstalacao() { 
+string Fatura::getNumeroInstalacao() { 
 	return numeroInstalacao; 
 }
-void ContaDigital::setNumeroInstalacao(string numeroInstalacao) { 
+void Fatura::setNumeroInstalacao(string numeroInstalacao) { 
 	this->numeroInstalacao = numeroInstalacao;
 }
 
-string ContaDigital::getDataVencimento() { 
+string Fatura::getDataVencimento() { 
 	return dataVencimento;
 }
 
-void ContaDigital::setDataVencimento(string dataVencimento)
+void Fatura::setDataVencimento(string dataVencimento)
 {
 	this->dataVencimento = dataVencimento;
 }
 
-double ContaDigital::getValorAPagar() { 
+double Fatura::getValorAPagar() { 
 	return valorAPagar; 
 }
 
-void ContaDigital::setValorAPagar(double valor) { 
+void Fatura::setValorAPagar(double valor) { 
 	this->valorAPagar = valor; 
 }
 
-string ContaDigital::getMesReferente() { 
+string Fatura::getMesReferente() { 
 	return mesReferente; 
 }
-void ContaDigital::setMesReferente(string mesReferente) { 
+void Fatura::setMesReferente(string mesReferente) { 
 	this->mesReferente = mesReferente; 
 }
 
-Cliente ContaDigital::getCliente() {
+Cliente Fatura::getCliente() {
 	return cliente; 
 }
-void ContaDigital::setCliente(Cliente cliente) { 
+void Fatura::setCliente(Cliente cliente) { 
 	this->cliente = cliente;
 }
 
-ValoresFaturados ContaDigital::getValoresFaturados() {
+ValoresFaturados Fatura::getValoresFaturados() {
 	return valoresFaturados; 
 }
-void ContaDigital::setValoresFaturados(ValoresFaturados dadosFatura) { 
+void Fatura::setValoresFaturados(ValoresFaturados dadosFatura) { 
 	this->valoresFaturados = dadosFatura; 
 }
-
-bool ContaDigital::adicionarHistoricoConsumo(Consumo consumo)
+#include <iostream>
+bool Fatura::adicionarHistoricoConsumo(Consumo consumo)
 {
 	static int pos = 0;
-	if (pos == CAPACIDADE_HISTORICO_CONSUMO)
+	
+	if (pos == CAPACIDADE_HISTORICO_CONSUMO) {
 		return false;
+	}
 	historicoConsumo[pos++] = consumo;
+	if (pos == CAPACIDADE_HISTORICO_CONSUMO) pos = 0;
 	return true;
 }
-string  ContaDigital::obterHistoricoConsumo() {
+string  Fatura::obterHistoricoConsumo() {
 	string historico;
 	for (int i = 0; i < CAPACIDADE_HISTORICO_CONSUMO; i++)
 		historico.append(historicoConsumo[i].toString() + "\n");
@@ -68,7 +71,7 @@ string  ContaDigital::obterHistoricoConsumo() {
 }
 
 
-string ContaDigital::toString()
+string Fatura::toString()
 {
 	char str[2000];
 	sprintf_s(str, 2000, "\n\nNúmero da Instalação:%s\nDados do Cliente:\n%s\nValor a Pagar:R$ %1.2f\nReferente a: %s\tData de Vencimento: %s\n\nDetalhes da Fatura:\n%s\n\nHistórico de Consumo:\n%s",

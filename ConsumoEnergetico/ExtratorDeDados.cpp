@@ -1,5 +1,5 @@
 #include "ExtratorDeDados.h"
-#include "ContaDigital.h"
+#include "Fatura.h"
 #include "ArquivoTexto\ArquivoTexto.h"
 #include "EntradaESaida.h"
 
@@ -7,10 +7,77 @@
 
 ExtratorDeDados::ExtratorDeDados(){ }
 
+Fatura ExtratorDeDados::lerContaPDF(string& caminho) {
+	string conteudoConta;
+	vector<string> linhasArquivo;
+	const char  DELIMITADOR = '\n';
+	static Fatura faturaVazia = Fatura();
+
+
+	ES::removerArquivo(ARQUIVO_SAIDA);
+
+	cout << "\nConvertendo PDF... ";
+	if (!interpretarSaidaConversor(ES::PDFToText(caminho, ARQUIVO_SAIDA))) {
+
+		//ES::exibirAbortarOperacao();
+		return faturaVazia;
+	}
+
+	cout << "\nLendo a conta digital... ";
+	if (!lerArquivoTexto(conteudoConta)) {
+		cout << "\nFALHA: O conteúdo da conta não pôde ser lido. Possivelmente o arquivo está corrompido.";
+		//ES::exibirAbortarOperacao();
+		return faturaVazia;
+	}
+	cout << "\nObtendo informações da conta... ";
+	ES::quebrarTexto(linhasArquivo, conteudoConta, DELIMITADOR);
+	if (!obterInformacoes(linhasArquivo)) {
+		cout << "\nFALHA: " << mensagemErro;
+		//ES::exibirAbortarOperacao();
+		return faturaVazia;
+	}
+
+	return fatura;
+}
+
+static const string SEM_ERROS = "Sucesso.";
+static const string ERRO_ABRIR_ARQUIVO_PDF = "FALHA: O arquivo PDF informado não existe ou está corrompido.";
+static const string ERRO_ABRIR_ARQUIVO_SAIDA = "FALHA: Não foi possível gerar os dados de saída";
+static const string ERRO_DE_PERMISSAO = "FALHA: O programa não tem permissão para ler o arquivo PDF informado ou gerar os dados de saída.";
+static const string ERRO_DESCONHECIDO = "FALHA: Um erro desconhecido ocorreu ao converter o arquivo PDF.";
+
+
+bool ExtratorDeDados::interpretarSaidaConversor(int codigoSaida) {
+	switch (codigoSaida) {
+	case ES::CodigoDeSaida::SEM_ERROS:
+		cout << SEM_ERROS;
+		return true;
+
+	case ES::ERRO_ABRIR_ARQUIVO_PDF:
+		cout << ERRO_ABRIR_ARQUIVO_PDF;
+		return false;
+
+	case ES::ERRO_ABRIR_ARQUIVO_SAIDA:
+		cout << ERRO_ABRIR_ARQUIVO_SAIDA;
+		return false;
+
+	case ES::ERRO_DE_PERMISSAO:
+		cout << ERRO_DE_PERMISSAO;
+		return false;
+
+	default:
+		cout << ERRO_DESCONHECIDO;
+		return false;
+	}
+	return false;
+
+}
+
 bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo) {
 	ArquivoTexto arquivo;
 	arquivo.abrir(ARQUIVO_SAIDA, TipoDeAcesso::LEITURA);
 	conteudoArquivo = arquivo.ler();
+	arquivo.fechar();
 	return conteudoArquivo == "NULL" ? false : true;
 }
 
@@ -22,19 +89,19 @@ bool ExtratorDeDados::obterInformacoes(vector<string>& linhasArquivo) {
 		return false;
 	}
 
-	ValoresFaturados fatura;
+	ValoresFaturados valores;
 	Cliente cliente;
 	int posicaoAtual = 0;
 
-	obterValoresFaturados(linhasArquivo, fatura, posicaoAtual);
+	obterValoresFaturados(linhasArquivo, valores, posicaoAtual);
 	obterHistoricoConsumo(linhasArquivo, posicaoAtual);
 	obterCliente(linhasArquivo, cliente, posicaoAtual);
 	obterDemaisInformacoes(linhasArquivo, cliente, posicaoAtual);
 
-	conta.setCliente(cliente);
-	conta.setValoresFaturados(fatura);
+	fatura.setCliente(cliente);
+	fatura.setValoresFaturados(valores);
 
-	cout << conta.toString();
+	cout << fatura.toString();
 
 	return true;
 }
@@ -46,18 +113,18 @@ bool ExtratorDeDados::obterDemaisInformacoes(vector<string>& linhasArquivo, Clie
 	ES::quebrarTexto(linha, linhasArquivo[++posicaoAtual], ' ');
 
 	cliente.setNumero(linha[0]);
-	conta.setNumeroInstalacao(linha[1]);
+	fatura.setNumeroInstalacao(linha[1]);
 
 	//Separando Numero do cliente e numero da instalacao
 	ES::quebrarTexto(linha, linhasArquivo[++posicaoAtual], ' ');
 
 	linha = vector<string>();
-
+	cout << linhasArquivo[posicaoAtual];
 	//Separando mes, vencimento e valor a pagar
 	ES::quebrarTexto(linha, linhasArquivo[++posicaoAtual], ' ');
-	conta.setMesReferente(linha[0]);
-	conta.setDataVencimento(linha[1]);
-	conta.setValorAPagar(ES::strToDouble(linha[2]));
+	fatura.setMesReferente(linha[0]);
+	fatura.setDataVencimento(linha[1]);
+	fatura.setValorAPagar(ES::strToDouble(linha[2]));
 
 
 	return true;
@@ -65,8 +132,16 @@ bool ExtratorDeDados::obterDemaisInformacoes(vector<string>& linhasArquivo, Clie
 }
 bool ExtratorDeDados::obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual) {
 
-	while (linhasArquivo[posicaoAtual] != "Comprovante de Pagamento")
-		posicaoAtual++;
+	//while (linhasArquivo[posicaoAtual] != "Comprovante de Pagamento")
+	//	posicaoAtual++;
+	int pos = posicaoAtual;
+	posicaoAtual = procurarNumeroLinha(linhasArquivo, "Comprovante de Pagamento", posicaoAtual);
+	if (posicaoAtual == -1 )
+		posicaoAtual = procurarNumeroLinha(linhasArquivo, "NnW", pos);
+	if (posicaoAtual == -1) {
+		return false;
+	}
+	cout << linhasArquivo[posicaoAtual+1];
 
 	cliente.setNome(linhasArquivo[++posicaoAtual]);
 	cliente.setRua(linhasArquivo[++posicaoAtual]);
@@ -139,7 +214,7 @@ bool ExtratorDeDados::obterHistoricoConsumo(const string & linha) {
 	consumo.setMediaConsumoDiario(ES::strToDouble(dados[2]));
 	consumo.setDias(ES::strToInt(dados[3]));
 
-	conta.adicionarHistoricoConsumo(consumo);
+	fatura.adicionarHistoricoConsumo(consumo);
 
 	return true;
 }

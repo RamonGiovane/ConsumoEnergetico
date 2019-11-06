@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "Cliente.h"
-#include "ContaDigital.h"
+#include "Fatura.h"
 using namespace std;
 
 class ConsumoEnergetico
@@ -31,7 +31,7 @@ private:
 	
 
 	//Fatura fatura;
-	ContaDigital conta;
+	Fatura conta;
 };
 
 
