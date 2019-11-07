@@ -17,20 +17,39 @@ public:
 
 	string getNumeroInstalacao();
 	void setNumeroInstalacao(string numeroInstalacao);
+	
 	string getDataVencimento();
 	double getValorAPagar();
+	
 	void setValorAPagar(double valor);
 	void setDataVencimento(string data);
-	string getMesReferente();
-	void setMesReferente(string mesReferente);
+	
+	int getMesReferente();
+	void setMesReferente(int mesReferente);
+
+	int getAnoReferente();
+	void setAnoReferente(int anoReferente);
+	
 	Cliente getCliente();
 	void setCliente(Cliente cliente);
+
+	string getDataDeLeitura();
+	void setDataDeLeitura(string dataDeLeitura);
+	
+	string getDataDeLeituraAnterior();
+	void setDataDeLeituraAnterior(string dataDeLeitura);
+	
+	string getProximaDataDeLeitura();
+	void setProximaDataDeLeitura(string dataDeLeitura);
+
 	ValoresFaturados getValoresFaturados();
 	void setValoresFaturados(ValoresFaturados valoresFaturados);
 	
 	bool adicionarHistoricoConsumo(Consumo consumo);
 
 	string obterHistoricoConsumo();
+
+	bool setMesAnoReferente(const string & mesAno);
 
 	Consumo obterConsumoDoMes();
 
@@ -41,8 +60,9 @@ private:
 	string numeroInstalacao;
 	string dataVencimento;
 	double valorAPagar;
-	string mesReferente;
+	int mesReferente, anoReferente;
 	Cliente cliente;
+	string dataDeLeitura, dataDeLeituraAnterior, proximaDataDeLeitura;
 	ValoresFaturados valoresFaturados;
 	
 

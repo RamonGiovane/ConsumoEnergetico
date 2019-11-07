@@ -11,6 +11,8 @@ class ES {
 public:
 	static string lerString(string mensagem);
 	static int lerInteiro(string mensagem);
+	static int identificarMesAbreviado(string strMes);
+	static string mesToStr(int mes);
 	static void mudarLocalizacao();
 	static int PDFToText(string caminhoArquivo, string arquivoDestino);
 	static bool removerArquivo(string caminhoArquivo);

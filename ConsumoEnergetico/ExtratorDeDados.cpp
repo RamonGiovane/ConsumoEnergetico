@@ -15,7 +15,7 @@ Fatura ExtratorDeDados::lerFaturaPDF(const string& caminho) {
 
 	ES::removerArquivo(ARQUIVO_SAIDA);
 
-	cout << "\nConvertendo PDF... ";
+	cout << "\nConvertendo PDF...\n ";
 	if (!interpretarSaidaConversor(ES::PDFToText(caminho, ARQUIVO_SAIDA))) {
 
 		//ES::exibirAbortarOperacao();
@@ -80,7 +80,6 @@ bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo) {
 	return conteudoArquivo == "NULL" ? false : true;
 }
 
-
 bool ExtratorDeDados::obterInformacoes(vector<string>& linhasArquivo) {
 
 	if (linhasArquivo[0] != "Valores Faturados") {
@@ -91,19 +90,18 @@ bool ExtratorDeDados::obterInformacoes(vector<string>& linhasArquivo) {
 	ValoresFaturados valores;
 	Cliente cliente;
 	int posicaoAtual = 0;
-	
-	
+
+
 	//Extraindo todas as informações do arquivo de texto
-	obterValoresFaturados(linhasArquivo, valores, posicaoAtual);
-	obterHistoricoConsumo(linhasArquivo, posicaoAtual);
-	obterCliente(linhasArquivo, cliente, posicaoAtual);
-	obterNumeroClienteEInstalacao(linhasArquivo, cliente, posicaoAtual);
-	obterMesVencimentoEValor(linhasArquivo, posicaoAtual);
-	obterDatasDeLeitura(linhasArquivo, posicaoAtual);
+	if (!obterValoresFaturados(linhasArquivo, valores, posicaoAtual)) return false;
+	if (!obterHistoricoConsumo(linhasArquivo, posicaoAtual)) return false;
+	if (!obterCliente(linhasArquivo, cliente, posicaoAtual)) return false;
+	if (!obterNumeroClienteEInstalacao(linhasArquivo, cliente, posicaoAtual)) return false;
+	if (!obterMesVencimentoEValor(linhasArquivo, posicaoAtual)) return false;
+	if (!obterDatasDeLeitura(linhasArquivo, posicaoAtual)) return false;
 	
 	fatura.setCliente(cliente);
 	fatura.setValoresFaturados(valores);
-
 
 	return true;
 }
@@ -118,13 +116,50 @@ bool ExtratorDeDados::obterDatasDeLeitura(vector<string>& linhasArquivo, int & p
 	vector<string> linha;
 	ES::quebrarTexto(linha, datas, ' ');
 	
-	//Nao pega a posição 0 porque corresponde à um espaço em branco
-	cout << linha[1] << endl;
-	cout << linha[2] << endl;
-	cout << linha[3] << endl;
 
+	//Nao pega a posição 0 porque corresponde à um espaço em branco
+	formatarEAdicionarDatasDeLeitura(linha[1], linha[2], linha[3]);
+
+
+	return true;
+}
+
+/*Insere às datas de leitura, anterior, atual e proxima, seus respectivos anos. Em seguida, as armazena no objeto fatura.*/
+bool ExtratorDeDados::formatarEAdicionarDatasDeLeitura(const string & dataLeituraAnterior, const string & dataLeituraAtual, const string & proximaDataLeitura){
+	int ano = fatura.getAnoReferente();
+	
+	string anoAtualStr = "/" + ES::intToStr(ano);
+	
+	//Se a data da leitura anterior for em dezembro, então decrementa-se o ano  atual para ela.
+	if (obterMesData(dataLeituraAnterior) == 12)
+		 fatura.setDataDeLeituraAnterior(dataLeituraAnterior + "/" + ES::intToStr(ano - 1));
+	else
+		fatura.setDataDeLeituraAnterior(dataLeituraAnterior + anoAtualStr);
+
+	//Se a data da proxima leitura for em janeiro, então incrementa-se o ano atual para ela.
+	if (obterMesData(proximaDataLeitura) == 1)
+		fatura.setProximaDataDeLeitura(proximaDataLeitura + "/" + ES::intToStr(ano + 1));
+	else
+		fatura.setProximaDataDeLeitura(proximaDataLeitura + anoAtualStr);
+
+	fatura.setDataDeLeitura(dataLeituraAtual + anoAtualStr);
+
+	cout << fatura.getDataDeLeitura() << endl;
+	cout << fatura.getDataDeLeituraAnterior() << endl;
+	cout << fatura.getProximaDataDeLeitura() << endl;
+
+	return true;
 
 }
+
+/*Retorna o número de um mês a partir de uma data no formato "MM/yyyy"*/
+int ExtratorDeDados::obterMesData(const string & data) {
+	vector<string> v;
+	ES::quebrarTexto(v, data, '/');
+	return ES::strToInt(v[0]);
+
+}
+
 bool ExtratorDeDados::obterNumeroClienteEInstalacao(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual)
 {
 	vector<string> linha;
@@ -137,25 +172,24 @@ bool ExtratorDeDados::obterNumeroClienteEInstalacao(vector<string>& linhasArquiv
 
 	return true;
 }
+
 bool ExtratorDeDados::obterMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual)
 {
-	//Separando Numero do cliente e numero da instalacao
-	//ES::quebrarTexto(linha, linhasArquivo[++posicaoAtual], ' ');
 
 	vector<string> linha;
 	posicaoAtual += 2;
-	cout << linhasArquivo[posicaoAtual];
+
 	
 	//Separando mes, vencimento e valor a pagar
 	ES::quebrarTexto(linha, linhasArquivo[posicaoAtual], ' ');
-	fatura.setMesReferente(linha[0]);
+	fatura.setMesAnoReferente(linha[0]);
 	fatura.setDataVencimento(linha[1]);
 	fatura.setValorAPagar(ES::strToDouble(linha[2]));
 
-	//ATENÇÃO: DESCOMENTAR TO STRINGS
 	return true;
 
 }
+
 bool ExtratorDeDados::obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual) {
 
 
@@ -246,7 +280,7 @@ bool ExtratorDeDados::obterHistoricoConsumo(const string & linha) {
 
 /*Procura o número de uma linha que contém total ou parcialmente o termo pesquisado . Retorna esse número ou -1 caso a linha não seja identificada*/
 int ExtratorDeDados::procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoAtual) {
-	for (; posicaoAtual < linhasArquivo.size() - 1; posicaoAtual++) {
+	for (; posicaoAtual < (int) linhasArquivo.size() - 1; posicaoAtual++) {
 		if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos)
 			return posicaoAtual;
 	}
@@ -261,11 +295,9 @@ string ExtratorDeDados::procurarPadrao(const vector<string>& linhasArquivo, int 
 	regex r(padraoRegex);
 	string s1;  
 	smatch match;
-	for (; posicaoAtual < linhasArquivo.size() - 1; posicaoAtual++) {
+	for (; posicaoAtual < (int) linhasArquivo.size() - 1; posicaoAtual++) {
 		
 		if (regex_search(linhasArquivo[posicaoAtual], match, r)) {
-			cout << "MATCH " << match.str() << endl;
-			cout << linhasArquivo[posicaoAtual] << endl;
 
 			return match.str();
 		}
@@ -305,6 +337,9 @@ string ExtratorDeDados::procurarItem(const vector<string> & linhasArquivo, const
 
 }
 
+/*Procura o número de uma linha dentro de um vector com as linhas do arquivo. Pesquisa um termo a partir de uma posição (int &) que será alterada na chamada
+da função, até a que seja encontrado um termo final ou o fim do arquivo.
+Retorna esse número se alguma linha conter o termo pesquisado, -1 do contrário*/
 vector<string>& ExtratorDeDados::procurarLinha(const vector<string> & linhasArquivo, const string & termoPesquisado,
 	int & posicaoAtual, const string & termoFinal) {
 
@@ -356,28 +391,3 @@ double ExtratorDeDados::extrairValoresFaturados(vector<string>& linhasArquivo, i
 	}
 	return valor;
 }
-
-
-
-
-//int f()
-//{
-//	string s1("{1,2,3}");
-//	regex e(R"(\d+)");
-//
-//	cout << s1 << endl;
-//
-//	sregex_iterator iter(s1.begin(), s1.end(), e);
-//	sregex_iterator end;
-//
-//	while (iter != end)
-//	{
-//		cout << "size: " << iter->size() << endl;
-//
-//		for (unsigned i = 0; i < iter->size(); ++i)
-//		{
-//			cout << "the " << i + 1 << "th match" << ": " << (*iter)[i] << endl;
-//		}
-//		++iter;
-//	}
-//}

@@ -46,7 +46,7 @@ bool Consumo::definirMesAno(string mesAnoStr)
 
 	if (v.size() != 2) return false;
 
-	int mes = identificarMes(v[0]);
+	int mes = ES::identificarMesAbreviado(v[0]);
 
 	if (mes == 0) return false;
 
@@ -60,33 +60,7 @@ bool Consumo::definirMesAno(string mesAnoStr)
 
 }
 
-int  Consumo::identificarMes(string strMes) {
-	if (strMes == "JAN" || strMes == "jan")
-		return 1;
-	if (strMes == "FEV" || strMes == "fev")
-		return 2;
-	if (strMes == "MAR" || strMes == "mar")
-		return 3;
-	if (strMes == "ABR" || strMes == "abr")
-		return 4;
-	if (strMes == "MAI" || strMes == "mai")
-		return 5;
-	if (strMes == "JUN" || strMes == "jun")
-		return 6;
-	if (strMes == "JUL" || strMes == "jul")
-		return 7;
-	if (strMes == "AGO" || strMes == "ago")
-		return 8;
-	if (strMes == "SET" || strMes == "set")
-		return 9;
-	if (strMes == "OUT" || strMes == "out")
-		return 10;
-	if (strMes == "NOV" || strMes == "nov")
-		return 11;
-	if (strMes == "DEZ" || strMes == "dez")
-		return 12;
-	return 0;
-}
+
 
 string Consumo::toString() {
 	char str[500];

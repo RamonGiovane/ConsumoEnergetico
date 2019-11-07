@@ -1,6 +1,7 @@
 #include "Fatura.h"
 #include "Consumo.h"
 #include "ValoresFaturados.h"
+#include "EntradaESaida.h"
 
 Fatura::Fatura()
 {
@@ -31,18 +32,58 @@ void Fatura::setValorAPagar(double valor) {
 	this->valorAPagar = valor; 
 }
 
-string Fatura::getMesReferente() { 
+int Fatura::getMesReferente() { 
 	return mesReferente; 
 }
-void Fatura::setMesReferente(string mesReferente) { 
-	this->mesReferente = mesReferente; 
+void Fatura::setMesReferente(int mesReferente) {
+	this->mesReferente = mesReferente;
 }
+
+int Fatura::getAnoReferente() {
+	return anoReferente;
+}
+void Fatura::setAnoReferente(int anoReferente) {
+	this->anoReferente = anoReferente;
+}
+
+
+
 
 Cliente Fatura::getCliente() {
 	return cliente; 
 }
 void Fatura::setCliente(Cliente cliente) { 
 	this->cliente = cliente;
+}
+
+string Fatura::getDataDeLeitura()
+{
+	return dataDeLeitura;
+}
+
+void Fatura::setDataDeLeitura(string dataDeLeitura)
+{
+	this->dataDeLeitura = dataDeLeitura;
+}
+
+string Fatura::getDataDeLeituraAnterior()
+{
+	return dataDeLeituraAnterior;
+}
+
+void Fatura::setDataDeLeituraAnterior(string dataDeLeituraAnterior)
+{
+	this->dataDeLeituraAnterior = dataDeLeituraAnterior;
+}
+
+string Fatura::getProximaDataDeLeitura()
+{
+	return proximaDataDeLeitura;
+}
+
+void Fatura::setProximaDataDeLeitura(string proximaDataDeLeitura)
+{
+	this->proximaDataDeLeitura = proximaDataDeLeitura;
 }
 
 ValoresFaturados Fatura::getValoresFaturados() {
@@ -70,11 +111,29 @@ string  Fatura::obterHistoricoConsumo() {
 	return historico;
 }
 
+bool Fatura::setMesAnoReferente(const string & mesAno) {
+	vector<string> v;
+	ES::quebrarTexto(v, mesAno, '/');
+
+	if (v.size() != 2) return false;
+
+	setMesReferente(ES::identificarMesAbreviado(v[0]));
+	setAnoReferente(ES::strToInt(v[1]));
+
+	return true;
+}
 
 string Fatura::toString()
 {
-	char str[2000];
-	sprintf_s(str, 2000, "\n\nNúmero da Instalação:%s\nDados do Cliente:\n%s\nValor a Pagar:R$ %1.2f\nReferente a: %s\tData de Vencimento: %s\n\nDetalhes da Fatura:\n%s\n\nHistórico de Consumo:\n%s",
-		numeroInstalacao.c_str(), cliente.toString().c_str(), valorAPagar, mesReferente.c_str(), dataVencimento.c_str(), valoresFaturados.toString().c_str(), obterHistoricoConsumo().c_str());
+	char str[3000];
+	sprintf_s(str, 3000, "\n\nNúmero da Instalação:%s\nDados do Cliente:\n%s"
+		"\n\nDatas de Leitura:\n Anterior: %s Atual: %s Próxima: %s"
+		"\n\n============\n  Valor a Pagar : R$ %1.2f\n"
+		"\n  Referente a: %s/%d\n  Data de Vencimento: %s\n==============="
+		"\n\nDetalhes da Fatura:\n%s\n\nHistórico de Consumo:\n%s",
+		numeroInstalacao.c_str(), cliente.toString().c_str(), 
+		dataDeLeituraAnterior.c_str(), dataDeLeitura.c_str(), proximaDataDeLeitura.c_str(),
+		valorAPagar, ES::mesToStr(mesReferente).c_str(), 
+		anoReferente, dataVencimento.c_str(), valoresFaturados.toString().c_str(), obterHistoricoConsumo().c_str());
 	return str;
 }

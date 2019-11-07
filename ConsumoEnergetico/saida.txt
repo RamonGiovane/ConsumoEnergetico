@@ -1,14 +1,16 @@
 Valores Faturados
 Descrição Quantidade Tarifa/Preço (R$) Valor (R$)
-Energia Elétrica kWh 162 1,01279001 164,04
+Energia Elétrica kWh 151 0,98792560 149,16
 Encargos/Cobranças
-Contrib Ilum Publica Municipal 29,19
+Contrib Ilum Publica Municipal 27,44
 Tarifas Aplicadas (sem impostos)
-Energia Elétrica kWh 0,66833000
+Energia Elétrica kWh 0,65703968
 Adicional Bandeiras - Já incluído no Valor a Pagar
-Bandeira Vermelha 9,81
+Bandeira Amarela 1,51
+Bandeira Vermelha 4,97
 Histórico de Consumo
 MÊS/ANO CONSUMO kWh MÉDIA kWh/Dia Dias
+OUT/19 151 4,87 31
 SET/19 162 5,22 31
 AGO/19 165 5,15 32
 JUL/19 132 4,40 30
@@ -21,7 +23,6 @@ JAN/19 144 4,50 32
 DEZ/18 146 4,86 30
 NOV/18 137 4,72 29
 OUT/18 145 4,53 32
-SET/18 159 4,81 33
 Reservado ao Fisco
 SEM VALOR FISCAL
 Base de cálculo (R$) Alíquota (%) Valor (R$)
@@ -30,9 +31,9 @@ PASEP - - -
 COFINS - - -
 Ouvidoria CEMIG: 0800 728 3838 - Agência Nacional de Energia Elétrica - ANEEL - Telefone: 167 - Ligação gratuita de telefones fixos e móveis
 Código de Débito Automático Instalação Vencimento Total a pagar
-000088011333 3000755750 22/10/2019 R$193,23
-Setembro/2019
-Comprovante de Pagamento
+000088011333 3000755750 22/11/2019 R$176,60
+83630000001-2 76600138004-3 31274265733-0 00088011333-7 Outubro/2019
+NnNnWwNwNnWnNnNwWwWnNnNnNnNnWwWwNnNnNnWwWwNnNnNnWwWwNnWnNnNnNwWwNnWwWwNnNnNnNnWwWwNnWwNwNnNnWnWnNnNwWwNnNnNnWwWnNwWwWnNnNnNwNnWnNnNwWwNnNwWnNnWwNwWnWwNnNnNwNwNnWnWnWnWnNwNwNnNnNnWwWwNnWwNnNnWwNnNwNnWnWnNwWwNwNnNnWnWwWwNnNnNnWnN
 HELTON SEBASTIAO ROSA
 RUA IRMA ELIZABETH CUNHA 181 CS
 BROGOTO
@@ -41,14 +42,14 @@ CPF 963.165.356-00
 Nº DO CLIENTE Nº DA INSTALAÇÃO
 7008637570 3000755750
 Referente a Vencimento Valor a pagar (R$)
-SET/2019 22/10/2019 193,23
+OUT/2019 22/11/2019 176,60
 2ª VIA - CONTA DE ENERGIA ELÉTRICA
 Classe Subclasse Modalidade Tarifária Datas de Leitura Data de Emissão
-Residencial Residencial Convencional B1 Anterior Atual Próxima 13/09/2019
-Monofásico 13/08 13/09 14/10
+Residencial Residencial Convencional B1 Anterior Atual Próxima 14/10/2019
+Monofásico 13/09 14/10 13/11
 Informações Técnicas
 Tipo de Medição Medição Leitura Anterior Leitura Atual Constante de Multiplicação Consumo kWh
-Energia kWh ABI057037937 26.928 27.090 1 162
+Energia kWh ABI057037937 27.090 27.241 1 151
 Informações Gerais
 Tarifa vigente conforme Res Aneel nº 2.550, de 21/05/2019.
 O pagamento desta conta não quita débitos anteriores.
@@ -59,5 +60,5 @@ vencimento das mesmas.
 atualizados e informar alterações da atividade
 exercida no local.
 Leitura realizada conforme calendário de faturamento
-AGO/2019 Band. Verm. P1 - SET/2019 Band. Verm. P1
+SET/2019 Band. Verm. P1 - OUT/2019 Band. Amarela
 

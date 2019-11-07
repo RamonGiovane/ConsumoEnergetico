@@ -28,6 +28,10 @@ private:
 
 	bool obterDatasDeLeitura(vector<string>& linhasArquivo, int & posicaoAtual);
 
+	bool formatarEAdicionarDatasDeLeitura(const string & dataLeituraAnterior, const string & dataLeituraAtual, const string & proximaDataLeitura);
+
+	int obterMesData(const string & data);
+
 	bool obterNumeroClienteEInstalacao(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
 
 	bool obterMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual);

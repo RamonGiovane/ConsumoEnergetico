@@ -89,10 +89,10 @@ bool ConsumoEnergetico::lerContaDigital() {
 	
 	ExtratorDeDados extrator;
 
-	caminho = "C:/Users/ramon/Desktop/fat.pdf";
+	caminho = "C:/Users/ramon/Desktop/corr.pdf";
 	string c1 = "C:/Users/ramon/Downloads/FaturaCEMIG_22112019.pdf";
 	//caminho = "C:/Users/Usuario/Desktop/fat.pdf";
-	//A partir daqui, passar essas operações para o ExtratorDeDados
+
 
 	Fatura f = extrator.lerFaturaPDF(caminho);
 	Fatura f2  = extrator.lerFaturaPDF(c1);

@@ -20,6 +20,67 @@ int ES::lerInteiro(string mensagem) {
 	return opcao;
 }
 
+/*Identifica e retorna o número de um mês a partir de sua abreviação. Por exemplo: JAN = 1; AGO = 8; NOV = 11*/
+int  ES::identificarMesAbreviado(string strMes) {
+	if (strMes == "JAN" || strMes == "jan")
+		return 1;
+	if (strMes == "FEV" || strMes == "fev")
+		return 2;
+	if (strMes == "MAR" || strMes == "mar")
+		return 3;
+	if (strMes == "ABR" || strMes == "abr")
+		return 4;
+	if (strMes == "MAI" || strMes == "mai")
+		return 5;
+	if (strMes == "JUN" || strMes == "jun")
+		return 6;
+	if (strMes == "JUL" || strMes == "jul")
+		return 7;
+	if (strMes == "AGO" || strMes == "ago")
+		return 8;
+	if (strMes == "SET" || strMes == "set")
+		return 9;
+	if (strMes == "OUT" || strMes == "out")
+		return 10;
+	if (strMes == "NOV" || strMes == "nov")
+		return 11;
+	if (strMes == "DEZ" || strMes == "dez")
+		return 12;
+	return 0;
+}
+
+/*Retorna a representação textual de um mês a partir de seu número. Caso o número fornecido não corresponda a um mês, uma string vazia será retornada*/
+string  ES::mesToStr(int mes) {
+	switch (mes)
+	{
+	case 1:
+		return "Janeiro";
+	case 2:
+		return "Fevereiro";
+	case 3:
+		return "Março";
+	case 4:
+		return "Abril";
+	case 5:
+		return "Maio";
+	case 6:
+		return "Junho";
+	case 7:
+		return "Julho";
+	case 8:
+		return "Agosto";
+	case 9:
+		return "Setembro";
+	case 10:
+		return "Outubro";
+	case 11:
+		return "Novembro";
+	case 12:
+		return "Dezembro";
+	}
+
+	return "";
+}
 void ES::mudarLocalizacao() {
 	setlocale(LC_ALL, "pt-BR");
 }
@@ -57,12 +118,12 @@ bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char deli
 
 int ES::strToInt(const string & str)
 {
-	return str.empty() ? 0 : stoi(str);
+	return str.empty() || !isNumber(str) ? 0 : stoi(str);
 }
 
 double ES::strToDouble(const string & str)
 {
-	return str.empty() ? 0 : stod(str);
+	return str.empty() || !isNumber(str) ? 0 : stod(str);
 }
 
 string ES::doubleToStr(const double & numero, int precision)
@@ -83,7 +144,7 @@ string ES::intToStr(const int & numero)
 bool ES::isNumber(const string& s)
 {
 	return !s.empty() && find_if(s.begin(),
-		s.end(), [](char c) { return !isdigit(c); }) == s.end();
+		s.end(), [](char c) { return (!isdigit(c) && c != ',' && c != '.'); }) == s.end();
 }
 
 
