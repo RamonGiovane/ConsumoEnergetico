@@ -3,6 +3,9 @@
 #include <fstream>
 #include <cstdio>
 #include <iostream>
+#include <regex>
+#include "ArquivoTexto\ArquivoTexto.h"
+#include <Windows.h>
 
 using namespace std;
 string ES::lerString(string mensagem) {
@@ -81,11 +84,40 @@ string  ES::mesToStr(int mes) {
 
 	return "";
 }
+
 void ES::mudarLocalizacao() {
 	setlocale(LC_ALL, "pt-BR");
 }
 
-/**/
+int executarWinCommand(const string & comando) {
+	return WinExec(comando.c_str(), SW_HIDE);
+}
+
+
+const static string DIR_LIST = "files.txt";
+bool ES::obterArquivosDiretorio( const string  & caminhoDiretorio, vector<string> & listaArquivos) {
+
+	removerArquivo(DIR_LIST);
+
+	executarWinCommand("dir /b " + caminhoDiretorio + " > " + DIR_LIST);
+	//system(("dir /b C:\\Users\\ > " + DIR_LIST).c_str());
+	system(("dir /b " + caminhoDiretorio + " > " + DIR_LIST).c_str());
+
+	ArquivoTexto arquivo;
+	if (!arquivo.abrir(DIR_LIST, LEITURA)) return false;
+
+	vector<string> linhas;
+	quebrarTexto(linhas, arquivo.ler(), '\n');
+
+	arquivo.fechar();
+
+	if (linhas.empty()) return false;
+
+	return true;
+}
+
+
+/*Converte um arquivo PDF especificado em caminhoArquivo e um arquivo texto que será criado no caminho fornecido em arquivoDestino*/
 int ES::PDFToText(string caminhoArquivo, string arquivoDestino) {
 	string command = "xpdf\\pdftotext.exe -raw " + caminhoArquivo + " " + arquivoDestino;
 	return system(command.c_str());
@@ -147,4 +179,87 @@ bool ES::isNumber(const string& s)
 		s.end(), [](char c) { return (!isdigit(c) && c != ',' && c != '.'); }) == s.end();
 }
 
+/*Procura um termo usando expressão regular em uma linha que contenha total ou parcialmente o termo pesquisado . Retorna o termo que case com a expressão
+ou string vazia se nenhuma linha coincidir com ela*/
+string ES::procurarPadrao(const vector<string>& linhasTexto, int & posicaoAtual, string padraoRegex) {
+
+	regex r(padraoRegex);
+	string s1;
+	smatch match;
+	for (; posicaoAtual < (int)linhasTexto.size() - 1; posicaoAtual++) {
+
+		if (regex_search(linhasTexto[posicaoAtual], match, r)) {
+
+			return match.str();
+		}
+	}
+	return "";
+}
+
+/*Procura o número de uma linha dentro de um vector com as linhas do arquivo. Pesquisa um termo a partir de uma posição (int &) que será alterada na chamada
+da função, até a que seja encontrado um termo final ou o fim do arquivo.
+Retorna esse número se alguma linha conter o termo pesquisado, -1 do contrário*/
+vector<string>& ES::procurarLinha(const vector<string> & linhasArquivo, const string & termoPesquisado,
+	int & posicaoAtual, const string & termoFinal) {
+
+	static vector<string> linhasValores;
+	linhasValores = vector<string>();
+	string descricao, item;
+	int posicao = posicaoAtual;
+
+	//Iterar pelas linhas até encontrar o fim
+	for (; linhasArquivo[posicaoAtual] != termoFinal && posicaoAtual < (int)linhasArquivo.size() - 1; posicaoAtual++) {
+
+		if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos) {
+
+			quebrarTexto(linhasValores, linhasArquivo[posicaoAtual], ' ');
+
+			return linhasValores;
+
+		}
+	}
+
+	posicaoAtual = posicao;
+
+	return linhasValores;
+}
+
+/*Procura o número de uma linha que contém total ou parcialmente o termo pesquisado . Retorna esse número ou -1 caso a linha não seja identificada*/
+int ES::procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoAtual) {
+	for (; posicaoAtual < (int)linhasArquivo.size() - 1; posicaoAtual++) {
+		if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos)
+			return posicaoAtual;
+	}
+	return -1;
+
+}
+
+/*
+Procura nas linhas do arquivo (const vector<string> & linhasArquivo) o valor correpondente à um termo pesquisado, a partir do numero de uma linha
+até uma linha em que seu conteúdo seja especificado por um termo de parada (const string & termoFinal).
+Por exemplo, pesquisando o termo "Bandeira Vermelha", sendo as linhas subseguintes à posição especificada:
+
+"Energia Elétrica kWh 0,66833000
+Adicional Bandeiras - Já incluído no Valor a Pagar
+Bandeira Vermelha 9,81
+Histórico de Consumo
+MÊS/ANO CONSUMO kWh MÉDIA kWh/Dia Dias
+SET/19 162 5,22 31"
+
+Seria retornado o valor "9,81" como string. A pesquisa seria feita até o termo final "Histórico de Consumo" ou até o final do vector.
+O valor a ser retornado é sempre o último item da linha separado por espaços em branco. Importante notar que a referência contendo o número
+da linha atual na chamada da função será alterada, passando a ter o número da linha em que a pesquisa finalizou.
+Se o termo final for uma string vazia, a pesquisa é finalizada na próxima posição após àquela que corresponder ao termo correto ou
+ao final do arquivo.
+*/
+string ES::procurarItem(const vector<string> & linhasArquivo, const string & termoPesquisado,
+	int & posicaoAtual, const string & termoFinal) {
+
+	vector<string> linhasValores = ES::procurarLinha(linhasArquivo, termoPesquisado, posicaoAtual, termoFinal);
+	if (!linhasValores.empty())
+		return linhasValores[linhasValores.size() - 1];
+
+	return string("");
+
+}
 

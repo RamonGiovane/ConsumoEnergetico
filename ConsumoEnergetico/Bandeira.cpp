@@ -1,14 +1,14 @@
 #include "Bandeira.h"
 
-
-
 Bandeira::Bandeira()
 {
+	valor = 0;
 }
 
 
 Bandeira::Bandeira(Cor cor) {
 	setCor(cor);
+	valor = 0;
 }
 
 Bandeira::Bandeira(Cor cor, double valor)

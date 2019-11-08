@@ -14,6 +14,8 @@ public:
 	static int identificarMesAbreviado(string strMes);
 	static string mesToStr(int mes);
 	static void mudarLocalizacao();
+	static bool obterArquivosDiretorio(const string & caminhoDiretorio, vector<string>& listaArquivos);
+	
 	static int PDFToText(string caminhoArquivo, string arquivoDestino);
 	static bool removerArquivo(string caminhoArquivo);
 	static void exibirAbortarOperacao();
@@ -25,6 +27,14 @@ public:
 	static string doubleToStr(const double & numero, int precision = 2);
 	static string intToStr(const int & numero);
 	static bool isNumber(const std::string& s);
+
+	static string procurarPadrao(const vector<string>& linhasTexto, int & posicaoAtual, string padraoRegex);
+	static vector<string>& procurarLinha(const vector<string>& linhasArquivo, const string & termoPesquisado,
+		int & posicaoAtual, const string & termoFinal);
+	static string procurarItem(const vector<string>& linhasArquivo, const string & termoPesquisado,
+		int & posicaoAtual, const string & termoFinal = "");
+	static int procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoInicial);
+
 
 	enum CodigoDeSaida {
 

@@ -6,12 +6,17 @@
 #include <sstream>
 #include <vector>
 
+
+
+using namespace std;
+
 ConsumoEnergetico::ConsumoEnergetico()
 {
-
+	
 }
 
 int ConsumoEnergetico::iniciar() {
+	
 	ES::mudarLocalizacao();
 	return menu();
 
@@ -19,7 +24,7 @@ int ConsumoEnergetico::iniciar() {
 
 
 int ConsumoEnergetico::interpretarComando(char * argumentos[]) {
-	return 1;
+	return 0;
 }
 
 void ConsumoEnergetico::exibirInformacao() {
@@ -36,18 +41,36 @@ void ConsumoEnergetico::exibirInformacao() {
 
 }
 int ConsumoEnergetico::iniciar(int numeroArgumentos, char * argumentos[]) {
+	ES::mudarLocalizacao();
 	return interpretarComando(numeroArgumentos, argumentos);
 }
+
+int ConsumoEnergetico::interpretarUmParametro(char * paramtero) {
+	
+	vector<string> arquivos;
+	if (ES::obterArquivosDiretorio("C:\\Users\\", arquivos))
+		//return importarFautras(arquivos)
+		return 1;;
+	if (!ES::isNumber(paramtero)) {
+		cout << "\nCliente não localizado.\n";
+		return 0;
+	}
+
+	//return pesquisarConsumo(paramtero);
+	return 1;
+}
+
+
 int ConsumoEnergetico::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 	switch (numeroArgumentos) {
-	case 1: 
-		//return importarFaturas(argumentos[0]);
-		break;
-	case 2:
-		//return pesquisaConsumo(argumentos[0], argumentos[1]);
+	case 2: 
+		return interpretarUmParametro(argumentos[1]);
 		break;
 	case 3:
-		//return interpretarComando(argumentos);
+		//return pesquisaConsumo(argumentos[0], argumentos[1]);
+		break;
+	case 4:
+		//return interpretarTresParametros(argumentos);
 		break;
 	
 	default:
@@ -109,6 +132,10 @@ bool ConsumoEnergetico::lerContaDigital() {
 
 
 int main(int argc, char * argv[]) {
-	//return ConsumoEnergetico().iniciar(argc, argv);
-	return ConsumoEnergetico().iniciar();
+	cout << endl << "a" << endl;
+	ConsumoEnergetico().iniciar(argc, argv);
+	
+	//return 1;
+	ConsumoEnergetico().iniciar();
+	return system("pause");
 }

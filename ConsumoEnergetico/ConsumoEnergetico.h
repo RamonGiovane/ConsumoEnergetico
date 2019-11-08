@@ -19,6 +19,8 @@ public:
 	void exibirInformacao();
 	int iniciar(int argc, char * argv[]);
 
+	int interpretarUmParametro(char * paramtero);
+
 private:
 
 	int menu();

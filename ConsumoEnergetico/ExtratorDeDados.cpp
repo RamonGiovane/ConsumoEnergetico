@@ -110,7 +110,7 @@ bool ExtratorDeDados::obterDatasDeLeitura(vector<string>& linhasArquivo, int & p
 {
 	string padraoRegex = "\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}";
 	
-	string datas = procurarPadrao(linhasArquivo, posicaoAtual, padraoRegex);
+	string datas = ES::procurarPadrao(linhasArquivo, posicaoAtual, padraoRegex);
 	if (datas == "") { mensagemErro = "Não foi possível computar as datas de leitura"; return false; }
 
 	vector<string> linha;
@@ -194,9 +194,9 @@ bool ExtratorDeDados::obterCliente(vector<string>& linhasArquivo, Cliente & clie
 
 
 	int pos = posicaoAtual;
-	posicaoAtual = procurarNumeroLinha(linhasArquivo, "Comprovante de Pagamento", posicaoAtual);
+	posicaoAtual = ES::procurarNumeroLinha(linhasArquivo, "Comprovante de Pagamento", posicaoAtual);
 	if (posicaoAtual == -1 )
-		posicaoAtual = procurarNumeroLinha(linhasArquivo, "NnW", pos);
+		posicaoAtual = ES::procurarNumeroLinha(linhasArquivo, "NnW", pos);
 	if (posicaoAtual == -1) {
 		return false;
 	}
@@ -222,7 +222,7 @@ bool ExtratorDeDados::obterValoresFaturados(vector<string>& linhasArquivo, Valor
 	double  bandeiraAmarela, bandeiraVermelha;
 
 	vector<string> linhaEnergiaEletrica =
-		procurarLinha(linhasArquivo, "Energia Elétrica kWh", posicaoAtual, "Encargos/Cobranças");
+		ES::procurarLinha(linhasArquivo, "Energia Elétrica kWh", posicaoAtual, "Encargos/Cobranças");
 
 	if (linhaEnergiaEletrica.empty()) {
 		mensagemErro = "Impossível computar linha sobre Energia Elétrica kWh";
@@ -234,10 +234,10 @@ bool ExtratorDeDados::obterValoresFaturados(vector<string>& linhasArquivo, Valor
 	fatura.setValorFaturado(ES::strToDouble(linhaEnergiaEletrica[--tamanhoLinhaEnergia]));
 	fatura.setPreco(ES::strToDouble(linhaEnergiaEletrica[--tamanhoLinhaEnergia]));
 	fatura.setConsumo(ES::strToInt((linhaEnergiaEletrica[--tamanhoLinhaEnergia])));
-	fatura.setValorIluminacaoPublica(ES::strToDouble(procurarItem(linhasArquivo, "Contrib Ilum Publica Municipal", posicaoAtual, "Tarifas Aplicadas (sem impostos)")));
+	fatura.setValorIluminacaoPublica(ES::strToDouble(ES::procurarItem(linhasArquivo, "Contrib Ilum Publica Municipal", posicaoAtual, "Tarifas Aplicadas (sem impostos)")));
 
-	bandeiraAmarela = ES::strToDouble(procurarItem(linhasArquivo, "Bandeira Amarela", posicaoAtual));
-	bandeiraVermelha = ES::strToDouble(procurarItem(linhasArquivo, "Bandeira Vermelha", posicaoAtual));
+	bandeiraAmarela = ES::strToDouble(ES::procurarItem(linhasArquivo, "Bandeira Amarela", posicaoAtual));
+	bandeiraVermelha = ES::strToDouble(ES::procurarItem(linhasArquivo, "Bandeira Vermelha", posicaoAtual));
 
 	fatura.definirAdicionais(bandeiraAmarela, bandeiraVermelha);
 
@@ -246,7 +246,7 @@ bool ExtratorDeDados::obterValoresFaturados(vector<string>& linhasArquivo, Valor
 
 bool ExtratorDeDados::obterHistoricoConsumo(vector<string>& linhasArquivo, int & posicaoAtual) {
 	string termo = "MÊS/ANO CONSUMO kWh MÉDIA kWh/Dia Dias";
-	posicaoAtual = procurarNumeroLinha(linhasArquivo, termo, posicaoAtual);
+	posicaoAtual = ES::procurarNumeroLinha(linhasArquivo, termo, posicaoAtual);
 	if (posicaoAtual == -1) {
 		mensagemErro = "Dados de histórico de consumo não econtrados. ";
 		return false;
@@ -278,92 +278,7 @@ bool ExtratorDeDados::obterHistoricoConsumo(const string & linha) {
 	return true;
 }
 
-/*Procura o número de uma linha que contém total ou parcialmente o termo pesquisado . Retorna esse número ou -1 caso a linha não seja identificada*/
-int ExtratorDeDados::procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoAtual) {
-	for (; posicaoAtual < (int) linhasArquivo.size() - 1; posicaoAtual++) {
-		if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos)
-			return posicaoAtual;
-	}
-	return -1;
 
-}
-
-/*Procura um termo usando expressão regular em uma linha que contenha total ou parcialmente o termo pesquisado . Retorna o termo que case com a expressão 
-ou string vazia se nenhuma linha coincidir com ela*/
-string ExtratorDeDados::procurarPadrao(const vector<string>& linhasArquivo, int & posicaoAtual, string padraoRegex) {
-	
-	regex r(padraoRegex);
-	string s1;  
-	smatch match;
-	for (; posicaoAtual < (int) linhasArquivo.size() - 1; posicaoAtual++) {
-		
-		if (regex_search(linhasArquivo[posicaoAtual], match, r)) {
-
-			return match.str();
-		}
-	}
-	return "";
-
-}
-
-
-
-/*
-Procura nas linhas do arquivo (const vector<string> & linhasArquivo) o valor correpondente à um termo pesquisado, a partir do numero de uma linha
-até uma linha em que seu conteúdo seja especificado por um termo de parada (const string & termoFinal).
-Por exemplo, pesquisando o termo "Bandeira Vermelha", sendo as linhas subseguintes à posição especificada:
-
-"Energia Elétrica kWh 0,66833000
-Adicional Bandeiras - Já incluído no Valor a Pagar
-Bandeira Vermelha 9,81
-Histórico de Consumo
-MÊS/ANO CONSUMO kWh MÉDIA kWh/Dia Dias
-SET/19 162 5,22 31"
-
-Seria retornado o valor "9,81" como string. A pesquisa seria feita até o termo final "Histórico de Consumo" ou até o final do vector.
-O valor a ser retornado é sempre o último item da linha separado por espaços em branco. Importante notar que a referência contendo o número
-da linha atual na chamada da função será alterada, passando a ter o número da linha em que a pesquisa finalizou.
-Se o termo final for uma string vazia, a pesquisa é finalizada na próxima posição após àquela que corresponder ao termo correto ou
-ao final do arquivo.
-*/
-string ExtratorDeDados::procurarItem(const vector<string> & linhasArquivo, const string & termoPesquisado,
-	int & posicaoAtual, const string & termoFinal) {
-
-	vector<string> linhasValores = procurarLinha(linhasArquivo, termoPesquisado, posicaoAtual, termoFinal);
-	if (!linhasValores.empty())
-		return linhasValores[linhasValores.size() - 1];
-
-	return string("");
-
-}
-
-/*Procura o número de uma linha dentro de um vector com as linhas do arquivo. Pesquisa um termo a partir de uma posição (int &) que será alterada na chamada
-da função, até a que seja encontrado um termo final ou o fim do arquivo.
-Retorna esse número se alguma linha conter o termo pesquisado, -1 do contrário*/
-vector<string>& ExtratorDeDados::procurarLinha(const vector<string> & linhasArquivo, const string & termoPesquisado,
-	int & posicaoAtual, const string & termoFinal) {
-
-	static vector<string> linhasValores;
-	linhasValores = vector<string>();
-	string descricao, item;
-	int posicao = posicaoAtual;
-
-	//Iterar pelas linhas até encontrar o fim
-	for (; linhasArquivo[posicaoAtual] != termoFinal && posicaoAtual < (int)linhasArquivo.size() - 1; posicaoAtual++) {
-
-		if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos) {
-
-			ES::quebrarTexto(linhasValores, linhasArquivo[posicaoAtual], ' ');
-
-			return linhasValores;
-
-		}
-	}
-
-	posicaoAtual = posicao;
-
-	return linhasValores;
-}
 
 
 double ExtratorDeDados::extrairValoresFaturados(vector<string>& linhasArquivo, int& posicaoAtual) {

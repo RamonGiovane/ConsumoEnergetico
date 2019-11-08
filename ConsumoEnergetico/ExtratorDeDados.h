@@ -44,18 +44,6 @@ private:
 
 	bool obterHistoricoConsumo(const string & linha);
 
-	int procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoInicial);
-
-	string procurarPadrao(const vector<string>& linhasArquivo, int & posicaoAtual, string padraoRegex);
-
-
-
-	string procurarItem(const vector<string>& linhasArquivo, const string & termoPesquisado,
-		int & posicaoAtual, const string & termoFinal = "");
-
-	vector<string>& procurarLinha(const vector<string> & linhasArquivo, const string & termoPesquisado,
-		int & posicaoAtual, const string & termoFinal = "");
-
 	double extrairValoresFaturados(vector<string>& linhasArquivo, int & posicaoAtual);
 
 
