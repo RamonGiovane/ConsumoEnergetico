@@ -10,30 +10,37 @@ class ConsumoEnergetico
 {
 
 public:
-	
-
 	ConsumoEnergetico();
+
 	int iniciar();
 	int interpretarComando(int numeroArgumentos, char * argumentos[]);
 	int interpretarComando(char * argumentos[]);
 	void exibirInformacao();
 	int iniciar(int argc, char * argv[]);
 
+	//int importarFaturas(vector<string> listaArquivos);
+
+	int importarFaturas(vector<string> listaArquivos, const string & caminhoDiretorio);
+
 	int interpretarUmParametro(char * paramtero);
 
 private:
 
 	int menu();
-	bool lerContaDigital();
-
+	bool lerContaDigital(const string & caminhoArquivo);
+	
+	void definirCaminhoPrograma(char * argumentosMain[]);
+	
 	
 
 	bool interpretarSaidaConversor(int codigoSaida);
 
-	
 
-	//Fatura fatura;
 	Fatura conta;
+
+	ExtratorDeDados extrator;
+
+	string caminhoPrograma;
 };
 
 

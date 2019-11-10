@@ -3,9 +3,11 @@
 #include <fstream>
 #include <cstdio>
 #include <iostream>
+#include <filesystem>
 #include <regex>
 #include "ArquivoTexto\ArquivoTexto.h"
 #include <Windows.h>
+#include <stdlib.h>
 
 using namespace std;
 string ES::lerString(string mensagem) {
@@ -99,28 +101,37 @@ bool ES::obterArquivosDiretorio( const string  & caminhoDiretorio, vector<string
 
 	removerArquivo(DIR_LIST);
 
-	executarWinCommand("dir /b " + caminhoDiretorio + " > " + DIR_LIST);
+	//executarWinCommand("dir /b " + caminhoDiretorio + " > " + DIR_LIST);
 	//system(("dir /b C:\\Users\\ > " + DIR_LIST).c_str());
 	system(("dir /b " + caminhoDiretorio + " > " + DIR_LIST).c_str());
 
 	ArquivoTexto arquivo;
 	if (!arquivo.abrir(DIR_LIST, LEITURA)) return false;
 
-	vector<string> linhas;
-	quebrarTexto(linhas, arquivo.ler(), '\n');
+	listaArquivos = vector<string>();
+	quebrarTexto(listaArquivos, arquivo.ler(), '\n');
 
 	arquivo.fechar();
 
-	if (linhas.empty()) return false;
+	if (listaArquivos.empty()) return false;
 
 	return true;
 }
 
 
 /*Converte um arquivo PDF especificado em caminhoArquivo e um arquivo texto que será criado no caminho fornecido em arquivoDestino*/
-int ES::PDFToText(string caminhoArquivo, string arquivoDestino) {
-	string command = "xpdf\\pdftotext.exe -raw " + caminhoArquivo + " " + arquivoDestino;
-	return system(command.c_str());
+bool ES::PDFToText(const string & caminhoArquivo, const string & caminhoPrograma, const string  & arquivoDestino) {
+	removerArquivo(arquivoDestino);
+
+	char comando[200];
+	sprintf_s(comando, 200, "%sxpdf\\pdftotext.exe -raw  \"%s\" \"%s\" >nul 2>nul ", caminhoPrograma.c_str(), caminhoArquivo.c_str(), arquivoDestino.c_str());
+	
+	//cout << comando << endl;
+
+	system(string(comando).c_str());
+
+	return  arquivoExiste(arquivoDestino);
+
 }
 
 /*Remove um arquivo do disco rígido. Se a operação for bem sucedida, retorna true. Se o arquivo não existir ou um erro ocorrer, 
@@ -129,6 +140,10 @@ bool ES::removerArquivo(string caminhoArquivo) {
 
 	return remove(caminhoArquivo.c_str()) != 0 ? false : true;
 	
+}
+bool ES::arquivoExiste(const string& nomeArquivo) {
+	ifstream f(nomeArquivo.c_str());
+	return f.good();
 }
 
 void ES::exibirAbortarOperacao() {

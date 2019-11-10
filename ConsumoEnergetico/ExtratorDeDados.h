@@ -17,9 +17,14 @@ public:
 
 	ExtratorDeDados();
 
-	Fatura lerFaturaPDF(const string & caminho);
+	bool lerFaturaPDF(Fatura & fatura, const string & caminhoPrograma, const string & caminhoArquivo);
+
+	string getMensagemErro();
 
 private:
+	
+	string caminhoPrograma;
+
 	bool interpretarSaidaConversor(int codigoSaida);
 
 	bool lerArquivoTexto(string & conteudoArquivo);

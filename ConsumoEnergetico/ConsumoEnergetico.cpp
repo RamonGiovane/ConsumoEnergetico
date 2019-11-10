@@ -10,10 +10,7 @@
 
 using namespace std;
 
-ConsumoEnergetico::ConsumoEnergetico()
-{
-	
-}
+ConsumoEnergetico::ConsumoEnergetico(){ }
 
 int ConsumoEnergetico::iniciar() {
 	
@@ -41,16 +38,56 @@ void ConsumoEnergetico::exibirInformacao() {
 
 }
 int ConsumoEnergetico::iniciar(int numeroArgumentos, char * argumentos[]) {
+	definirCaminhoPrograma(argumentos);
 	ES::mudarLocalizacao();
 	return interpretarComando(numeroArgumentos, argumentos);
 }
 
-int ConsumoEnergetico::interpretarUmParametro(char * paramtero) {
+string formatarCaminhoCompleto(const string & caminhoDiretorio, const string & nomeArquivo) {
 	
+	if (caminhoDiretorio == nomeArquivo) return caminhoDiretorio;
+	
+	string caminhoCompleto(caminhoDiretorio);
+
+	if (caminhoCompleto[caminhoCompleto.size() - 1] != '\\')
+		caminhoCompleto.append("\\");
+
+	caminhoCompleto.append(nomeArquivo);
+	return caminhoCompleto;
+}
+int ConsumoEnergetico::importarFaturas(vector<string> listaArquivos, const string & caminhoDiretorio) {
+	int arquivosIgnorados = 0, arquivosLidos = 0;
+	string caminhoCompleto;
+
+
+
+	for (string arquivo : listaArquivos) {
+		
+		caminhoCompleto = formatarCaminhoCompleto(caminhoDiretorio, arquivo);
+
+		cout << "\nLendo " + caminhoCompleto;
+		if (!lerContaDigital(caminhoCompleto)) {
+			cout << "\nIgnorando arquivo...\n\n";
+			arquivosIgnorados++;
+		}
+		else {
+			cout << "\nArquivo lido e importado com sucesso...\n\n";
+			arquivosLidos++;
+		}
+	}
+	cout << "\n\nA leitura terminou.\n" << arquivosLidos << " arquivo(s) lido(s) com sucesso.\n" << 
+		arquivosIgnorados << " arquivo(s) com falha ignorado(s)." << endl << endl;
+
+	return 1;
+
+}
+
+int ConsumoEnergetico::interpretarUmParametro(char * paramtero) {
+	string caminhoDiretorio  = "C:\\Users\\ramon\\Desktop\\test_ground";
 	vector<string> arquivos;
-	if (ES::obterArquivosDiretorio("C:\\Users\\", arquivos))
-		//return importarFautras(arquivos)
-		return 1;;
+	if (ES::obterArquivosDiretorio(caminhoDiretorio, arquivos))
+		return importarFaturas(arquivos, caminhoDiretorio);
+		//return 1;
 	if (!ES::isNumber(paramtero)) {
 		cout << "\nCliente não localizado.\n";
 		return 0;
@@ -62,6 +99,7 @@ int ConsumoEnergetico::interpretarUmParametro(char * paramtero) {
 
 
 int ConsumoEnergetico::interpretarComando(int numeroArgumentos, char * argumentos[]) {
+
 	switch (numeroArgumentos) {
 	case 2: 
 		return interpretarUmParametro(argumentos[1]);
@@ -82,7 +120,7 @@ int ConsumoEnergetico::interpretarComando(int numeroArgumentos, char * argumento
 
 int ConsumoEnergetico::menu()
 {
-	exibirInformacao();
+	//exibirInformacao();
 	string menu("\n1-Ler Conta Digital\n2-Exibir Programa\n3-Executar Programa\n4-Sair\n");
 	int opcao;
 	while (true) {
@@ -90,7 +128,7 @@ int ConsumoEnergetico::menu()
 		opcao = ES::lerInteiro("\nEscolha: ");
 		switch (opcao) {
 		case 1:
-			lerContaDigital();
+			lerContaDigital("C:/Users/ramon/Desktop/corr.pdf");
 			break;
 		case 2:
 			//exibirPrograma(maquinaExecucao);
@@ -107,31 +145,34 @@ int ConsumoEnergetico::menu()
 	return 0;
 }
 
-bool ConsumoEnergetico::lerContaDigital() {
-	string caminho = ES::lerString("Insira o caminho do arquivo PDF:\n>>");
-	
-	ExtratorDeDados extrator;
+bool ConsumoEnergetico::lerContaDigital(const string & caminhoArquivo) {
 
-	caminho = "C:/Users/ramon/Desktop/corr.pdf";
-	string c1 = "C:/Users/ramon/Downloads/FaturaCEMIG_22112019.pdf";
-	//caminho = "C:/Users/Usuario/Desktop/fat.pdf";
-
-
-	Fatura f = extrator.lerFaturaPDF(caminho);
-	Fatura f2  = extrator.lerFaturaPDF(c1);
-
-	cout << f.toString();
-
-	cout << f2.toString();
-
+	Fatura f;
+	if (!extrator.lerFaturaPDF(f, caminhoPrograma, caminhoArquivo)) { cout << extrator.getMensagemErro(); return false; }
 
 	return true;
+
+}
+
+
+void ConsumoEnergetico::definirCaminhoPrograma(char * argv[]) {
+	
+	caminhoPrograma = argv[0];
+	int i = caminhoPrograma.size()-1;
+	cout << endl << caminhoPrograma;
+	while (true) {
+		if (caminhoPrograma[i--] == '\\') break;
+		caminhoPrograma.pop_back();
+	}
+	
+	
 }
 
 
 
-
 int main(int argc, char * argv[]) {
+	
+
 	cout << endl << "a" << endl;
 	ConsumoEnergetico().iniciar(argc, argv);
 	

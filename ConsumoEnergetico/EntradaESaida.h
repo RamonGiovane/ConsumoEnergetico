@@ -15,9 +15,11 @@ public:
 	static string mesToStr(int mes);
 	static void mudarLocalizacao();
 	static bool obterArquivosDiretorio(const string & caminhoDiretorio, vector<string>& listaArquivos);
-	
-	static int PDFToText(string caminhoArquivo, string arquivoDestino);
+
+	static bool PDFToText(const string & caminhoArquivo, const string & caminhoPrograma, const string & arquivoDestino);
+
 	static bool removerArquivo(string caminhoArquivo);
+	static bool arquivoExiste(const string & nomeArquivo);
 	static void exibirAbortarOperacao();
 
 	static bool quebrarTexto(vector<string>& fragmentos, const string & texto, char delimitador);

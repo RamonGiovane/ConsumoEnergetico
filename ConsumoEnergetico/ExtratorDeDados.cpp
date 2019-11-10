@@ -4,39 +4,45 @@
 #include "EntradaESaida.h"
 #include <regex>
 
+
 ExtratorDeDados::ExtratorDeDados(){ }
 
-Fatura ExtratorDeDados::lerFaturaPDF(const string& caminho) {
+//(Fatura & fatura, const string & caminhoPrograma, const string & caminhoArquivo)
+bool ExtratorDeDados::lerFaturaPDF(Fatura & fatura, const string & caminhoPrograma, const string& caminhoArquivo) {
+	
+	this->caminhoPrograma = caminhoPrograma;
+
 	string conteudoConta;
 	vector<string> linhasArquivo;
 	const char  DELIMITADOR = '\n';
 	static Fatura faturaVazia = Fatura();
 
-
 	ES::removerArquivo(ARQUIVO_SAIDA);
 
-	cout << "\nConvertendo PDF...\n ";
-	if (!interpretarSaidaConversor(ES::PDFToText(caminho, ARQUIVO_SAIDA))) {
-
+	cout << "\nConvertendo PDF... ";
+	if (!ES::PDFToText(caminhoArquivo, caminhoPrograma, ARQUIVO_SAIDA)) {
+		mensagemErro = "\nFALHA: O arquivo não pôde ser lido. Provavelmente não é um arquivo PDF ou não existe.";
 		//ES::exibirAbortarOperacao();
-		return faturaVazia;
+		fatura = faturaVazia;
+		return false;
 	}
 
 	cout << "\nLendo a conta digital... ";
 	if (!lerArquivoTexto(conteudoConta)) {
-		cout << "\nFALHA: O conteúdo da conta não pôde ser lido. Possivelmente o arquivo está corrompido.";
-		//ES::exibirAbortarOperacao();
-		return faturaVazia;
+		mensagemErro = "\nFALHA: O conteúdo da conta não pôde ser lido. Possivelmente o arquivo está corrompido.";
+		fatura = faturaVazia;
+		return false;
 	}
+
 	cout << "\nObtendo informações da conta... ";
 	ES::quebrarTexto(linhasArquivo, conteudoConta, DELIMITADOR);
 	if (!obterInformacoes(linhasArquivo)) {
-		cout << "\nFALHA: " << mensagemErro;
-		//ES::exibirAbortarOperacao();
-		return faturaVazia;
+		mensagemErro = "\nFALHA: " + mensagemErro;
+		fatura = faturaVazia;
+		return false;
 	}
 
-	return fatura;
+	return true;
 }
 
 static const string SEM_ERROS = "Sucesso.";
@@ -45,6 +51,9 @@ static const string ERRO_ABRIR_ARQUIVO_SAIDA = "FALHA: Não foi possível gerar os
 static const string ERRO_DE_PERMISSAO = "FALHA: O programa não tem permissão para ler o arquivo PDF informado ou gerar os dados de saída.";
 static const string ERRO_DESCONHECIDO = "FALHA: Um erro desconhecido ocorreu ao converter o arquivo PDF.";
 
+string ExtratorDeDados::getMensagemErro() {
+	return mensagemErro;
+}
 
 bool ExtratorDeDados::interpretarSaidaConversor(int codigoSaida) {
 	switch (codigoSaida) {
@@ -144,10 +153,6 @@ bool ExtratorDeDados::formatarEAdicionarDatasDeLeitura(const string & dataLeitur
 
 	fatura.setDataDeLeitura(dataLeituraAtual + anoAtualStr);
 
-	cout << fatura.getDataDeLeitura() << endl;
-	cout << fatura.getDataDeLeituraAnterior() << endl;
-	cout << fatura.getProximaDataDeLeitura() << endl;
-
 	return true;
 
 }
@@ -200,7 +205,6 @@ bool ExtratorDeDados::obterCliente(vector<string>& linhasArquivo, Cliente & clie
 	if (posicaoAtual == -1) {
 		return false;
 	}
-	cout << linhasArquivo[posicaoAtual+1];
 
 	cliente.setNome(linhasArquivo[++posicaoAtual]);
 	cliente.setRua(linhasArquivo[++posicaoAtual]);
