@@ -22,6 +22,10 @@ public:
 
 	int importarFaturas(vector<string> listaArquivos, const string & caminhoDiretorio);
 
+	void relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados);
+
+	bool importarFatura(const string & caminhoArquivo, bool printMensagemFinal = false);
+
 	int interpretarUmParametro(char * paramtero);
 
 private:

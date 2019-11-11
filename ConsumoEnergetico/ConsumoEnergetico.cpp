@@ -2,6 +2,7 @@
 #include "ConsumoEnergetico.h"
 #include "EntradaESaida.h"
 #include "ArquivoTexto\ArquivoTexto.h"
+#include "ArquivoCliente.h"
 #include "Cliente.h"
 #include <sstream>
 #include <vector>
@@ -38,6 +39,7 @@ void ConsumoEnergetico::exibirInformacao() {
 
 }
 int ConsumoEnergetico::iniciar(int numeroArgumentos, char * argumentos[]) {
+	cout << endl;
 	definirCaminhoPrograma(argumentos);
 	ES::mudarLocalizacao();
 	return interpretarComando(numeroArgumentos, argumentos);
@@ -55,39 +57,64 @@ string formatarCaminhoCompleto(const string & caminhoDiretorio, const string & n
 	caminhoCompleto.append(nomeArquivo);
 	return caminhoCompleto;
 }
+/*Lê várias faturas PDF de um caminho especificado. É necessário a lista de arquivos do diretório e seu caminho absoluto,
+para que eles sejam encontrados.
+Exibe ao usuário os status da operações. Retorna true em caso de sucesso, false em falha.*/
 int ConsumoEnergetico::importarFaturas(vector<string> listaArquivos, const string & caminhoDiretorio) {
 	int arquivosIgnorados = 0, arquivosLidos = 0;
 	string caminhoCompleto;
 
-
-
 	for (string arquivo : listaArquivos) {
-		
 		caminhoCompleto = formatarCaminhoCompleto(caminhoDiretorio, arquivo);
-
-		cout << "\nLendo " + caminhoCompleto;
-		if (!lerContaDigital(caminhoCompleto)) {
-			cout << "\nIgnorando arquivo...\n\n";
-			arquivosIgnorados++;
-		}
-		else {
-			cout << "\nArquivo lido e importado com sucesso...\n\n";
+		if (importarFatura(caminhoCompleto))
 			arquivosLidos++;
-		}
+		else arquivosIgnorados++;
 	}
-	cout << "\n\nA leitura terminou.\n" << arquivosLidos << " arquivo(s) lido(s) com sucesso.\n" << 
-		arquivosIgnorados << " arquivo(s) com falha ignorado(s)." << endl << endl;
 
-	return 1;
+	relatorioImportacaoArquivos(arquivosLidos, arquivosIgnorados);
+
+	return arquivosIgnorados;
 
 }
 
+void ConsumoEnergetico::relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados) {
+	string arquivoLidoStr = " arquivo lido com sucesso.", arquivosLidosStr = " arquivos lidos com sucesso.";
+	string arquivoIgnoradoStr = " arquivo com falha ignorado.", arquivosIgnoradosStr = " arquivos com falha ignorados.";
+
+	cout << "\n\nA leitura terminou.\n" << arquivosLidos << (arquivosLidos == 1 ? arquivoLidoStr : arquivosLidosStr)  <<
+	endl << arquivosIgnorados << (arquivosIgnorados == 1 ? arquivoIgnoradoStr : arquivosIgnoradosStr) << endl << endl;
+}
+
+/*Lê uma fatura em PDF do caminho especificado. Exibe ao usuário os status da operações. Retorna true em caso de sucesso, false em falha.*/
+bool ConsumoEnergetico::importarFatura(const string & caminhoArquivo, bool printMensagemFinal) {
+	cout << "\nLendo " + caminhoArquivo;
+	if (!lerContaDigital(caminhoArquivo)) {
+		cout << "\nIgnorando arquivo...\n\n";
+		if (printMensagemFinal) relatorioImportacaoArquivos(0, 1);
+		return false;
+	}
+	
+	cout << "\nArquivo lido e importado com sucesso...\n\n";
+
+	if (printMensagemFinal) relatorioImportacaoArquivos(1, 0);
+
+	return true;
+	
+}
+
 int ConsumoEnergetico::interpretarUmParametro(char * paramtero) {
-	string caminhoDiretorio  = "C:\\Users\\ramon\\Desktop\\test_ground";
+	string caminhoDiretorio  = paramtero;
+
+	cout << paramtero << endl;
+	//string caminhoDiretorio = "AAA.";
+
 	vector<string> arquivos;
-	if (ES::obterArquivosDiretorio(caminhoDiretorio, arquivos))
+	if (ES::obterArquivosDiretorio(caminhoDiretorio, arquivos)) {
+		if (arquivos.empty())
+			return importarFatura(caminhoDiretorio, true);
 		return importarFaturas(arquivos, caminhoDiretorio);
-		//return 1;
+	
+	}
 	if (!ES::isNumber(paramtero)) {
 		cout << "\nCliente não localizado.\n";
 		return 0;
@@ -150,6 +177,19 @@ bool ConsumoEnergetico::lerContaDigital(const string & caminhoArquivo) {
 	Fatura f;
 	if (!extrator.lerFaturaPDF(f, caminhoPrograma, caminhoArquivo)) { cout << extrator.getMensagemErro(); return false; }
 
+	cout << f.toString();
+
+	ArquivoCliente arquivoCliente;
+	arquivoCliente.abrir("Cliente.dat");
+	arquivoCliente.escreverObjeto(f.getCliente());
+	
+	Cliente* c = arquivoCliente.lerObjeto(arquivoCliente.pesquisarProduto("7008637570"));
+	cout << c << endl;
+	cout << c->getNome() << endl;
+	cout << c->toString();
+	system("pause");
+
+
 	return true;
 
 }
@@ -159,7 +199,7 @@ void ConsumoEnergetico::definirCaminhoPrograma(char * argv[]) {
 	
 	caminhoPrograma = argv[0];
 	int i = caminhoPrograma.size()-1;
-	cout << endl << caminhoPrograma;
+	
 	while (true) {
 		if (caminhoPrograma[i--] == '\\') break;
 		caminhoPrograma.pop_back();
@@ -171,9 +211,7 @@ void ConsumoEnergetico::definirCaminhoPrograma(char * argv[]) {
 
 
 int main(int argc, char * argv[]) {
-	
 
-	cout << endl << "a" << endl;
 	ConsumoEnergetico().iniciar(argc, argv);
 	
 	//return 1;

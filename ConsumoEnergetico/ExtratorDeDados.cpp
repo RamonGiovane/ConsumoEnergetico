@@ -42,6 +42,8 @@ bool ExtratorDeDados::lerFaturaPDF(Fatura & fatura, const string & caminhoProgra
 		return false;
 	}
 
+	fatura = this->fatura;
+
 	return true;
 }
 
@@ -109,9 +111,12 @@ bool ExtratorDeDados::obterInformacoes(vector<string>& linhasArquivo) {
 	if (!obterMesVencimentoEValor(linhasArquivo, posicaoAtual)) return false;
 	if (!obterDatasDeLeitura(linhasArquivo, posicaoAtual)) return false;
 	
+
+
+
 	fatura.setCliente(cliente);
 	fatura.setValoresFaturados(valores);
-
+	
 	return true;
 }
 

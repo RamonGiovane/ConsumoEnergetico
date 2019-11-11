@@ -96,23 +96,32 @@ int executarWinCommand(const string & comando) {
 }
 
 
-const static string DIR_LIST = "files.txt";
+const static string DIR_LIST = "files.tmp";
 bool ES::obterArquivosDiretorio( const string  & caminhoDiretorio, vector<string> & listaArquivos) {
 
+	
+	listaArquivos = vector<string>();
+	
+	//Verifica se o caminho solicitado não é um arquivo ao invés de um diretório
+	if (ES::arquivoExiste(caminhoDiretorio)) return true;
+
+	//Caso seja um diretório, limpa o arquivo que conterá a lista de diretórios.
 	removerArquivo(DIR_LIST);
 
-	//executarWinCommand("dir /b " + caminhoDiretorio + " > " + DIR_LIST);
-	//system(("dir /b C:\\Users\\ > " + DIR_LIST).c_str());
+	//Realiza uma chamada de sistema que lista os arquivos informados dentro do arquivo DIR_LIST
 	system(("dir /b " + caminhoDiretorio + " > " + DIR_LIST).c_str());
 
+	//Tentando ler o arquivo gerado...
 	ArquivoTexto arquivo;
 	if (!arquivo.abrir(DIR_LIST, LEITURA)) return false;
 
-	listaArquivos = vector<string>();
+	//Direcionando para o vector de resposta
 	quebrarTexto(listaArquivos, arquivo.ler(), '\n');
 
 	arquivo.fechar();
+	ES::removerArquivo(DIR_LIST);
 
+	//Se o vector estiver vazio, não há arquivos para ler
 	if (listaArquivos.empty()) return false;
 
 	return true;
@@ -123,8 +132,8 @@ bool ES::obterArquivosDiretorio( const string  & caminhoDiretorio, vector<string
 bool ES::PDFToText(const string & caminhoArquivo, const string & caminhoPrograma, const string  & arquivoDestino) {
 	removerArquivo(arquivoDestino);
 
-	char comando[200];
-	sprintf_s(comando, 200, "%sxpdf\\pdftotext.exe -raw  \"%s\" \"%s\" >nul 2>nul ", caminhoPrograma.c_str(), caminhoArquivo.c_str(), arquivoDestino.c_str());
+	char comando[500];
+	sprintf_s(comando, 500, "%sxpdf\\pdftotext.exe -raw  \"%s\" \"%s\" >nul 2>nul ", caminhoPrograma.c_str(), caminhoArquivo.c_str(), arquivoDestino.c_str());
 	
 	//cout << comando << endl;
 
@@ -141,6 +150,8 @@ bool ES::removerArquivo(string caminhoArquivo) {
 	return remove(caminhoArquivo.c_str()) != 0 ? false : true;
 	
 }
+
+/*Verifica se um arquivo existe no caminho especificado. Retorna true se ele existir e false se for um diretório ou não existir*/
 bool ES::arquivoExiste(const string& nomeArquivo) {
 	ifstream f(nomeArquivo.c_str());
 	return f.good();
@@ -158,8 +169,8 @@ bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char deli
 	string linha;
 	while (getline(ss, linha, delimitador)) {
 		fragmentos.push_back(linha);
-
 	}
+
 	return true;
 }
 

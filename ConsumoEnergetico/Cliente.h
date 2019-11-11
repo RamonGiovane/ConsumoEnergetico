@@ -8,7 +8,7 @@ class Cliente
 {
 public:
 	Cliente();
-	Cliente(string nome, string rua, string bairro, string CEP, string cidade);
+	Cliente(string numero, string nome, string rua, string bairro, string CEP, string cidade);
 
 	Cliente& setNome(string nome);
 	Cliente& setRua(string rua);

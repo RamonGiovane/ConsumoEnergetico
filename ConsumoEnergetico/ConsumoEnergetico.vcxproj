@@ -22,6 +22,7 @@
     <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp" />
     <ClCompile Include="ArquivoBinario\ArquivoProduto.cpp" />
     <ClCompile Include="ArquivoBinario\Produto.cpp" />
+    <ClCompile Include="ArquivoCliente.cpp" />
     <ClCompile Include="ArquivoContaDigital.cpp" />
     <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp" />
     <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="ArquivoBinario\ArquivoBinario.h" />
     <ClInclude Include="ArquivoBinario\ArquivoProduto.h" />
     <ClInclude Include="ArquivoBinario\Produto.h" />
+    <ClInclude Include="ArquivoCliente.h" />
     <ClInclude Include="ArquivoTexto\ArquivoTexto.h" />
     <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h" />
     <ClInclude Include="Bandeira.h" />

@@ -75,6 +75,9 @@
     <ClCompile Include="Fatura.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
+    <ClCompile Include="ArquivoCliente.cpp">
+      <Filter>Source Files\Arquivo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bandeira.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="Fatura.h">
       <Filter>Header Files\Modelo</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoCliente.h">
+      <Filter>Header Files\Arquivo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

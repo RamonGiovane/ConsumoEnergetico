@@ -4,9 +4,9 @@ Cliente::Cliente()
 {
 }
 
-Cliente::Cliente(string nome, string rua, string bairro, string CEP, string cidade)
+Cliente::Cliente(string numero, string nome, string rua, string bairro, string CEP, string cidade)
 {
-	setNome(nome).setBairro(bairro).setRua(rua).setCidade(cidade).setCEP(CEP);
+	setNumero(numero).setNome(nome).setBairro(bairro).setRua(rua).setCidade(cidade).setCEP(CEP);
 }
 
 
