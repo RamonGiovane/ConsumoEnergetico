@@ -133,10 +133,10 @@ bool ArquivoCliente::excluirRegistro(unsigned int numeroRegistro) {
 	return false;
 }
 
-/* Pesquisa o nome de um cliente no arquivo. Em caso de sucesso retorna o número do registro
+/* Pesquisa o número de um cliente no arquivo. Em caso de sucesso retorna o número do registro
 * onde o cliente está armazenado, caso contrário, retorna -1.
 */
-int ArquivoCliente::pesquisarProduto(string numeroCliente) {
+int ArquivoCliente::pesquisarCliente(string numeroCliente) {
 	Cliente *cliente;
 
 	// Obtém o número de registros do arquivo.
@@ -147,7 +147,7 @@ int ArquivoCliente::pesquisarProduto(string numeroCliente) {
 		// Recupera o cliente do aquivo.
 		cliente = lerObjeto(reg);
 
-		// Verifica se é o nome procurado.
+		// Verifica se é o número procurado.
 		if (!_stricmp(numeroCliente.c_str(), cliente->getNumero().c_str()))
 			return reg;
 	}

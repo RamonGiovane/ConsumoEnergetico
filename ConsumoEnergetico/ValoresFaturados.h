@@ -8,17 +8,17 @@ class ValoresFaturados
 public:
 	ValoresFaturados();
 	
-	ValoresFaturados(int consumo, double valorFaturado, double preco);
+	ValoresFaturados(int consumo, double valorDaFatura, double preco);
 	//ValorFaurado(string descricao, consumo, valor, bandeiraAmarela, bandeiraVermelha);
 	
 	ValoresFaturados& setConsumo(int consumo);
 	ValoresFaturados& setPreco(double preco);
-	ValoresFaturados& setValorFaturado(double valor);
+	ValoresFaturados& setValorDaFatura(double valor);
 	ValoresFaturados& setValorIluminacaoPublica(double valor);
 
 	int getConsumo();
 	double getPreco();
-	double getValorFaturado();
+	double getValorDaFatura();
 	double getValorIluminacaoPublica();
 
 	ValoresFaturados& definirAdicionais(double bandeiraAmarela, double bandeiraVermleha);

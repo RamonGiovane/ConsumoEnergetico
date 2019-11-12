@@ -3,6 +3,7 @@
 #include "EntradaESaida.h"
 #include "ArquivoTexto\ArquivoTexto.h"
 #include "ArquivoCliente.h"
+#include "ArquivoFatura.h"
 #include "Cliente.h"
 #include <sstream>
 #include <vector>
@@ -182,8 +183,14 @@ bool ConsumoEnergetico::lerContaDigital(const string & caminhoArquivo) {
 	ArquivoCliente arquivoCliente;
 	arquivoCliente.abrir("Cliente.dat");
 	arquivoCliente.escreverObjeto(f.getCliente());
+	arquivoCliente.fechar();
+
+	ArquivoFatura af;
+	af.abrir("Fatura.dat");
+	af.escreverObjeto(f);
+	af.lerObjeto(af.pesquisarFatura("7008637570"));
 	
-	Cliente* c = arquivoCliente.lerObjeto(arquivoCliente.pesquisarProduto("7008637570"));
+	Cliente* c = arquivoCliente.lerObjeto(arquivoCliente.pesquisarCliente("7008637570"));
 	cout << c << endl;
 	cout << c->getNome() << endl;
 	cout << c->toString();

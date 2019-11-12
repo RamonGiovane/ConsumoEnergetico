@@ -226,7 +226,7 @@ bool ExtratorDeDados::obterCliente(vector<string>& linhasArquivo, Cliente & clie
 	return true;
 }
 
-bool ExtratorDeDados::obterValoresFaturados(vector<string>& linhasArquivo, ValoresFaturados & fatura, int & posicaoAtual) {
+bool ExtratorDeDados::obterValoresFaturados(vector<string>& linhasArquivo, ValoresFaturados & valoresFaturados, int & posicaoAtual) {
 
 	double  bandeiraAmarela, bandeiraVermelha;
 
@@ -240,15 +240,17 @@ bool ExtratorDeDados::obterValoresFaturados(vector<string>& linhasArquivo, Valor
 
 	size_t tamanhoLinhaEnergia = linhaEnergiaEletrica.size();
 
-	fatura.setValorFaturado(ES::strToDouble(linhaEnergiaEletrica[--tamanhoLinhaEnergia]));
-	fatura.setPreco(ES::strToDouble(linhaEnergiaEletrica[--tamanhoLinhaEnergia]));
-	fatura.setConsumo(ES::strToInt((linhaEnergiaEletrica[--tamanhoLinhaEnergia])));
-	fatura.setValorIluminacaoPublica(ES::strToDouble(ES::procurarItem(linhasArquivo, "Contrib Ilum Publica Municipal", posicaoAtual, "Tarifas Aplicadas (sem impostos)")));
+	valoresFaturados.setValorDaFatura(ES::strToDouble(linhaEnergiaEletrica[--tamanhoLinhaEnergia]));
+	valoresFaturados.setPreco(ES::strToDouble(linhaEnergiaEletrica[--tamanhoLinhaEnergia]));
+	valoresFaturados.setConsumo(ES::strToInt((linhaEnergiaEletrica[--tamanhoLinhaEnergia])));
+	valoresFaturados.setValorIluminacaoPublica(ES::strToDouble(ES::procurarItem(linhasArquivo, "Contrib Ilum Publica Municipal", posicaoAtual, "Tarifas Aplicadas (sem impostos)")));
 
 	bandeiraAmarela = ES::strToDouble(ES::procurarItem(linhasArquivo, "Bandeira Amarela", posicaoAtual));
 	bandeiraVermelha = ES::strToDouble(ES::procurarItem(linhasArquivo, "Bandeira Vermelha", posicaoAtual));
 
-	fatura.definirAdicionais(bandeiraAmarela, bandeiraVermelha);
+	cout << valoresFaturados.toString();
+
+	valoresFaturados.definirAdicionais(bandeiraAmarela, bandeiraVermelha);
 
 	return true;
 }

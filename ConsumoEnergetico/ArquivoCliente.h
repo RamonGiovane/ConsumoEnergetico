@@ -51,11 +51,11 @@ public:
 	// Obtém o tamanho do registro em bytes.
 	unsigned int tamanhoRegistro();
 
-	// Escreve o objeto Produto como um registro do arquivo.
+	// Escreve o objeto Cliente como um registro do arquivo.
 	void escreverObjeto(Cliente cliente);
 
-	/* Lê os dados de um registro do arquivo e armazena-os no objeto Produto.
-	* Retorna o objeto Produto. Em caso de erro retorna NULL.
+	/* Lê os dados de um registro do arquivo e armazena-os no objeto Cliente.
+	* Retorna o objeto Cliente. Em caso de erro retorna NULL.
 	*/
 	Cliente* lerObjeto(unsigned int numeroRegistro);
 
@@ -64,10 +64,10 @@ public:
 	*/
 	bool excluirRegistro(unsigned int numeroRegistro);
 
-	/* Pesquisa o nome de um cliente no arquivo. Em caso de sucesso retorna o número do registro
+	/* Pesquisa o número de um cliente no arquivo. Em caso de sucesso retorna o número do registro
 	* onde o cliente está armazenado, caso contrário, retorna -1.
 	*/
-	int pesquisarProduto(string nome);
+	int pesquisarCliente(string numero);
 
 private:
 	ArquivoBinario *arqBin;

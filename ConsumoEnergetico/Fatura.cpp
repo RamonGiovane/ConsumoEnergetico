@@ -46,9 +46,6 @@ void Fatura::setAnoReferente(int anoReferente) {
 	this->anoReferente = anoReferente;
 }
 
-
-
-
 Cliente Fatura::getCliente() {
 	return cliente; 
 }

@@ -13,7 +13,7 @@ void ValoresFaturados::inicializarBandeiras()
 ValoresFaturados::ValoresFaturados(int consumo, double valorFaturado, double preco)
 {
 	inicializarBandeiras();
-	setConsumo(consumo).setValorFaturado(valorFaturado).setPreco(preco);
+	setConsumo(consumo).setValorDaFatura(valorFaturado).setPreco(preco);
 }
 
 ValoresFaturados & ValoresFaturados::setConsumo(int consumo)
@@ -28,7 +28,7 @@ ValoresFaturados & ValoresFaturados::setPreco(double preco)
 	return *this;
 }
 
-ValoresFaturados & ValoresFaturados::setValorFaturado(double valor)
+ValoresFaturados & ValoresFaturados::setValorDaFatura(double valor)
 {
 	this->valorFaturado = valor;
 	return *this;
@@ -69,7 +69,7 @@ double ValoresFaturados::getPreco()
 	return preco;
 }
 
-double ValoresFaturados::getValorFaturado()
+double ValoresFaturados::getValorDaFatura()
 {
 	return valorFaturado;
 }
