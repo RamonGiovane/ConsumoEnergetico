@@ -32,6 +32,8 @@ private:
 
 	int menu();
 	bool lerContaDigital(const string & caminhoArquivo);
+
+	bool salvarDados(Fatura fatura);
 	
 	void definirCaminhoPrograma(char * argumentosMain[]);
 	

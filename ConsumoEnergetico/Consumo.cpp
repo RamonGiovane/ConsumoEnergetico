@@ -3,12 +3,14 @@
 #include "Consumo.h"
 
 using namespace std;
-Consumo::Consumo()
-{
+Consumo::Consumo(){
 	mes = ano = dias = consumoKWh = 0;
 	mediaConsumoDiario = 0;
 }
 
+Consumo::Consumo(int mes, int ano, int consumoKWh, double mediaConsumoDiario, int dias) {
+	setMes(mes).setAno(ano).setConsumoKWh(consumoKWh).setMediaConsumoDiario(mediaConsumoDiario).setDias(dias);
+}
 Consumo & Consumo::setMes(int mes)
 {
 	this->mes = mes;
@@ -63,8 +65,8 @@ bool Consumo::definirMesAno(string mesAnoStr)
 
 
 string Consumo::toString() {
-	char str[500];
-	sprintf_s(str, 500, "Ano: %d Mês: %d Consumo: %d kWh Média: %1.2f kWh/dia em %d dias", ano, mes, consumoKWh, mediaConsumoDiario, dias);
+	char str[1000];
+	sprintf_s(str, 1000, "Ano: %d Mês: %d Consumo: %d kWh Média: %1.2f kWh/dia em %d dias", ano, mes, consumoKWh, mediaConsumoDiario, dias);
 	return str;
 }
 

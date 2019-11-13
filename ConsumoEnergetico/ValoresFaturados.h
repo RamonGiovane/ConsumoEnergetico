@@ -9,6 +9,9 @@ public:
 	ValoresFaturados();
 	
 	ValoresFaturados(int consumo, double valorDaFatura, double preco);
+
+	double obterValorAdicional(Bandeira::Cor bandeira);
+	
 	//ValorFaurado(string descricao, consumo, valor, bandeiraAmarela, bandeiraVermelha);
 	
 	ValoresFaturados& setConsumo(int consumo);

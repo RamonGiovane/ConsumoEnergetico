@@ -23,8 +23,8 @@
     <ClCompile Include="ArquivoBinario\ArquivoProduto.cpp" />
     <ClCompile Include="ArquivoBinario\Produto.cpp" />
     <ClCompile Include="ArquivoCliente.cpp" />
-    <ClCompile Include="ArquivoContaDigital.cpp" />
     <ClCompile Include="ArquivoFatura.cpp" />
+    <ClCompile Include="ArquivoHistorico.cpp" />
     <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp" />
     <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp" />
     <ClCompile Include="Bandeira.cpp" />
@@ -42,10 +42,12 @@
     <ClInclude Include="ArquivoBinario\Produto.h" />
     <ClInclude Include="ArquivoCliente.h" />
     <ClInclude Include="ArquivoFatura.h" />
+    <ClInclude Include="ArquivoHistorico.h" />
     <ClInclude Include="ArquivoTexto\ArquivoTexto.h" />
     <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h" />
     <ClInclude Include="Bandeira.h" />
     <ClInclude Include="Cliente.h" />
+    <ClInclude Include="Constantes.h" />
     <ClInclude Include="Consumo.h" />
     <ClInclude Include="ConsumoEnergetico.h" />
     <ClInclude Include="Fatura.h" />

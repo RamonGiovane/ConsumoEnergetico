@@ -27,6 +27,7 @@ public:
 	// Obtém o tamanho do arquivo em bytes.
 	unsigned long tamanhoArquivo();
 
+
 private:
 	string nomeArquivo;
 	fstream arquivoBinario; // Arquivo binário para escrita e leitura de dados. 

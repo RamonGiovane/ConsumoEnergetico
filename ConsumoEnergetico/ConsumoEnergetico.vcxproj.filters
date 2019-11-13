@@ -48,9 +48,6 @@
     <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp">
       <Filter>Source Files\Arquivo</Filter>
     </ClCompile>
-    <ClCompile Include="ArquivoContaDigital.cpp">
-      <Filter>Source Files\Arquivo</Filter>
-    </ClCompile>
     <ClCompile Include="ArquivoBinario\ArquivoProduto.cpp">
       <Filter>Source Files\Arquivo</Filter>
     </ClCompile>
@@ -80,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="ArquivoFatura.cpp">
       <Filter>Source Files\Arquivo</Filter>
+    </ClCompile>
+    <ClCompile Include="ArquivoHistorico.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +127,12 @@
     </ClInclude>
     <ClInclude Include="ArquivoFatura.h">
       <Filter>Header Files\Arquivo</Filter>
+    </ClInclude>
+    <ClInclude Include="Constantes.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoHistorico.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

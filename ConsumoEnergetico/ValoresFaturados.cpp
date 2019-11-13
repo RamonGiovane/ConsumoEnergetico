@@ -16,6 +16,19 @@ ValoresFaturados::ValoresFaturados(int consumo, double valorFaturado, double pre
 	setConsumo(consumo).setValorDaFatura(valorFaturado).setPreco(preco);
 }
 
+double ValoresFaturados::obterValorAdicional(Bandeira::Cor bandeira) {
+	switch (bandeira)
+	{
+	case Bandeira::Cor::AMARELA:
+		return bandeiraAmarela.getValor();
+	case Bandeira::Cor::VERMELHA:
+		return bandeiraVermelha.getValor();
+	default:
+		return -1;
+
+	}
+}
+
 ValoresFaturados & ValoresFaturados::setConsumo(int consumo)
 {
 	this->consumo = consumo;
@@ -51,7 +64,7 @@ string ValoresFaturados::toString()
 {
 	char str[500];
 	sprintf_s(str, 500,
-		"Preço da energia elétrica: R$%1.8f\nConsumo faturado este mês: %d kWh\nValor da fatura: R$% 1.2f\n"  
+		"Preço da energia elétrica: R$%1.8f\nConsumo faturado este mês: %d kWh\nValor da fatura: R$% 1.2f\n"
 		"Valor de contribuição de iluminação pública: R$ %1.2f\nAdicionais já inclusos no preço:\nBandeira Amarela: R$ %1.2f\nBandeira Vermelha: R$ %1.2f",
 		preco, consumo, valorFaturado, iluminacaoPublica, bandeiraAmarela.getValor(), bandeiraVermelha.getValor());
 	return str;

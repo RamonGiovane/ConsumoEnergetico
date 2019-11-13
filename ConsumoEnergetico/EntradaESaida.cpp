@@ -173,6 +173,19 @@ bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char deli
 
 	return true;
 }
+bool ES::strMesAnoToInt(const string & mesAno, int & mes, int & ano) {
+	vector<string> v;
+	ES::quebrarTexto(v, mesAno, '/');
+
+	if (v.size() != 2) return false;
+
+	mes = ES::identificarMesAbreviado(v[0]);
+	ano = ES::strToInt(v[1]);
+
+	if (mes == 0 || ano == 0) return false;
+
+	return true;
+}
 
 int ES::strToInt(const string & str)
 {

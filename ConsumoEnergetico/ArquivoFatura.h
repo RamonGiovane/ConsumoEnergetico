@@ -65,26 +65,38 @@ public:
 	// Obtém o tamanho do registro em bytes.
 	unsigned int tamanhoRegistro();
 
+	void objetoParaRegistro(Fatura & fatura, RegistroFatura & registro);
+
 	// Escreve o objeto Produto como um registro do arquivo.
-	void escreverObjeto(Fatura fatura);
+	bool escreverObjeto(Fatura fatura);
+	
 
 	/* Lê os dados de um registro do arquivo e armazena-os no objeto Produto.
 	* Retorna o objeto Produto. Em caso de erro retorna NULL.
 	*/
-	Fatura* lerObjeto(unsigned int numeroRegistro);
+
+	Fatura * lerObjeto(unsigned int numeroRegistro, bool consultaDetalhada = true);
+
+	Fatura registroParaFatura(Fatura & fatura, const RegistroFatura & registro, bool consultaDetalhada = true);
+
 
 	/* Exclui um registro do arquivo. O primeiro registro é o número zero (0).
 	* Retorna true se o registro foi excluído com sucesso e false caso contrário.
 	*/
 	bool excluirRegistro(unsigned int numeroRegistro);
 
-	/* Pesquisa o nome de um fatura no arquivo. Em caso de sucesso retorna o número do registro
+
+	/* Pesquisa uma fatura no arquivo. Em caso de sucesso retorna o número do registro
 	* onde o fatura está armazenado, caso contrário, retorna -1.
 	*/
-	int pesquisarFatura(string nome);
+	int pesquisarFatura(string numeroCliente, int mesReferente, int anoReferente);
+
 
 private:
 	ArquivoBinario *arqBin;
+
+	bool salvarCliente(const Cliente & cliente);
+	bool salvarHistoricoConsumo(Fatura & fatura);
 };
 
 #endif // !ARQUIVO_FATURA_H

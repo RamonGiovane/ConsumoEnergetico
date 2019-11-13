@@ -47,11 +47,9 @@ public:
 	
 	bool adicionarHistoricoConsumo(Consumo consumo);
 
-	string obterHistoricoConsumo();
-
 	bool setMesAnoReferente(const string & mesAno);
-
-	Consumo obterConsumoDoMes();
+	
+	bool obterConsumoDoHistorico(Consumo & consumo, int posicaoDoHistorico);
 
 	string toString();
 
@@ -64,6 +62,9 @@ private:
 	Cliente cliente;
 	string dataDeLeitura, dataDeLeituraAnterior, proximaDataDeLeitura;
 	ValoresFaturados valoresFaturados;
+	
+	string obterHistoricoConsumoStr();
+
 	
 
 };

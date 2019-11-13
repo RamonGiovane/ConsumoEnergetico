@@ -6,6 +6,7 @@ class Consumo
 {
 public:
 	Consumo();
+	Consumo(int mes, int ano, int consumoKWh, double mediaConsumoDiario, int dias);
 	Consumo& setMes(int mes);
 	Consumo& setAno(int ano);
 	Consumo& setConsumoKWh(int consumo);
@@ -29,7 +30,6 @@ private:
 	double mediaConsumoDiario;
 	int dias;
 
-	int identificarMes(string strMes);
 	
 };
 
