@@ -20,8 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp" />
-    <ClCompile Include="ArquivoBinario\ArquivoProduto.cpp" />
-    <ClCompile Include="ArquivoBinario\Produto.cpp" />
     <ClCompile Include="ArquivoCliente.cpp" />
     <ClCompile Include="ArquivoFatura.cpp" />
     <ClCompile Include="ArquivoHistorico.cpp" />
@@ -30,7 +28,7 @@
     <ClCompile Include="Bandeira.cpp" />
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="Consumo.cpp" />
-    <ClCompile Include="ConsumoEnergetico.cpp" />
+    <ClCompile Include="CEE.cpp" />
     <ClCompile Include="Fatura.cpp" />
     <ClCompile Include="EntradaESaida.cpp" />
     <ClCompile Include="ExtratorDeDados.cpp" />
@@ -38,8 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArquivoBinario\ArquivoBinario.h" />
-    <ClInclude Include="ArquivoBinario\ArquivoProduto.h" />
-    <ClInclude Include="ArquivoBinario\Produto.h" />
     <ClInclude Include="ArquivoCliente.h" />
     <ClInclude Include="ArquivoFatura.h" />
     <ClInclude Include="ArquivoHistorico.h" />
@@ -49,7 +45,7 @@
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="Constantes.h" />
     <ClInclude Include="Consumo.h" />
-    <ClInclude Include="ConsumoEnergetico.h" />
+    <ClInclude Include="CEE.h" />
     <ClInclude Include="Fatura.h" />
     <ClInclude Include="EntradaESaida.h" />
     <ClInclude Include="ExtratorDeDados.h" />

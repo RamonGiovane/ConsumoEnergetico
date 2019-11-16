@@ -6,7 +6,8 @@
 
 
 ExtratorDeDados::ExtratorDeDados(){ }
-
+const string LINHA_BANDEIRA_AMARELA = "Band. Amarela - ";
+const string LINHA_HISTORICO_CONSUMO = "Histórico de Consumo";
 //(Fatura & fatura, const string & caminhoPrograma, const string & caminhoArquivo)
 bool ExtratorDeDados::lerFaturaPDF(Fatura & fatura, const string & caminhoPrograma, const string& caminhoArquivo) {
 	
@@ -93,36 +94,67 @@ bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo) {
 
 bool ExtratorDeDados::obterInformacoes(vector<string>& linhasArquivo) {
 
-	if (linhasArquivo[0] != "Valores Faturados") {
-		mensagemErro = "Este arquivo pdf não corresponde a uma conta de luz CEMIG";
-		return false;
-	}
+
 
 	ValoresFaturados valores;
 	Cliente cliente;
-	int posicaoAtual = 0;
+	
+	if (linhasArquivo[0] == "Valores Faturados")
+		return lerTextoModo1(linhasArquivo, fatura, cliente, valores);
+	
+	if (linhasArquivo[0] == "Acesse o Cemig Atende")
+		return lerTextoModo2(linhasArquivo, fatura, cliente, valores);
+	//cout << "\nNot implemented!\n";
 
+	mensagemErro = "Este arquivo pdf não corresponde a uma conta de luz CEMIG";
+	return false;
+
+}
+
+bool ExtratorDeDados::lerTextoModo1(vector<string> & linhasArquivo, Fatura & fatura, Cliente & cliente, ValoresFaturados & valores) {
+	int posicaoAtual = 0;
 
 	//Extraindo todas as informações do arquivo de texto
 	if (!obterValoresFaturados(linhasArquivo, valores, posicaoAtual)) return false;
-	if (!obterHistoricoConsumo(linhasArquivo, posicaoAtual)) return false;
-	if (!obterCliente(linhasArquivo, cliente, posicaoAtual)) return false;
+	if (!obterHistoricoConsumo(linhasArquivo, posicaoAtual, "MÊS/ANO CONSUMO kWh MÉDIA kWh/Dia Dias")) return false;
+	if (!obterCliente(linhasArquivo, cliente, posicaoAtual, "Comprovante de Pagamento")) return false;
 	if (!obterNumeroClienteEInstalacao(linhasArquivo, cliente, posicaoAtual)) return false;
 	if (!obterMesVencimentoEValor(linhasArquivo, posicaoAtual)) return false;
 	if (!obterDatasDeLeitura(linhasArquivo, posicaoAtual)) return false;
-	
 
+	fatura.setCliente(cliente);
+	fatura.setValoresFaturados(valores);
+
+	cout << endl << endl << fatura.toString() << endl;
+
+	return true;
+}
+
+bool ExtratorDeDados::lerTextoModo2(vector<string> & linhasArquivo, Fatura & fatura, Cliente & cliente, ValoresFaturados & valores) {
+	int posicaoAtual = 21;
+
+	//Extraindo todas as informações do arquivo de texto
+	if (!obterCliente(linhasArquivo, cliente, posicaoAtual, "Modalidade Tarifária")) return false;
+	if (!obterNumeroClienteEInstalacao(linhasArquivo, cliente, posicaoAtual)) return false;
+	cout << endl << cliente.toString();
+	if (!obterDatasDeLeitura(linhasArquivo, posicaoAtual)) return false;
+	if (!obterHistoricoConsumo(linhasArquivo, posicaoAtual, LINHA_BANDEIRA_AMARELA)) return false;
+	if (!obterValoresFaturados(linhasArquivo, valores, posicaoAtual)) return false;
+	if (!obterMesVencimentoEValor(linhasArquivo, posicaoAtual)) return false;
 
 
 	fatura.setCliente(cliente);
 	fatura.setValoresFaturados(valores);
-	
+
+	cout << endl << endl << fatura.toString() << endl;
+
 	return true;
+
 }
 
 bool ExtratorDeDados::obterDatasDeLeitura(vector<string>& linhasArquivo, int & posicaoAtual)
 {
-	string padraoRegex = "\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}";
+	string padraoRegex = "\\s*\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}";
 	
 	string datas = ES::procurarPadrao(linhasArquivo, posicaoAtual, padraoRegex);
 	if (datas == "") { mensagemErro = "Não foi possível computar as datas de leitura"; return false; }
@@ -130,17 +162,31 @@ bool ExtratorDeDados::obterDatasDeLeitura(vector<string>& linhasArquivo, int & p
 	vector<string> linha;
 	ES::quebrarTexto(linha, datas, ' ');
 	
+	if (linha[0] == "")
+		linha.erase(linha.begin());
 
-	//Nao pega a posição 0 porque corresponde à um espaço em branco
-	formatarEAdicionarDatasDeLeitura(linha[1], linha[2], linha[3]);
+
+	if (fatura.getAnoReferente() == 0) {
+		int ano = procurarAnoReferente(linhasArquivo, posicaoAtual);
+		if (ano == 0) return false;
+		fatura.setAnoReferente(ano);
+	}
+
+	formatarEAdicionarDatasDeLeitura(linha[0], linha[1], linha[2]);
 
 
 	return true;
 }
 
+int ExtratorDeDados::procurarAnoReferente(const vector<string> & linhasArquivo, int posicaoAtual) {
+	vector<string> data;
+	ES::quebrarTexto(data, linhasArquivo[posicaoAtual + 1], '/');
+	return ES::strToInt(data[2]);
+}
 /*Insere às datas de leitura, anterior, atual e proxima, seus respectivos anos. Em seguida, as armazena no objeto fatura.*/
-bool ExtratorDeDados::formatarEAdicionarDatasDeLeitura(const string & dataLeituraAnterior, const string & dataLeituraAtual, const string & proximaDataLeitura){
-	int ano = fatura.getAnoReferente();
+bool ExtratorDeDados::formatarEAdicionarDatasDeLeitura(const string & dataLeituraAnterior, const string & dataLeituraAtual, const string & proximaDataLeitura, int ano){
+	
+	if(ano == 0) ano = fatura.getAnoReferente();
 	
 	string anoAtualStr = "/" + ES::intToStr(ano);
 	
@@ -175,7 +221,7 @@ bool ExtratorDeDados::obterNumeroClienteEInstalacao(vector<string>& linhasArquiv
 	vector<string> linha;
 
 	//Separando Numero do cliente e numero da instalacao
-	ES::quebrarTexto(linha, linhasArquivo[++posicaoAtual], ' ');
+	ES::quebrarTexto(linha, linhasArquivo[posicaoAtual], ' ');
 
 	cliente.setNumero(linha[0]);
 	fatura.setNumeroInstalacao(linha[1]);
@@ -185,26 +231,38 @@ bool ExtratorDeDados::obterNumeroClienteEInstalacao(vector<string>& linhasArquiv
 
 bool ExtratorDeDados::obterMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual)
 {
+	// \\s*\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}\\s\\d{2}[/]\\d{2}";
+	string padrao = "\\.*\\d{2}[/]\\d{2}[/]\\d{4}\\s{1}";//[R$]*\\d{1,9}[,]\\d{2}"; /*000088011333 3000755750 22 / 10 / 2019 R$193, 23*/
+	cout << endl << "match " << ES::procurarPadrao(linhasArquivo, posicaoAtual, padrao);
 
 	vector<string> linha;
-	posicaoAtual += 2;
+	//posicaoAtual += 2;
 
+
+
+	//PROCURAR O TERMO POR PADRAO REGEX
 	
 	//Separando mes, vencimento e valor a pagar
 	ES::quebrarTexto(linha, linhasArquivo[posicaoAtual], ' ');
-	fatura.setMesAnoReferente(linha[0]);
-	fatura.setDataVencimento(linha[1]);
+	if (linha[0].size() == 8) {
+		fatura.setMesAnoReferente(linha[0]);
+		fatura.setDataVencimento(linha[1]);
+	}
+	else {
+		fatura.setMesAnoReferente(linhasArquivo[posicaoAtual + 1]);
+		fatura.setDataVencimento(linha[0]);
+	}
 	fatura.setValorAPagar(ES::strToDouble(linha[2]));
 
 	return true;
 
 }
 
-bool ExtratorDeDados::obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual) {
+bool ExtratorDeDados::obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual, const string & termoReferencia) {
 
 
 	int pos = posicaoAtual;
-	posicaoAtual = ES::procurarNumeroLinha(linhasArquivo, "Comprovante de Pagamento", posicaoAtual);
+	posicaoAtual = ES::procurarNumeroLinha(linhasArquivo, termoReferencia, posicaoAtual);
 	if (posicaoAtual == -1 )
 		posicaoAtual = ES::procurarNumeroLinha(linhasArquivo, "NnW", pos);
 	if (posicaoAtual == -1) {
@@ -222,6 +280,8 @@ bool ExtratorDeDados::obterCliente(vector<string>& linhasArquivo, Cliente & clie
 	cliente.setCEP(linha[0]).setCidade(linha[1] + " " + linha[2]);
 
 	posicaoAtual += 2;
+	if (linhasArquivo[posicaoAtual] == "Nº DO CLIENTE Nº DA INSTALAÇÃO")
+		posicaoAtual++;
 
 	return true;
 }
@@ -255,13 +315,18 @@ bool ExtratorDeDados::obterValoresFaturados(vector<string>& linhasArquivo, Valor
 	return true;
 }
 
-bool ExtratorDeDados::obterHistoricoConsumo(vector<string>& linhasArquivo, int & posicaoAtual) {
-	string termo = "MÊS/ANO CONSUMO kWh MÉDIA kWh/Dia Dias";
-	posicaoAtual = ES::procurarNumeroLinha(linhasArquivo, termo, posicaoAtual);
+
+bool ExtratorDeDados::obterHistoricoConsumo(vector<string>& linhasArquivo, int & posicaoAtual, const string & termoReferencia) {
+
+	posicaoAtual = ES::procurarNumeroLinha(linhasArquivo, termoReferencia, posicaoAtual);
 	if (posicaoAtual == -1) {
 		mensagemErro = "Dados de histórico de consumo não econtrados. ";
 		return false;
 	}
+
+ 
+	string tst = linhasArquivo[posicaoAtual];
+	
 	for (int i = 0; i < 13; i++) {
 		if (!obterHistoricoConsumo(linhasArquivo[++posicaoAtual])) {
 			mensagemErro = "Dados de histórico de consumo inconsistentes. ";

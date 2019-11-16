@@ -30,6 +30,9 @@ public:
 	static double strToDouble(const string& str);
 	static string doubleToStr(const double & numero, int precision = 2);
 	static string intToStr(const int & numero);
+	
+	static void criarDiretorio(const string & nomeDir, bool ocultarSaida = true);
+	
 	static bool isNumber(const std::string& s);
 
 	static string procurarPadrao(const vector<string>& linhasTexto, int & posicaoAtual, string padraoRegex);

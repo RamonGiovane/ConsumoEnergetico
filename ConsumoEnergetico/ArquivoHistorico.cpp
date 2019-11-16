@@ -117,9 +117,8 @@ bool ArquivoHistorico::excluirRegistro(unsigned int numeroRegistro) {
 	// Verifica se o número do registro é válido.
 	if (numeroRegistro >= 0 && numeroRegistro < registros) {
 		// Cria um novo arquivo que receberá o conteúdo do arquivo atual sem o registro a ser excluído.
-		ArquivoHistorico arquivo("HistoricoConsumo.tmp");
+		ArquivoHistorico arquivo(FILE_HISTORICO_TMP);
 
-		// Copia todos os registros do arquivo Consumo.dat para Consumo.tmp.
 		for (unsigned reg = 0; reg < registros; reg++)
 			if (reg != numeroRegistro) {
 				
@@ -136,11 +135,10 @@ bool ArquivoHistorico::excluirRegistro(unsigned int numeroRegistro) {
 		fechar();
 
 		// Remove o arquivo com o registro a ser excluído e renomeia o novo arquivo.
-		_unlink("HistoricoConsumo.dat");
-		rename("HistoricoConsumo.tmp", "HistoricoConsumo.dat");
+		_unlink(FILE_HISTORICO_DAT);
+		rename(FILE_HISTORICO_TMP, FILE_HISTORICO_TMP);
 
-		// Reabre o arquivo "Consumo.dat".
-		abrir("HistoricoConsumo.dat");
+		abrir(FILE_HISTORICO_DAT);
 		return true;
 	}
 	return false;

@@ -23,6 +23,7 @@ ArquivoCliente::ArquivoCliente(string nomeArquivo) {
 
 // Exclui o objeto arquivo binário.
 ArquivoCliente::~ArquivoCliente() {
+	fechar();
 	delete arqBin;
 }
 
@@ -113,7 +114,7 @@ bool ArquivoCliente::excluirRegistro(unsigned int numeroRegistro) {
 	// Verifica se o número do registro é válido.
 	if (numeroRegistro >= 0 && numeroRegistro < registros) {
 		// Cria um novo arquivo que receberá o conteúdo do arquivo atual sem o registro a ser excluído.
-		ArquivoCliente arquivo("Cliente.tmp");
+		ArquivoCliente arquivo(FILE_CLIENTE_TMP);
 
 		// Copia todos os registros do arquivo Cliente.dat para Cliente.tmp.
 		for (unsigned reg = 0; reg < registros; reg++)
@@ -125,11 +126,11 @@ bool ArquivoCliente::excluirRegistro(unsigned int numeroRegistro) {
 		fechar();
 
 		// Remove o arquivo com o registro a ser excluído e renomeia o novo arquivo.
-		_unlink("Cliente.dat");
-		rename("Cliente.tmp", "Cliente.dat");
+		_unlink(FILE_CLIENTE_DAT);
+		rename(FILE_CLIENTE_TMP, FILE_CLIENTE_DAT);
 
 		// Reabre o arquivo "Cliente.dat".
-		abrir("Cliente.dat");
+		abrir(FILE_CLIENTE_DAT);
 		return true;
 	}
 	return false;

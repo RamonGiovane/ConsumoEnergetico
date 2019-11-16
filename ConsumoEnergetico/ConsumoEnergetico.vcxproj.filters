@@ -33,9 +33,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ArquivoBinario\Produto.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Bandeira.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
@@ -46,9 +43,6 @@
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
     <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp">
-      <Filter>Source Files\Arquivo</Filter>
-    </ClCompile>
-    <ClCompile Include="ArquivoBinario\ArquivoProduto.cpp">
       <Filter>Source Files\Arquivo</Filter>
     </ClCompile>
     <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp">
@@ -63,9 +57,6 @@
     <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="ConsumoEnergetico.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ExtratorDeDados.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
@@ -79,14 +70,14 @@
       <Filter>Source Files\Arquivo</Filter>
     </ClCompile>
     <ClCompile Include="ArquivoHistorico.cpp">
+      <Filter>Source Files\Arquivo</Filter>
+    </ClCompile>
+    <ClCompile Include="CEE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bandeira.h">
-      <Filter>Header Files\Modelo</Filter>
-    </ClInclude>
-    <ClInclude Include="ArquivoBinario\Produto.h">
       <Filter>Header Files\Modelo</Filter>
     </ClInclude>
     <ClInclude Include="Cliente.h">
@@ -104,9 +95,6 @@
     <ClInclude Include="ArquivoBinario\ArquivoBinario.h">
       <Filter>Header Files\Arquivo</Filter>
     </ClInclude>
-    <ClInclude Include="ArquivoBinario\ArquivoProduto.h">
-      <Filter>Header Files\Arquivo</Filter>
-    </ClInclude>
     <ClInclude Include="EntradaESaida.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
@@ -115,9 +103,6 @@
     </ClInclude>
     <ClInclude Include="ExtratorDeDados.h">
       <Filter>Header Files\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="ConsumoEnergetico.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Fatura.h">
       <Filter>Header Files\Modelo</Filter>
@@ -132,6 +117,9 @@
       <Filter>Header Files\Util</Filter>
     </ClInclude>
     <ClInclude Include="ArquivoHistorico.h">
+      <Filter>Header Files\Arquivo</Filter>
+    </ClInclude>
+    <ClInclude Include="CEE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

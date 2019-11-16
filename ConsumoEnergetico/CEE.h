@@ -6,19 +6,16 @@
 #include "Fatura.h"
 using namespace std;
 
-class ConsumoEnergetico
+class CEE
 {
 
 public:
-	ConsumoEnergetico();
+	CEE();
 
-	int iniciar();
 	int interpretarComando(int numeroArgumentos, char * argumentos[]);
 	int interpretarComando(char * argumentos[]);
 	void exibirInformacao();
 	int iniciar(int argc, char * argv[]);
-
-	//int importarFaturas(vector<string> listaArquivos);
 
 	int importarFaturas(vector<string> listaArquivos, const string & caminhoDiretorio);
 
@@ -28,18 +25,22 @@ public:
 
 	int interpretarUmParametro(char * paramtero);
 
+	bool pesquisaConsumo(char * numeroCliente, char * mesAno = NULL);
+
+	void exibirPesquisaConsumo(Fatura * fatura);
+
+	void exibirCliente(Cliente * cliente);
+
+	Cliente* pesquisarCliente(const string & numeroCliente);
+
 private:
 
-	int menu();
+
 	bool lerContaDigital(const string & caminhoArquivo);
 
 	bool salvarDados(Fatura fatura);
 	
 	void definirCaminhoPrograma(char * argumentosMain[]);
-	
-	
-
-	bool interpretarSaidaConversor(int codigoSaida);
 
 
 	Fatura conta;

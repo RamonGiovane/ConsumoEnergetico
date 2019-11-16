@@ -89,7 +89,7 @@ public:
 	/* Pesquisa uma fatura no arquivo. Em caso de sucesso retorna o número do registro
 	* onde o fatura está armazenado, caso contrário, retorna -1.
 	*/
-	int pesquisarFatura(string numeroCliente, int mesReferente, int anoReferente);
+	int pesquisarFatura(string numeroCliente, int mesReferente = 0, int anoReferente = 0, int posicao = 0);
 
 
 private:

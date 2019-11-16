@@ -7,6 +7,7 @@
 #include "ArquivoFatura.h"
 #include "ArquivoCliente.h"
 #include "ArquivoHistorico.h"
+#include "Constantes.h"
 
 // Cria um objeto para manipular o arquivo binário com acesso aleatório.
 ArquivoFatura::ArquivoFatura() {
@@ -23,6 +24,7 @@ ArquivoFatura::ArquivoFatura(string nomeArquivo) {
 
 // Exclui o objeto arquivo binário.
 ArquivoFatura::~ArquivoFatura() {
+	fechar();
 	delete arqBin;
 }
 
@@ -109,7 +111,7 @@ bool ArquivoFatura::escreverObjeto(Fatura fatura) {
 
 bool ArquivoFatura::salvarCliente(const Cliente & cliente) {
 	ArquivoCliente arquivo;
-	arquivo.abrir(ARQUIVO_CLIENTE);
+	arquivo.abrir(FILE_CLIENTE_DAT);
 	arquivo.escreverObjeto(cliente);
 	arquivo.fechar();
 	return true;
@@ -118,7 +120,7 @@ bool ArquivoFatura::salvarCliente(const Cliente & cliente) {
 bool ArquivoFatura::salvarHistoricoConsumo(Fatura & fatura) {
 	ArquivoHistorico arquivo;
 	const int TAMANHO_HISTORICO = 12;
-	arquivo.abrir(ARQUIVO_HISTORICO_CONSUMO);
+	arquivo.abrir(FILE_HISTORICO_DAT);
 	
 	for (int i = 0; i < TAMANHO_HISTORICO; i++) {
 		Consumo consumo;
@@ -168,7 +170,7 @@ Fatura ArquivoFatura::registroParaFatura(Fatura & fatura, const RegistroFatura &
 	if (consultaDetalhada) {
 
 		ArquivoCliente arquivoCliente;
-		arquivoCliente.abrir(ARQUIVO_CLIENTE);
+		arquivoCliente.abrir(FILE_CLIENTE_DAT);
 		Cliente * cliente = arquivoCliente.lerObjeto(arquivoCliente.pesquisarCliente(registro.numeroCliente));
 		arquivoCliente.fechar();
 
@@ -202,7 +204,7 @@ bool ArquivoFatura::excluirRegistro(unsigned int numeroRegistro) {
 	// Verifica se o número do registro é válido.
 	if (numeroRegistro >= 0 && numeroRegistro < registros) {
 		// Cria um novo arquivo que receberá o conteúdo do arquivo atual sem o registro a ser excluído.
-		ArquivoFatura arquivo("Fatura.tmp");
+		ArquivoFatura arquivo(FILE_FATURA_TMP);
 
 		// Copia todos os registros do arquivo Fatura.dat para Fatura.tmp.
 		for (unsigned reg = 0; reg < registros; reg++)
@@ -214,11 +216,11 @@ bool ArquivoFatura::excluirRegistro(unsigned int numeroRegistro) {
 		fechar();
 
 		// Remove o arquivo com o registro a ser excluído e renomeia o novo arquivo.
-		_unlink("Fatura.dat");
-		rename("Fatura.tmp", "Fatura.dat");
+		_unlink(FILE_FATURA_DAT);
+		rename(FILE_FATURA_TMP, FILE_FATURA_DAT);
 
 		// Reabre o arquivo "Fatura.dat".
-		abrir("Fatura.dat");
+		abrir(FILE_FATURA_DAT);
 		return true;
 	}
 	return false;
@@ -227,21 +229,31 @@ bool ArquivoFatura::excluirRegistro(unsigned int numeroRegistro) {
 /* Pesquisa o número de um cliente no arquivo. Em caso de sucesso retorna o número do registro
 * onde o fatura está armazenado, caso contrário, retorna -1.
 */
-int ArquivoFatura::pesquisarFatura(string numeroCliente, int mesReferente, int anoReferente) {
+int ArquivoFatura::pesquisarFatura(string numeroCliente, int mesReferente, int anoReferente, int posicao) {
 	Fatura *fatura;
 
 	// Obtém o número de registros do arquivo.
 	unsigned registros = numeroRegistros();
 
 	// Percorre o arquivo a procura do nome do fatura.
-	for (unsigned reg = 0; reg < registros; reg++) {
+	for (unsigned reg = posicao; reg < registros; reg++) {
 		// Recupera o fatura do aquivo.
 		fatura = lerObjeto(reg, false);
 
 		// Verifica se é o número procurado.
-		if (!_stricmp(numeroCliente.c_str(), fatura->getCliente().getNumero().c_str()) && 
-			mesReferente == fatura->getMesReferente() && 
-			anoReferente == fatura->getAnoReferente()) return reg;
+		if (!_stricmp(numeroCliente.c_str(), fatura->getCliente().getNumero().c_str())) {
+
+			if ((anoReferente == 0 && mesReferente == 0) ||
+				mesReferente == fatura->getMesReferente() &&
+				anoReferente == fatura->getAnoReferente()) {
+
+				return reg;
+			}
+		}
 	}
 	return -1;
 }
+
+
+
+

@@ -211,6 +211,11 @@ string ES::intToStr(const int & numero)
 	return stream.str();
 }
 
+/*Cria um diretório no caminho ou nome especificado. Se o diretório já existir, exibe no console uma mensagem de erro, 
+isto se for passado false para o campo opcional "ocultarSaida"*/
+void ES::criarDiretorio(const string & nomeDir, bool ocultarSaida) {
+	system(("mkdir " + nomeDir + ((ocultarSaida) ? " >nul 2>nul" : "")).c_str());
+}
 
 bool ES::isNumber(const string& s)
 {

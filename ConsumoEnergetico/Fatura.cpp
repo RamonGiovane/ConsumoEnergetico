@@ -4,8 +4,11 @@
 #include "EntradaESaida.h"
 #include <iostream>
 
-Fatura::Fatura()
-{
+Fatura::Fatura() {
+
+	valorAPagar = 0;
+	mesReferente = anoReferente = 0;
+
 }
 
 

@@ -31,9 +31,15 @@ private:
 
 	bool obterInformacoes(vector<string>& linhasArquivo);
 
+	bool lerTextoModo1(vector<string>& linhasArquivo, Fatura & fatura, Cliente & cliente, ValoresFaturados & valores);
+
+	bool lerTextoModo2(vector<string>& linhasArquivo, Fatura & fatura, Cliente & cliente, ValoresFaturados & valores);
+
 	bool obterDatasDeLeitura(vector<string>& linhasArquivo, int & posicaoAtual);
 
-	bool formatarEAdicionarDatasDeLeitura(const string & dataLeituraAnterior, const string & dataLeituraAtual, const string & proximaDataLeitura);
+	int procurarAnoReferente(const vector<string>& linhasArquivo, int posicaoAtual);
+
+	bool formatarEAdicionarDatasDeLeitura(const string & dataLeituraAnterior, const string & dataLeituraAtual, const string & proximaDataLeitura, int anoFatura = 0);
 
 	int obterMesData(const string & data);
 
@@ -41,11 +47,11 @@ private:
 
 	bool obterMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual);
 
-	bool obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
+	bool obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual, const string & termoReferencia);
 
 	bool obterValoresFaturados(vector<string>& linhasArquivo, ValoresFaturados & fatura, int & posicaoAtual);
 
-	bool obterHistoricoConsumo(vector<string>& linhasArquivo, int & posicaoAtual);
+	bool obterHistoricoConsumo(vector<string>& linhasArquivo, int & posicaoAtual, const string & termoReferencia);
 
 	bool obterHistoricoConsumo(const string & linha);
 

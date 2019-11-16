@@ -1,12 +1,11 @@
 #include "ExtratorDeDados.h"
-#include "ConsumoEnergetico.h"
+#include "CEE.h"
 #include "EntradaESaida.h"
 #include "ArquivoTexto\ArquivoTexto.h"
 #include "ArquivoCliente.h"
 #include "ArquivoFatura.h"
 #include "Cliente.h"
 #include "Constantes.h"
-
 #include "ArquivoHistorico.h"
 
 #include <string>
@@ -15,21 +14,15 @@
 
 using namespace std;
 
-ConsumoEnergetico::ConsumoEnergetico() { }
-
-int ConsumoEnergetico::iniciar() {
-
-	ES::mudarLocalizacao();
-	return menu();
-
-}
+CEE::CEE() { }
 
 
-int ConsumoEnergetico::interpretarComando(char * argumentos[]) {
+
+int CEE::interpretarComando(char * argumentos[]) {
 	return 0;
 }
 
-void ConsumoEnergetico::exibirInformacao() {
+void CEE::exibirInformacao() {
 	cout << "CEE versão 0.1: Relatório de Consumo de Energia Elétrica" << endl;
 	cout << "2019 Ramon Giovane https://github.com/RamonGiovane" << endl;
 
@@ -42,10 +35,16 @@ void ConsumoEnergetico::exibirInformacao() {
 	cout << "Mais informações em: https://github.com/RamonGiovane/ConsumoEnergetico" << endl;
 
 }
-int ConsumoEnergetico::iniciar(int numeroArgumentos, char * argumentos[]) {
-	cout << endl;
+int CEE::iniciar(int numeroArgumentos, char * argumentos[]) {
+	
 	definirCaminhoPrograma(argumentos);
+	
+	//Define a localização para o Brasil
 	ES::mudarLocalizacao();
+	
+	//Cria o diretório em que os arquivos binários ficarão
+	ES::criarDiretorio("data");
+
 	return interpretarComando(numeroArgumentos, argumentos);
 }
 
@@ -64,7 +63,7 @@ string formatarCaminhoCompleto(const string & caminhoDiretorio, const string & n
 /*Lê várias faturas PDF de um caminho especificado. É necessário a lista de arquivos do diretório e seu caminho absoluto,
 para que eles sejam encontrados.
 Exibe ao usuário os status da operações. Retorna true em caso de sucesso, false em falha.*/
-int ConsumoEnergetico::importarFaturas(vector<string> listaArquivos, const string & caminhoDiretorio) {
+int CEE::importarFaturas(vector<string> listaArquivos, const string & caminhoDiretorio) {
 	int arquivosIgnorados = 0, arquivosLidos = 0;
 	string caminhoCompleto;
 
@@ -81,7 +80,7 @@ int ConsumoEnergetico::importarFaturas(vector<string> listaArquivos, const strin
 
 }
 
-void ConsumoEnergetico::relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados) {
+void CEE::relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados) {
 	string arquivoLidoStr = " arquivo lido com sucesso.", arquivosLidosStr = " arquivos lidos com sucesso.";
 	string arquivoIgnoradoStr = " arquivo com falha ignorado.", arquivosIgnoradosStr = " arquivos com falha ignorados.";
 
@@ -90,7 +89,7 @@ void ConsumoEnergetico::relatorioImportacaoArquivos(int arquivosLidos, int arqui
 }
 
 /*Lê uma fatura em PDF do caminho especificado. Exibe ao usuário os status da operações. Retorna true em caso de sucesso, false em falha.*/
-bool ConsumoEnergetico::importarFatura(const string & caminhoArquivo, bool printMensagemFinal) {
+bool CEE::importarFatura(const string & caminhoArquivo, bool printMensagemFinal) {
 	cout << "\nLendo " + caminhoArquivo;
 	if (!lerContaDigital(caminhoArquivo)) {
 		cout << "\nIgnorando arquivo...\n\n";
@@ -103,14 +102,13 @@ bool ConsumoEnergetico::importarFatura(const string & caminhoArquivo, bool print
 	if (printMensagemFinal) relatorioImportacaoArquivos(1, 0);
 
 	return true;
-
+////
 }
 
-int ConsumoEnergetico::interpretarUmParametro(char * paramtero) {
+int CEE::interpretarUmParametro(char * paramtero) {
 	string caminhoDiretorio = paramtero;
 
 	cout << paramtero << endl;
-	//string caminhoDiretorio = "AAA.";
 
 	vector<string> arquivos;
 	if (ES::obterArquivosDiretorio(caminhoDiretorio, arquivos)) {
@@ -119,24 +117,86 @@ int ConsumoEnergetico::interpretarUmParametro(char * paramtero) {
 		return importarFaturas(arquivos, caminhoDiretorio);
 
 	}
-	if (!ES::isNumber(paramtero)) {
-		cout << "\nCliente não localizado.\n";
-		return 0;
-	}
+	return pesquisaConsumo(paramtero);
+			
 
-	//return pesquisarConsumo(paramtero);
-	return 1;
 }
 
+bool CEE::pesquisaConsumo(char * numeroCliente, char * mesAno) {
+	Cliente * cliente = pesquisarCliente(numeroCliente);
+	
+	if (cliente == NULL) { cout << "\nCliente não localizado.\n";  return false; }
 
-int ConsumoEnergetico::interpretarComando(int numeroArgumentos, char * argumentos[]) {
+	
+	ArquivoFatura arquivo;
+	Fatura * fatura;
+
+	arquivo.abrir(FILE_FATURA_DAT);
+
+	int posicao = 0;
+	int mes = 0, ano = 0;
+	bool exibido = false;
+	
+	if (mesAno != NULL) {
+		ES::strMesAnoToInt(mesAno, mes, ano);
+		if (mes == 0 || ano == 0) {
+			cout << "\nParâmetro de data inválido.\n";
+			return false;
+		}
+	}
+	
+	exibirCliente(cliente);
+	
+	while (true) {
+		posicao = arquivo.pesquisarFatura(numeroCliente, mes, ano, posicao);
+		
+		if (posicao == -1) break;
+
+		fatura = arquivo.lerObjeto(posicao);
+		exibirPesquisaConsumo(fatura);
+
+		delete fatura;
+		
+		exibido = true;
+
+		posicao++;
+	}
+
+	if (!exibido) cout << "\nNenhum dado de fatura foi encontrado para os termos pesquisados.";
+	return exibido;
+}
+
+void CEE::exibirPesquisaConsumo(Fatura * fatura) {
+	cout << endl << "Consumo da Instalação Nº " << fatura->getNumeroInstalacao() << ": " << fatura->getValoresFaturados().getConsumo() << " kWh";
+	cout << endl << "Valor a pagar: R$ " << fatura->getValorAPagar() << " | Data de Vencimento: " << fatura->getDataVencimento();
+	cout << endl << "Referente a: " << ES::mesToStr(fatura->getMesReferente()) << " de " << fatura->getAnoReferente() << endl;
+}
+
+void CEE::exibirCliente(Cliente * cliente) {
+	cout << endl << "|| Pesquisando dados do cliente:" << endl << cliente->toString() << endl;
+
+}
+
+Cliente* CEE::pesquisarCliente(const string & numeroCliente) {
+	ArquivoCliente arquivo;
+	
+	arquivo.abrir(FILE_CLIENTE_DAT);
+	
+	int registro = arquivo.pesquisarCliente(numeroCliente);
+	if (registro == -1) return NULL;
+	
+	return arquivo.lerObjeto(registro);
+
+}
+
+int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 
 	switch (numeroArgumentos) {
 	case 2:
 		return interpretarUmParametro(argumentos[1]);
 		break;
 	case 3:
-		//return pesquisaConsumo(argumentos[0], argumentos[1]);
+		return pesquisaConsumo(argumentos[1], argumentos[2]);
 		break;
 	case 4:
 		//return interpretarTresParametros(argumentos);
@@ -149,34 +209,8 @@ int ConsumoEnergetico::interpretarComando(int numeroArgumentos, char * argumento
 	return 1;
 }
 
-int ConsumoEnergetico::menu()
-{
-	//exibirInformacao();
-	string menu("\n1-Ler Conta Digital\n2-Exibir Programa\n3-Executar Programa\n4-Sair\n");
-	int opcao;
-	while (true) {
-		cout << menu.c_str();
-		opcao = ES::lerInteiro("\nEscolha: ");
-		switch (opcao) {
-		case 1:
-			lerContaDigital("C:/Users/ramon/Desktop/corr.pdf");
-			break;
-		case 2:
-			//exibirPrograma(maquinaExecucao);
-			break;
-		case 3:
-			//executarPrograma(maquinaExecucao);
-			break;
-		case 4:
-			return 1;
-		default:
-			break;
-		}
-	}
-	return 0;
-}
 
-bool ConsumoEnergetico::lerContaDigital(const string & caminhoArquivo) {
+bool CEE::lerContaDigital(const string & caminhoArquivo) {
 
 	Fatura f;
 	if (!extrator.lerFaturaPDF(f, caminhoPrograma, caminhoArquivo)) { cout << extrator.getMensagemErro(); return false; }
@@ -184,26 +218,15 @@ bool ConsumoEnergetico::lerContaDigital(const string & caminhoArquivo) {
 	//salvarDados(f);
 
 	ArquivoCliente arquivoCliente;
-	arquivoCliente.abrir("Cliente.dat");
-	//arquivoCliente.escreverObjeto(f.getCliente());
-
-	
-	//Cliente* c = arquivoCliente.lerObjeto(arquivoCliente.pesquisarCliente("7008637570"));
-
-	//if (c == NULL) cout << endl << "Null";
-
-	//cout << c << endl;
-	//cout << c->getNome() << endl;
-	//cout << c->toString();
-	//system("pause");
+	arquivoCliente.abrir(FILE_CLIENTE_DAT);
 
 	return salvarDados(f);
 
 }
-bool ConsumoEnergetico::salvarDados(Fatura fatura) {
+bool CEE::salvarDados(Fatura fatura) {
 	
 	ArquivoFatura arquivoFatura;
-	arquivoFatura.abrir(ARQUIVO_FATAURA);
+	arquivoFatura.abrir(FILE_FATURA_DAT);
 	
 	int registro = arquivoFatura.pesquisarFatura(fatura.getCliente().getNumero(),
 		fatura.getMesReferente(), fatura.getAnoReferente());
@@ -217,7 +240,7 @@ bool ConsumoEnergetico::salvarDados(Fatura fatura) {
 	arquivoFatura.fechar();
 
 	ArquivoHistorico arquivoHistorico;
-	arquivoHistorico.abrir(ARQUIVO_HISTORICO_CONSUMO);
+	arquivoHistorico.abrir(FILE_HISTORICO_DAT);
 	int reg = arquivoHistorico.pesquisarHistorico(fatura.getCliente().getNumero());
 
 	return false;
@@ -229,7 +252,7 @@ int mesAnoEmNumeroUnico(const string & mesAno) {
 	return ano * 100 + mes;
 }
 
-void ConsumoEnergetico::definirCaminhoPrograma(char * argv[]) {
+void CEE::definirCaminhoPrograma(char * argv[]) {
 
 	caminhoPrograma = argv[0];
 	int i = caminhoPrograma.size() - 1;
@@ -242,13 +265,9 @@ void ConsumoEnergetico::definirCaminhoPrograma(char * argv[]) {
 
 }
 
-
-
 int main(int argc, char * argv[]) {
 
-	ConsumoEnergetico().iniciar(argc, argv);
+	CEE().iniciar(argc, argv);
 
-	//return 1;
-	ConsumoEnergetico().iniciar();
 	return system("pause");
 }
