@@ -70,7 +70,7 @@ void ArquivoHistorico::objetoParaRegistro(Consumo & consumo, RegistroConsumo & r
 	registro.dias = consumo.getDias();
 
 	strncpy_s(registro.numeroCliente, TAMANHO_CODIGOS, numeroCliente.c_str(), numeroCliente.length());
-	strncpy_s(registro.numeroInstalacao, TAMANHO_CODIGOS, "7000536440", consumo.getNumeroInstalacao().length());
+	strncpy_s(registro.numeroInstalacao, TAMANHO_CODIGOS, consumo.getNumeroInstalacao().c_str(), consumo.getNumeroInstalacao().length());
 }
 
 void ArquivoHistorico::registroParaObjeto(Consumo & consumo, RegistroConsumo & registro){
@@ -149,10 +149,18 @@ bool ArquivoHistorico::excluirRegistro(unsigned int numeroRegistro) {
 	return false;
 }
 
+int ArquivoHistorico::pesquisarConsumoNoHistorico(const string & numeroInstalacao, int mes, int ano) {
+	return pesquisarConsumoNoHistorico("", numeroInstalacao, mes, ano);
+}
+
+
 /* Pesquisa o número de um consumo no arquivo. Em caso de sucesso retorna o número do registro
 * onde o consumo está armazenado, caso contrário, retorna -1.
 */
-int ArquivoHistorico::pesquisarHistorico(string numeroCliente, string numeroInstalacao) {
+int ArquivoHistorico::pesquisarConsumoNoHistorico(string numeroCliente, string numeroInstalacao, int mes, int ano) {
+	
+	if (numeroCliente.empty() && numeroInstalacao.empty()) return -1;
+	
 	RegistroConsumo *consumo;
 
 	// Obtém o número de registros do arquivo.
@@ -163,26 +171,30 @@ int ArquivoHistorico::pesquisarHistorico(string numeroCliente, string numeroInst
 		// Recupera o consumo do aquivo.
 		consumo = lerObjeto(reg);
 
-		// Verifica se é o número procurado.
-		if (!_stricmp(numeroCliente.c_str(), consumo->numeroCliente)) {
+		// Verifica se correpsponde aos termos pesquisados
+		if (numeroCliente.empty() ||  !_stricmp(numeroCliente.c_str(), consumo->numeroCliente)) {
 			if(numeroInstalacao.empty() || !_stricmp(numeroInstalacao.c_str(), consumo->numeroInstalacao))
-				return reg;
-			continue;
+				if((ano == 0 && mes == 0) || (consumo->ano == ano && consumo->mes == mes))
+					return reg;
+			
 		}
 	}
 	return -1;
 }
 
 
-
 int mesAnoEmNumeroUnico(int mes, int ano) {
 	
 	return ano * 100 + mes;
 }
+
+
+
+
 /* Pesquisa o número de um consumo no arquivo. Em caso de sucesso retorna o número do registro
 * onde o consumo está armazenado, caso contrário, retorna -1.
 */
-int ArquivoHistorico::pesquisarHistorico(vector<Consumo> & historicoConsumo, const string & numeroCliente, int mesInicial, int anoInicial, int mesaFinal, int anoFinal) {
+int ArquivoHistorico::obterHistoricoConsumo(vector<Consumo> & historicoConsumo, const string & numeroCliente, int mesInicial, int anoInicial, int mesaFinal, int anoFinal) {
 	RegistroConsumo *registro;
 	Consumo consumo;
 	// Obtém o número de registros do arquivo.

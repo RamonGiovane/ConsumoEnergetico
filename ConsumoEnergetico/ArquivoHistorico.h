@@ -53,8 +53,6 @@ public:
 
 	void objetoParaRegistro(Consumo & consumo, RegistroConsumo & registro, const string & numeroCliente);
 
-	//void objetoParaRegistro(Consumo & consumo, RegistroConsumo & registro, const string & numeroCliente, const string & numeroInstalacao);
-
 	void registroParaObjeto(Consumo & consumo, RegistroConsumo & registro);
 
 	void escreverObjeto(Consumo consumo, const string & numeroCliente);
@@ -70,14 +68,17 @@ public:
 	*/
 	bool excluirRegistro(unsigned int numeroRegistro);
 
-	int pesquisarHistorico(string numeroCliente, string numeroInstalacao = "");
 
-	int pesquisarHistorico(vector<Consumo> & historicoConsumo, const string & numeroCliente, int mesInicial, int anoInicial, int mesaFinal, int anoFinal);
+
+	int pesquisarConsumoNoHistorico(const string & numeroInstalacao, int mes, int ano);
+
+	int obterHistoricoConsumo(vector<Consumo> & historicoConsumo, const string & numeroCliente, int mesInicial, int anoInicial, int mesaFinal, int anoFinal);
 
 
 
 private:
 	ArquivoBinario *arqBin;
+	int pesquisarConsumoNoHistorico(string numeroCliente = "", string numeroInstalacao = "", int mes = 0, int ano = 0);
 };
 
 #endif // !ARQUIVO_HISTORICO_H

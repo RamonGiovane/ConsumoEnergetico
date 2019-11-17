@@ -29,6 +29,8 @@ public:
 	
 	int interpretarTresParametros(char * paramtero1, char * paramtero2, char * paramtero3);
 
+	bool calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * arquivoEntrada);
+
 	bool pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, char * mesAnoFinal);
 
 	bool exibirHistorico(const vector<Consumo>& historico, char * mesAnoInicial, char * mesAnoFinal);

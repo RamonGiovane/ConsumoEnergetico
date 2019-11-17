@@ -3,6 +3,7 @@
 #include "Consumo.h"
 
 using namespace std;
+
 Consumo::Consumo(){
 	mes = ano = dias = consumoKWh = 0;
 	mediaConsumoDiario = 0;
@@ -74,7 +75,6 @@ bool Consumo::definirMesAno(string mesAnoStr)
 
 string Consumo::toString() {
 	char str[1000];
-	//sprintf_s(str, 1000, "Ano: %d Mês: %d Consumo: %d kWh Média: %1.2f kWh/dia em %d dias", ano, mes, consumoKWh, mediaConsumoDiario, dias);
 	sprintf_s(str, 1000, "%1.2d/%d  %1.3d kWh  %1.2f kWh/dia em %d dias", mes, ano, consumoKWh, mediaConsumoDiario, dias);
 	return str;
 }

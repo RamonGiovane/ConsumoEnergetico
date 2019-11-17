@@ -105,8 +105,8 @@ bool CEE::importarFatura(const string & caminhoArquivo, bool printMensagemFinal)
 	////
 }
 
-int CEE::interpretarUmParametro(char * paramtero) {
-	string caminhoDiretorio = paramtero;
+int CEE::interpretarUmParametro(char * parametro) {
+	string caminhoDiretorio = parametro;
 
 	vector<string> arquivos;
 	if (ES::obterArquivosDiretorio(caminhoDiretorio, arquivos)) {
@@ -116,21 +116,24 @@ int CEE::interpretarUmParametro(char * paramtero) {
 		return importarFaturas(arquivos, caminhoDiretorio);
 
 	}
-	return pesquisaConsumo(paramtero);
+	return pesquisaConsumo(parametro);
 
 }
 
-int CEE::interpretarTresParametros(char * paramtero1, char * paramtero2, char * paramtero3)
+int CEE::interpretarTresParametros(char * parametro1, char * parametro2, char * parametro3)
 {
-	if (ES::arquivoExiste(paramtero3)) {
-		cout << "\nNot implemented!";
-		//return calcularConsumoEnergetico(parametro1, parametro2, parametro3);
-	}
-
-	return pesquisaHistoricoConsumo(paramtero1, paramtero2, paramtero3);
+	//Se o parametro tres é um arquivo...
+	if (ES::arquivoExiste(parametro3)) 
+		return calcularConsumoDeEnergia(parametro1, parametro2, parametro3);
+	
+	//Senão, tenta outra operação...
+	return pesquisaHistoricoConsumo(parametro1, parametro2, parametro3);
 
 }
+bool CEE::calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * arquivoEntrada) {
 
+
+}
 bool CEE::pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, char * mesAnoFinal) {
 	int mesInicial, anoInicial, mesFinal, anoFinal;
 	
@@ -147,7 +150,7 @@ bool CEE::pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, c
 	
 	arquivo.abrir(FILE_HISTORICO_DAT);
 	
-	arquivo.pesquisarHistorico(historico, numeroCliente, mesInicial, anoInicial, mesFinal, anoFinal);
+	arquivo.obterHistoricoConsumo(historico, numeroCliente, mesInicial, anoInicial, mesFinal, anoFinal);
 	
 	organizarHistorico(historico);
 
@@ -171,7 +174,7 @@ bool CEE::exibirHistorico(const vector<Consumo> & historico, char * mesAnoInicia
 			cout << "\n\n| Instalação Nº " << consumo.getNumeroInstalacao() << endl;
 			cout << " MÊS/ANO  CONSUMO  \tMÉDIA DIÁRIA\n";
 		}
-		cout << " " << consumo.toString() << " " << consumo.getNumeroInstalacao() << endl;
+		cout << " " << consumo.toString() << endl;
 	}
 
 	return true;
@@ -297,11 +300,11 @@ bool CEE::salvarDados(Fatura fatura) {
 
 	int registro = arquivoFatura.pesquisarFatura(fatura.getCliente().getNumero(),
 		fatura.getMesReferente(), fatura.getAnoReferente());
-
+	//verificar isso
 	if (registro != -1) {
 		cout << endl << "AVISO: Esta fatura já foi importada anteriormente.";
-		
-		//return true;
+
+		return true;
 	}
 	arquivoFatura.escreverObjeto(fatura);
 
