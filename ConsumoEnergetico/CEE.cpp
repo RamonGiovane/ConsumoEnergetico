@@ -36,12 +36,12 @@ void CEE::exibirInformacao() {
 
 }
 int CEE::iniciar(int numeroArgumentos, char * argumentos[]) {
-	
+
 	definirCaminhoPrograma(argumentos);
-	
+
 	//Define a localização para o Brasil
 	ES::mudarLocalizacao();
-	
+
 	//Cria o diretório em que os arquivos binários ficarão
 	ES::criarDiretorio("data");
 
@@ -102,32 +102,99 @@ bool CEE::importarFatura(const string & caminhoArquivo, bool printMensagemFinal)
 	if (printMensagemFinal) relatorioImportacaoArquivos(1, 0);
 
 	return true;
-////
+	////
 }
 
 int CEE::interpretarUmParametro(char * paramtero) {
 	string caminhoDiretorio = paramtero;
 
-	cout << paramtero << endl;
-
 	vector<string> arquivos;
 	if (ES::obterArquivosDiretorio(caminhoDiretorio, arquivos)) {
+		if (!verificarXPDF()) return false;
 		if (arquivos.empty())
 			return importarFatura(caminhoDiretorio, true);
 		return importarFaturas(arquivos, caminhoDiretorio);
 
 	}
 	return pesquisaConsumo(paramtero);
-			
 
 }
 
-bool CEE::pesquisaConsumo(char * numeroCliente, char * mesAno) {
-	Cliente * cliente = pesquisarCliente(numeroCliente);
-	
-	if (cliente == NULL) { cout << "\nCliente não localizado.\n";  return false; }
+int CEE::interpretarTresParametros(char * paramtero1, char * paramtero2, char * paramtero3)
+{
+	if (ES::arquivoExiste(paramtero3)) {
+		cout << "\nNot implemented!";
+		//return calcularConsumoEnergetico(parametro1, parametro2, parametro3);
+	}
 
+	return pesquisaHistoricoConsumo(paramtero1, paramtero2, paramtero3);
+
+}
+
+bool CEE::pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, char * mesAnoFinal) {
+	int mesInicial, anoInicial, mesFinal, anoFinal;
 	
+	if (!ES::strMesAnoToInt(mesAnoInicial, mesInicial, anoInicial) ||
+		!ES::strMesAnoToInt(mesAnoFinal, mesFinal, anoFinal)) {
+		cout << MSG_DATA_INVALIDA;
+		return false;
+	}
+
+	if(!pesquisarExibirCliente(numeroCliente)) return false;
+
+	ArquivoHistorico arquivo;
+	vector<Consumo> historico;
+	
+	arquivo.abrir(FILE_HISTORICO_DAT);
+	
+	arquivo.pesquisarHistorico(historico, numeroCliente, mesInicial, anoInicial, mesFinal, anoFinal);
+	
+	organizarHistorico(historico);
+
+	exibirHistorico(historico, mesAnoInicial, mesAnoFinal);
+
+	arquivo.fechar();
+
+	return true;
+}
+
+bool CEE::exibirHistorico(const vector<Consumo> & historico, char * mesAnoInicial, char * mesAnoFinal) {
+	
+	cout << "\n|| Histórico de consumo de " << mesAnoInicial << " a " << mesAnoFinal << ":";
+	
+	if (historico.empty()) cout << "\n" << MSG_DADOS_NAO_ENCONTRADOS;
+	
+	string instalacao;
+	for (Consumo consumo : historico) {
+		if (instalacao != consumo.getNumeroInstalacao()) {
+			instalacao = consumo.getNumeroInstalacao();
+			cout << "\n\n| Instalação Nº " << consumo.getNumeroInstalacao() << endl;
+			cout << " MÊS/ANO  CONSUMO  \tMÉDIA DIÁRIA\n";
+		}
+		cout << " " << consumo.toString() << " " << consumo.getNumeroInstalacao() << endl;
+	}
+
+	return true;
+}
+
+bool CEE::organizarHistorico(vector<Consumo> & historico) {
+	sort(historico.begin(), historico.end(), Consumo::comparador);
+	return true;
+}
+
+bool CEE::verificarXPDF() {
+	if (!ES::arquivoExiste(PATH_XPDF)) {
+		cout << "\nDependência não encontrada:\n\t" <<
+			"> O arquivo " << PATH_XPDF << " não pôde ser localizado.\n\nO programa não pode prosseguir.\n";
+		return false;
+	}
+	return true;
+}
+
+bool CEE::pesquisaConsumo(char * numeroCliente, char * mesAno) {
+
+	if (!pesquisarExibirCliente(numeroCliente)) return false;
+
 	ArquivoFatura arquivo;
 	Fatura * fatura;
 
@@ -136,33 +203,30 @@ bool CEE::pesquisaConsumo(char * numeroCliente, char * mesAno) {
 	int posicao = 0;
 	int mes = 0, ano = 0;
 	bool exibido = false;
-	
-	if (mesAno != NULL) {
-		ES::strMesAnoToInt(mesAno, mes, ano);
-		if (mes == 0 || ano == 0) {
-			cout << "\nParâmetro de data inválido.\n";
+
+	//Converte e verifica se a data passada e válida
+	if (mesAno != NULL) 
+		if(!ES::strMesAnoToInt(mesAno, mes, ano)) {
+			cout << MSG_DATA_INVALIDA;
 			return false;
 		}
-	}
-	
-	exibirCliente(cliente);
-	
+
 	while (true) {
 		posicao = arquivo.pesquisarFatura(numeroCliente, mes, ano, posicao);
-		
+
 		if (posicao == -1) break;
 
 		fatura = arquivo.lerObjeto(posicao);
 		exibirPesquisaConsumo(fatura);
 
 		delete fatura;
-		
+
 		exibido = true;
 
 		posicao++;
 	}
 
-	if (!exibido) cout << "\nNenhum dado de fatura foi encontrado para os termos pesquisados.";
+	if (!exibido) cout << MSG_DADOS_NAO_ENCONTRADOS;
 	return exibido;
 }
 
@@ -177,15 +241,18 @@ void CEE::exibirCliente(Cliente * cliente) {
 
 }
 
-Cliente* CEE::pesquisarCliente(const string & numeroCliente) {
+bool CEE::pesquisarExibirCliente(const string & numeroCliente) {
 	ArquivoCliente arquivo;
-	
+
 	arquivo.abrir(FILE_CLIENTE_DAT);
-	
+
 	int registro = arquivo.pesquisarCliente(numeroCliente);
-	if (registro == -1) return NULL;
-	
-	return arquivo.lerObjeto(registro);
+
+	if (registro == -1) {
+		cout << "\nCliente não localizado.\n"; return false;
+	}
+	exibirCliente(arquivo.lerObjeto(registro));
+	return true;
 
 }
 
@@ -199,7 +266,7 @@ int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 		return pesquisaConsumo(argumentos[1], argumentos[2]);
 		break;
 	case 4:
-		//return interpretarTresParametros(argumentos);
+		return interpretarTresParametros(argumentos[1], argumentos[2], argumentos[3]);
 		break;
 
 	default:
@@ -224,33 +291,30 @@ bool CEE::lerContaDigital(const string & caminhoArquivo) {
 
 }
 bool CEE::salvarDados(Fatura fatura) {
-	
+
 	ArquivoFatura arquivoFatura;
 	arquivoFatura.abrir(FILE_FATURA_DAT);
-	
+
 	int registro = arquivoFatura.pesquisarFatura(fatura.getCliente().getNumero(),
 		fatura.getMesReferente(), fatura.getAnoReferente());
-	
-	if (registro == -1) {
-		arquivoFatura.escreverObjeto(fatura);
-		return true;
+
+	if (registro != -1) {
+		cout << endl << "AVISO: Esta fatura já foi importada anteriormente.";
+		
+		//return true;
 	}
-	cout << endl << "Esta fatura já foi importada anteriormente.";
+	arquivoFatura.escreverObjeto(fatura);
 
 	arquivoFatura.fechar();
 
-	ArquivoHistorico arquivoHistorico;
-	arquivoHistorico.abrir(FILE_HISTORICO_DAT);
-	int reg = arquivoHistorico.pesquisarHistorico(fatura.getCliente().getNumero());
+	return true;
+	//ArquivoHistorico arquivoHistorico;
+	//arquivoHistorico.abrir(FILE_HISTORICO_DAT);
+	//int reg = arquivoHistorico.pesquisarHistorico(fatura.getCliente().getNumero());
 
-	return false;
+	//return false;
 }
 
-int mesAnoEmNumeroUnico(const string & mesAno) {
-	int mes, ano;
-	ES::strMesAnoToInt(mesAno, mes, ano);
-	return ano * 100 + mes;
-}
 
 void CEE::definirCaminhoPrograma(char * argv[]) {
 
@@ -268,6 +332,6 @@ void CEE::definirCaminhoPrograma(char * argv[]) {
 int main(int argc, char * argv[]) {
 
 	CEE().iniciar(argc, argv);
-
+	cout << endl; 
 	return system("pause");
 }

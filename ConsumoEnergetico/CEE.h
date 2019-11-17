@@ -13,7 +13,9 @@ public:
 	CEE();
 
 	int interpretarComando(int numeroArgumentos, char * argumentos[]);
+	
 	int interpretarComando(char * argumentos[]);
+	
 	void exibirInformacao();
 	int iniciar(int argc, char * argv[]);
 
@@ -24,6 +26,16 @@ public:
 	bool importarFatura(const string & caminhoArquivo, bool printMensagemFinal = false);
 
 	int interpretarUmParametro(char * paramtero);
+	
+	int interpretarTresParametros(char * paramtero1, char * paramtero2, char * paramtero3);
+
+	bool pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, char * mesAnoFinal);
+
+	bool exibirHistorico(const vector<Consumo>& historico, char * mesAnoInicial, char * mesAnoFinal);
+
+	bool organizarHistorico(vector<Consumo>& historico);
+	
+	bool verificarXPDF();
 
 	bool pesquisaConsumo(char * numeroCliente, char * mesAno = NULL);
 
@@ -31,7 +43,9 @@ public:
 
 	void exibirCliente(Cliente * cliente);
 
-	Cliente* pesquisarCliente(const string & numeroCliente);
+	bool pesquisarExibirCliente(const string & numeroCliente);
+
+
 
 private:
 

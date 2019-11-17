@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <regex>
 #include "ArquivoTexto\ArquivoTexto.h"
+#include "Constantes.h"
 #include <Windows.h>
 #include <stdlib.h>
 
@@ -133,7 +134,7 @@ bool ES::PDFToText(const string & caminhoArquivo, const string & caminhoPrograma
 	removerArquivo(arquivoDestino);
 
 	char comando[500];
-	sprintf_s(comando, 500, "%sxpdf\\pdftotext.exe -raw  \"%s\" \"%s\" >nul 2>nul ", caminhoPrograma.c_str(), caminhoArquivo.c_str(), arquivoDestino.c_str());
+	sprintf_s(comando, 500, "%s%s -raw  \"%s\" \"%s\" >nul 2>nul ", caminhoPrograma.c_str(), PATH_XPDF, caminhoArquivo.c_str(), arquivoDestino.c_str());
 	
 	//cout << comando << endl;
 
@@ -185,6 +186,11 @@ bool ES::strMesAnoToInt(const string & mesAno, int & mes, int & ano) {
 	if (mes == 0 || ano == 0) return false;
 
 	return true;
+}
+
+long ES::strToLong(const string & str)
+{
+	return str.empty() || !isNumber(str) ? 0 : stol(str);
 }
 
 int ES::strToInt(const string & str)

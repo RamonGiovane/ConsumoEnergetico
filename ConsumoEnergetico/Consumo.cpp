@@ -8,9 +8,11 @@ Consumo::Consumo(){
 	mediaConsumoDiario = 0;
 }
 
-Consumo::Consumo(int mes, int ano, int consumoKWh, double mediaConsumoDiario, int dias) {
-	setMes(mes).setAno(ano).setConsumoKWh(consumoKWh).setMediaConsumoDiario(mediaConsumoDiario).setDias(dias);
+
+Consumo::Consumo(int mes, int ano, int consumoKWh, double mediaConsumoDiario, int dias, string numeroInstalcao){
+	setMes(mes).setAno(ano).setConsumoKWh(consumoKWh).setMediaConsumoDiario(mediaConsumoDiario).setDias(dias).setNumeroInstalacao(numeroInstalcao);
 }
+
 Consumo & Consumo::setMes(int mes)
 {
 	this->mes = mes;
@@ -41,6 +43,12 @@ Consumo & Consumo::setDias(int dias)
 	return *this;
 }
 
+Consumo & Consumo::setNumeroInstalacao(string numeroInstalacao)
+{
+	this->numeroInstalcao = numeroInstalacao;
+	return *this;
+}
+
 bool Consumo::definirMesAno(string mesAnoStr)
 {
 	vector<string> v;
@@ -66,8 +74,24 @@ bool Consumo::definirMesAno(string mesAnoStr)
 
 string Consumo::toString() {
 	char str[1000];
-	sprintf_s(str, 1000, "Ano: %d Mês: %d Consumo: %d kWh Média: %1.2f kWh/dia em %d dias", ano, mes, consumoKWh, mediaConsumoDiario, dias);
+	//sprintf_s(str, 1000, "Ano: %d Mês: %d Consumo: %d kWh Média: %1.2f kWh/dia em %d dias", ano, mes, consumoKWh, mediaConsumoDiario, dias);
+	sprintf_s(str, 1000, "%1.2d/%d  %1.3d kWh  %1.2f kWh/dia em %d dias", mes, ano, consumoKWh, mediaConsumoDiario, dias);
 	return str;
+}
+
+bool Consumo::comparador(Consumo & consumo1, Consumo & consumo2)
+{
+	int comparacao = consumo1.getNumeroInstalacao().compare(consumo2.getNumeroInstalacao());
+	if (comparacao < 0) return false;
+	if (comparacao > 0) return true;
+
+	if (consumo1.getAno() < consumo2.getAno()) return false;
+	if (consumo1.getAno() > consumo2.getAno()) return true;
+
+	if (consumo1.getMes() < consumo2.getMes()) return false;
+	if (consumo1.getMes() > consumo2.getMes()) return true;
+
+	return false;
 }
 
 int Consumo::getMes()
@@ -93,4 +117,9 @@ double Consumo::getMediaConsumoDiario()
 int Consumo::getDias()
 {
 	return dias;
+}
+
+string Consumo::getNumeroInstalacao()
+{
+	return numeroInstalcao;
 }

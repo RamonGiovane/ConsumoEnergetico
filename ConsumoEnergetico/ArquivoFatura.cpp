@@ -125,8 +125,10 @@ bool ArquivoFatura::salvarHistoricoConsumo(Fatura & fatura) {
 	for (int i = 0; i < TAMANHO_HISTORICO; i++) {
 		Consumo consumo;
 		if (!fatura.obterConsumoDoHistorico(consumo, i)) { arquivo.fechar(); return false; }
-
-		arquivo.escreverObjeto(consumo, fatura.getCliente().getNumero(), fatura.getNumeroInstalacao());
+		
+		consumo.setNumeroInstalacao(fatura.getNumeroInstalacao());
+		
+		arquivo.escreverObjeto(consumo, fatura.getCliente().getNumero());
 	}
 
 	arquivo.fechar();

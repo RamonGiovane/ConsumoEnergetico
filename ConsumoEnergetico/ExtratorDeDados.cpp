@@ -2,12 +2,12 @@
 #include "Fatura.h"
 #include "ArquivoTexto\ArquivoTexto.h"
 #include "EntradaESaida.h"
+#include "Constantes.h"
 #include <regex>
 
 
 ExtratorDeDados::ExtratorDeDados(){ }
-const string LINHA_BANDEIRA_AMARELA = "Band. Amarela - ";
-const string LINHA_HISTORICO_CONSUMO = "Histórico de Consumo";
+
 //(Fatura & fatura, const string & caminhoPrograma, const string & caminhoArquivo)
 bool ExtratorDeDados::lerFaturaPDF(Fatura & fatura, const string & caminhoPrograma, const string& caminhoArquivo) {
 	
@@ -18,10 +18,10 @@ bool ExtratorDeDados::lerFaturaPDF(Fatura & fatura, const string & caminhoProgra
 	const char  DELIMITADOR = '\n';
 	static Fatura faturaVazia = Fatura();
 
-	ES::removerArquivo(ARQUIVO_SAIDA);
+	ES::removerArquivo(FILE_SAIDA_TMP);
 
 	cout << "\nConvertendo PDF... ";
-	if (!ES::PDFToText(caminhoArquivo, caminhoPrograma, ARQUIVO_SAIDA)) {
+	if (!ES::PDFToText(caminhoArquivo, caminhoPrograma, FILE_SAIDA_TMP)) {
 		mensagemErro = "\nFALHA: O arquivo não pôde ser lido. Provavelmente não é um arquivo PDF ou não existe.";
 		//ES::exibirAbortarOperacao();
 		fatura = faturaVazia;
@@ -48,45 +48,15 @@ bool ExtratorDeDados::lerFaturaPDF(Fatura & fatura, const string & caminhoProgra
 	return true;
 }
 
-static const string SEM_ERROS = "Sucesso.";
-static const string ERRO_ABRIR_ARQUIVO_PDF = "FALHA: O arquivo PDF informado não existe ou está corrompido.";
-static const string ERRO_ABRIR_ARQUIVO_SAIDA = "FALHA: Não foi possível gerar os dados de saída";
-static const string ERRO_DE_PERMISSAO = "FALHA: O programa não tem permissão para ler o arquivo PDF informado ou gerar os dados de saída.";
-static const string ERRO_DESCONHECIDO = "FALHA: Um erro desconhecido ocorreu ao converter o arquivo PDF.";
 
 string ExtratorDeDados::getMensagemErro() {
 	return mensagemErro;
 }
 
-bool ExtratorDeDados::interpretarSaidaConversor(int codigoSaida) {
-	switch (codigoSaida) {
-	case ES::CodigoDeSaida::SEM_ERROS:
-		cout << SEM_ERROS;
-		return true;
-
-	case ES::ERRO_ABRIR_ARQUIVO_PDF:
-		cout << ERRO_ABRIR_ARQUIVO_PDF;
-		return false;
-
-	case ES::ERRO_ABRIR_ARQUIVO_SAIDA:
-		cout << ERRO_ABRIR_ARQUIVO_SAIDA;
-		return false;
-
-	case ES::ERRO_DE_PERMISSAO:
-		cout << ERRO_DE_PERMISSAO;
-		return false;
-
-	default:
-		cout << ERRO_DESCONHECIDO;
-		return false;
-	}
-	return false;
-
-}
 
 bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo) {
 	ArquivoTexto arquivo;
-	arquivo.abrir(ARQUIVO_SAIDA, TipoDeAcesso::LEITURA);
+	arquivo.abrir(FILE_SAIDA_TMP, TipoDeAcesso::LEITURA);
 	conteudoArquivo = arquivo.ler();
 	arquivo.fechar();
 	return conteudoArquivo == "NULL" ? false : true;

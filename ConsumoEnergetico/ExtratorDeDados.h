@@ -5,8 +5,8 @@
 #include "Cliente.h"
 #include "ValoresFaturados.h"
 #include "Fatura.h"
-const string ARQUIVO_SAIDA = string("saida.txt");
-const string CAMINHO_SAIDA = string("xpdf\\saida.txt");
+
+const string CAMINHO_SAIDA = string("xpdf\\saida.tmp");
 
 class ExtratorDeDados
 {

@@ -3,6 +3,7 @@
 #include "ArquivoHistorico.h"
 #include "Constantes.h"
 #include <iostream>
+#include <vector>
 #include <io.h>
 
 // Cria um objeto para manipular o arquivo binário com acesso aleatório.
@@ -61,7 +62,7 @@ unsigned int ArquivoHistorico::tamanhoRegistro() {
 	return (sizeof(int) * 4) + sizeof(double) + (TAMANHO_CODIGOS * sizeof(char) * 2);
 }
 
-void ArquivoHistorico::objetoParaRegistro(Consumo & consumo, RegistroConsumo & registro, const string & numeroCliente, const string & numeroInstalacao) {
+void ArquivoHistorico::objetoParaRegistro(Consumo & consumo, RegistroConsumo & registro, const string & numeroCliente) {
 	registro.ano = consumo.getAno();
 	registro.mes = consumo.getMes();
 	registro.mediaConsumoDiario = consumo.getMediaConsumoDiario();
@@ -69,15 +70,19 @@ void ArquivoHistorico::objetoParaRegistro(Consumo & consumo, RegistroConsumo & r
 	registro.dias = consumo.getDias();
 
 	strncpy_s(registro.numeroCliente, TAMANHO_CODIGOS, numeroCliente.c_str(), numeroCliente.length());
-	strncpy_s(registro.numeroInstalacao, TAMANHO_CODIGOS, numeroInstalacao.c_str(), numeroInstalacao.length());
+	strncpy_s(registro.numeroInstalacao, TAMANHO_CODIGOS, "7000536440", consumo.getNumeroInstalacao().length());
+}
+
+void ArquivoHistorico::registroParaObjeto(Consumo & consumo, RegistroConsumo & registro){
+	consumo = Consumo(registro.mes, registro.ano, registro.consumoKWh, registro.mediaConsumoDiario, registro.dias, registro.numeroInstalacao);
 }
 
 // Escreve o objeto Consumo como um registro do arquivo.
-void ArquivoHistorico::escreverObjeto(Consumo consumo, const string & numeroCliente, const string & numeroInstalacao) {
+void ArquivoHistorico::escreverObjeto(Consumo consumo, const string & numeroCliente) {
 	RegistroConsumo registro;
 
 	// Copiando os atributos do objeto Consumo para a estrutura RegistroConsumo.
-	objetoParaRegistro(consumo, registro, numeroCliente, numeroInstalacao);
+	objetoParaRegistro(consumo, registro, numeroCliente);
 
 	// Posiciona no fim do arquivo.
 	arqBin->getArquivoBinario().seekp(0, ios::end);
@@ -125,9 +130,9 @@ bool ArquivoHistorico::excluirRegistro(unsigned int numeroRegistro) {
 				RegistroConsumo * registroConsumo = lerObjeto(reg);
 				
 				Consumo * consumo = new Consumo(registroConsumo->mes, registroConsumo->ano, registroConsumo->consumoKWh, 
-					registroConsumo->mediaConsumoDiario, registroConsumo->dias);
+					registroConsumo->mediaConsumoDiario, registroConsumo->dias, registroConsumo->numeroInstalacao);
 				
-				arquivo.escreverObjeto(*consumo, registroConsumo->numeroCliente, registroConsumo->numeroInstalacao);
+				arquivo.escreverObjeto(*consumo, registroConsumo->numeroCliente);
 			}
 
 		// Fecha os arquivos para que possam ser removido e renomeado.
@@ -163,6 +168,42 @@ int ArquivoHistorico::pesquisarHistorico(string numeroCliente, string numeroInst
 			if(numeroInstalacao.empty() || !_stricmp(numeroInstalacao.c_str(), consumo->numeroInstalacao))
 				return reg;
 			continue;
+		}
+	}
+	return -1;
+}
+
+
+
+int mesAnoEmNumeroUnico(int mes, int ano) {
+	
+	return ano * 100 + mes;
+}
+/* Pesquisa o número de um consumo no arquivo. Em caso de sucesso retorna o número do registro
+* onde o consumo está armazenado, caso contrário, retorna -1.
+*/
+int ArquivoHistorico::pesquisarHistorico(vector<Consumo> & historicoConsumo, const string & numeroCliente, int mesInicial, int anoInicial, int mesaFinal, int anoFinal) {
+	RegistroConsumo *registro;
+	Consumo consumo;
+	// Obtém o número de registros do arquivo.
+	unsigned registros = numeroRegistros();
+
+	int inicioPesquisa = mesAnoEmNumeroUnico(mesInicial, anoInicial);
+	int fimPesquisa = mesAnoEmNumeroUnico(mesaFinal, anoFinal);
+	int mesAno;
+
+	// Percorre o arquivo a procura do nome do consumo.
+	for (unsigned reg = 0; reg < registros; reg++) {
+		// Recupera o consumo do aquivo.
+		registro = lerObjeto(reg);
+
+		// Verifica se é o número procurado.
+		if (!_stricmp(numeroCliente.c_str(), registro->numeroCliente)) {
+			mesAno = mesAnoEmNumeroUnico(registro->mes, registro->ano);
+			if (mesAno >= inicioPesquisa && mesAno <= fimPesquisa) {
+				registroParaObjeto(consumo, *registro);
+				historicoConsumo.push_back(consumo);
+			}
 		}
 	}
 	return -1;

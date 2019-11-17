@@ -4,6 +4,7 @@
 #include "Consumo.h"
 #include "ArquivoBinario\ArquivoBinario.h"
 #include <string>
+#include <vector>
 #include "Constantes.h"
 
 using namespace std;
@@ -50,9 +51,13 @@ public:
 	// Obtém o tamanho do registro em bytes.
 	unsigned int tamanhoRegistro();
 
-	void objetoParaRegistro(Consumo & consumo, RegistroConsumo & registro, const string & numeroCliente, const string & numeroInstalacao);
+	void objetoParaRegistro(Consumo & consumo, RegistroConsumo & registro, const string & numeroCliente);
 
-	void escreverObjeto(Consumo consumo, const string & numeroCliente, const string & numeroInstalacao);
+	//void objetoParaRegistro(Consumo & consumo, RegistroConsumo & registro, const string & numeroCliente, const string & numeroInstalacao);
+
+	void registroParaObjeto(Consumo & consumo, RegistroConsumo & registro);
+
+	void escreverObjeto(Consumo consumo, const string & numeroCliente);
 
 
 	/* Lê os dados de um registro do arquivo e armazena-os no objeto Historico.
@@ -66,6 +71,9 @@ public:
 	bool excluirRegistro(unsigned int numeroRegistro);
 
 	int pesquisarHistorico(string numeroCliente, string numeroInstalacao = "");
+
+	int pesquisarHistorico(vector<Consumo> & historicoConsumo, const string & numeroCliente, int mesInicial, int anoInicial, int mesaFinal, int anoFinal);
+
 
 
 private:

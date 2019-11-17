@@ -26,6 +26,8 @@ public:
 
 	static bool strMesAnoToInt(const string & mesAno, int & mes, int & ano);
 
+	static long strToLong(const string & str);
+
 	static int strToInt(const string& str);
 	static double strToDouble(const string& str);
 	static string doubleToStr(const double & numero, int precision = 2);

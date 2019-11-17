@@ -6,13 +6,13 @@ class Consumo
 {
 public:
 	Consumo();
-	Consumo(int mes, int ano, int consumoKWh, double mediaConsumoDiario, int dias);
+	Consumo(int mes, int ano, int consumoKWh, double mediaConsumoDiario, int dias, string numeroInstalcao);
 	Consumo& setMes(int mes);
 	Consumo& setAno(int ano);
 	Consumo& setConsumoKWh(int consumo);
 	Consumo& setMediaConsumoDiario(double media);
 	Consumo& setDias(int dias);
-
+	Consumo& setNumeroInstalacao(string numeroInstalacao);
 	bool definirMesAno(string mesAnoStr);
 
 	int getMes();
@@ -20,8 +20,11 @@ public:
 	int getConsumoKWh();
 	double getMediaConsumoDiario();
 	int getDias();
+	string getNumeroInstalacao();
 
 	string toString();
+
+	static bool comparador(Consumo & consumo1, Consumo & consumo2);
 
 private:
 	int mes;
@@ -29,7 +32,7 @@ private:
 	int consumoKWh;
 	double mediaConsumoDiario;
 	int dias;
-
+	string numeroInstalcao;
 	
 };
 
