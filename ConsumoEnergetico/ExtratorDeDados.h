@@ -19,6 +19,8 @@ public:
 
 	bool lerFaturaPDF(Fatura & fatura, const string & caminhoPrograma, const string & caminhoArquivo);
 
+	bool lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada);
+
 	string getMensagemErro();
 
 private:
@@ -56,6 +58,12 @@ private:
 	bool obterHistoricoConsumo(const string & linha);
 
 	double extrairValoresFaturados(vector<string>& linhasArquivo, int & posicaoAtual);
+
+	bool lerArquivoDeConsumo(const vector<string>& linhasArquivo, Consumo & consumo, int mes, int ano);
+
+	double obterConsumoKWh(const string & linhaDoConsumo);
+
+	bool lerValidarCabecalhoArquivoDeConsumo(const string & linhaCabecalho, int & mes, int & ano);
 
 
 	Fatura fatura;

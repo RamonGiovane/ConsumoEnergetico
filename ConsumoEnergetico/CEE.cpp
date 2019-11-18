@@ -130,9 +130,16 @@ int CEE::interpretarTresParametros(char * parametro1, char * parametro2, char * 
 	return pesquisaHistoricoConsumo(parametro1, parametro2, parametro3);
 
 }
+
+
 bool CEE::calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * arquivoEntrada) {
-
-
+	ExtratorDeDados extrator;
+	Consumo consumo;
+	if (!extrator.lerArquivoDeConsumo(consumo, numeroCliente, arquivoEntrada)) {
+		cout << endl << extrator.getMensagemErro();
+		return false;
+	}
+	return true;
 }
 bool CEE::pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, char * mesAnoFinal) {
 	int mesInicial, anoInicial, mesFinal, anoFinal;

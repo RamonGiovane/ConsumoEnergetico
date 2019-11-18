@@ -324,9 +324,6 @@ bool ExtratorDeDados::obterHistoricoConsumo(const string & linha) {
 	return true;
 }
 
-
-
-
 double ExtratorDeDados::extrairValoresFaturados(vector<string>& linhasArquivo, int& posicaoAtual) {
 	posicaoAtual = 2;
 	vector<string> linhasValores;
@@ -351,4 +348,82 @@ double ExtratorDeDados::extrairValoresFaturados(vector<string>& linhasArquivo, i
 		valor = ES::strToDouble(linhasValores[linhasValores.size() - 1]);
 	}
 	return valor;
+}
+
+
+bool ExtratorDeDados::lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada) {
+	ArquivoTexto arquivo;
+	arquivo.abrir(caminhoArquivoEntrada, LEITURA);
+	int mes = 0, ano = 0;
+	string arquivoTexto = arquivo.ler();
+	vector<string> linhas;
+	int mesArquivo, anoArquivo;
+	ES::quebrarTexto(linhas, arquivoTexto, '\n');
+	if (linhas.empty()) { mensagemErro = MSG_ERRO_ARQUIVO_ENTRADA; return false; }
+
+	if (!lerValidarCabecalhoArquivoDeConsumo(linhas[0], mesArquivo, anoArquivo)) return false;
+
+	arquivo.fechar();
+
+	return lerArquivoDeConsumo(linhas, consumo, mes, ano);
+
+}
+bool ExtratorDeDados::lerArquivoDeConsumo(const vector<string> & linhasArquivo, Consumo & consumo, int mes, int ano) {
+	double valorConsumo, totalConsumo = 0;
+
+	for (size_t i = 1; i < linhasArquivo.size(); i++) {
+		valorConsumo = obterConsumoKWh(linhasArquivo[i]);
+		if (valorConsumo == -1) {
+			mensagemErro = MSG_SINTAXE_INVALIDA + ES::intToStr(i+1) + "\n\t>> " + linhasArquivo[i];
+			return false;
+		}
+		totalConsumo += valorConsumo;
+	}
+
+	cout << endl << totalConsumo;
+	return true;
+}
+
+double ExtratorDeDados::obterConsumoKWh(const string & linhaDoConsumo) {
+	vector<string> itemsLinha;
+	double horas, watts;
+	ES::quebrarTexto(itemsLinha, linhaDoConsumo, ' ');
+
+	//A linha de consumo será lida de trás para frente, por isso armazena-se a última posição
+	int posicao = itemsLinha.size() - 1;
+
+	/*Valida se a linha tem os elementos minimos necessarios e no mesmo if se o
+	* primeiro valor númerico (kWh ou h) é mesmo um número*/
+	if (posicao < 2 || !ES::isNumber(itemsLinha[posicao - 1])) return -1;
+
+	if (itemsLinha[posicao] == "kWh") {
+		return ES::strToDouble(itemsLinha[posicao - 1]);
+	}
+
+	if (itemsLinha[posicao] == "h") {
+		horas = ES::strToDouble(itemsLinha[--posicao]);
+		if (itemsLinha[--posicao] == "w" && ES::isNumber(itemsLinha[posicao - 1])) {
+			watts = ES::strToDouble(itemsLinha[posicao - 1]);
+
+			return watts / 1000 * horas;
+		}
+	}
+
+	return -1;
+
+}
+
+
+bool ExtratorDeDados::lerValidarCabecalhoArquivoDeConsumo(const string & linhaCabecalho, int & mes, int & ano) {
+	vector<string> cabecalho;
+	ES::quebrarTexto(cabecalho, linhaCabecalho, ' ');
+	string dataInvalida = "";
+	if (cabecalho[0] == "#" && cabecalho.size() == 4) {
+		if (!ES::strMesAnoToInt(cabecalho[3], mes, ano))
+			dataInvalida = string("\n") + MSG_DATA_INVALIDA;
+		else
+			return true;
+	}
+	mensagemErro = string(MSG_SINTAXE_INVALIDA) + " 1.\n\t>> " + cabecalho[0] + "\n" + dataInvalida;
+	return false;
 }

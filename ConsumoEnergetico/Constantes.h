@@ -26,5 +26,7 @@ const char LINHA_HISTORICO_CONSUMO[] = "Histórico de Consumo";
 //Mensagem a ser exibidada ao usuário
 const char MSG_DATA_INVALIDA[] ="\nParâmetro de data inválido.\n";
 const char MSG_DADOS_NAO_ENCONTRADOS[] = "\nNenhum dado de consumo foi encontrado para os termos pesquisados.\n";
+const char MSG_SINTAXE_INVALIDA[] = "FALHA: Sintaxe inválida na linha ";
+const char MSG_ERRO_ARQUIVO_ENTRADA[] = "FALHA: O arquivo de entrada não pôde ser lido pois está corrompido ou vazio.";
 
 #endif // !CONSTANTES_H
