@@ -57,11 +57,7 @@ public:
 
 	void escreverObjeto(Consumo consumo, const string & numeroCliente);
 
-
-	/* Lê os dados de um registro do arquivo e armazena-os no objeto Historico.
-	* Retorna o objeto Historico. Em caso de erro retorna NULL.
-	*/
-	RegistroConsumo* lerObjeto(unsigned int numeroRegistro);
+	Consumo * lerObjeto(unsigned int numeroRegistro);
 
 	/* Exclui um registro do arquivo. O primeiro registro é o número zero (0).
 	* Retorna true se o registro foi excluído com sucesso e false caso contrário.
@@ -79,6 +75,11 @@ public:
 private:
 	ArquivoBinario *arqBin;
 	int pesquisarConsumoNoHistorico(string numeroCliente = "", string numeroInstalacao = "", int mes = 0, int ano = 0);
+
+	/* Lê os dados de um registro do arquivo e armazena-os no objeto Historico.
+	* Retorna o objeto Historico. Em caso de erro retorna NULL.
+	*/
+	RegistroConsumo* lerRegistro(unsigned int numeroRegistro);
 };
 
 #endif // !ARQUIVO_HISTORICO_H

@@ -10,7 +10,7 @@ ArquivoTexto::~ArquivoTexto() {
 
 /* Abre um arquivo texto identificado pelo parâmetro nomeArquivo.
  * O modo de abertura do arquivo deve ser especificado por uma das constantes de TipoDeAcesso.
- * Se o arquivo não existir ele será criado. Se o modo for ESCRITA e o arquivo já existir em disco, 
+ * Se o arquivo não existir ele será criado. Se o modo for ESCRITA e o arquivo já existir em disco,
  * todo o seu conteúdo será excluído.
  * Retorna true se o arquivo foi aberto com sucesso e false caso contrário.
  */
@@ -19,19 +19,19 @@ bool ArquivoTexto::abrir(string nomeArquivo, TipoDeAcesso modo) {
 
 	// Abre o arquivo segundo o modo de abertura.
 	switch (modo) {
-		case ACRESCENTAR: outputFile.open(nomeArquivo, ios::app);
-						  if (outputFile.is_open()) return true;
-						  break;
-						   
-		case ESCRITA: outputFile.open(nomeArquivo, ios::out);
-					  if (outputFile.is_open()) return true;
-					  break;
+	case ACRESCENTAR: outputFile.open(nomeArquivo, ios::app);
+		if (outputFile.is_open()) return true;
+		break;
 
-		case LEITURA: inputFile.open(nomeArquivo, ios::in);
-			      /* O teste abaixo verifica se foi retornado um ponteiro válido, diferente de nulo, se sim o teste é true indicando que o arquivo foi aberto com sucesso. 
-				       Caso contrário, um ponteiro nulo indica que houve erro ao tentar abrir o arquivo.
-				   */
-				  if (inputFile) return true;
+	case ESCRITA: outputFile.open(nomeArquivo, ios::out);
+		if (outputFile.is_open()) return true;
+		break;
+
+	case LEITURA: inputFile.open(nomeArquivo, ios::in);
+		/* O teste abaixo verifica se foi retornado um ponteiro válido, diferente de nulo, se sim o teste é true indicando que o arquivo foi aberto com sucesso.
+			 Caso contrário, um ponteiro nulo indica que houve erro ao tentar abrir o arquivo.
+		 */
+		if (inputFile) return true;
 	}
 	return false;
 } // abrir()
@@ -53,7 +53,7 @@ bool ArquivoTexto::escrever(string conteudo) {
 } // escrever()
 
 /* Lê o conteúdo do arquivo texto.
- * Retorna um objeto string com todo o conteúdo do arquivo texto. 
+ * Retorna um objeto string com todo o conteúdo do arquivo texto.
  * Em caso de erro retorna um objeto string com o valor literal "NULL".
  */
 string ArquivoTexto::ler() {
@@ -64,15 +64,13 @@ string ArquivoTexto::ler() {
 
 	// Lê o conteúdo do arquivo até atingir o fim do arquivo.
 	do { // Lê o conteúdo de uma linha limitada a TAMANHO_LINHA caracteres ou até encontrar o caractere nova linha ('\n'). 
-		 inputFile.getline(linha, TAMANHO_LINHA);
-		 
-	     // Verifica se atingiu o fim do arquivo. Se não, armazena as linhas lidas do texto em um objeto string.
-		 if (!inputFile.eof()) {
-		    texto.append(linha); 
-			texto.append("\n");
-		 }
-	} while (!inputFile.eof());
-   return texto;
+		inputFile.getline(linha, TAMANHO_LINHA);
+
+		texto.append(linha);
+		texto.append("\n");
+
+	} while (!inputFile.eof()); //Verifica se chegou ao fim do arquivo.
+	return texto;
 } // ler()
 
 /* Lê o conteúdo de uma linha de texto do arquivo identificada por numeroLinha.
@@ -94,7 +92,7 @@ string ArquivoTexto::lerLinha(int numeroLinha) {
 		inputFile.seekg(numeroLinha);
 		inputFile.getline(linha, TAMANHO_LINHA);
 	}
-	return linha; 
+	return linha;
 } // lerLinha()
 
 // Fecha o arquivo texto.

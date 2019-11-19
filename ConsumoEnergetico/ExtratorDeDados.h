@@ -21,6 +21,8 @@ public:
 
 	bool lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada);
 
+	double calcularConsumo(const vector<string>& linhasArquivo, int mes, int ano);
+
 	string getMensagemErro();
 
 private:
@@ -59,7 +61,7 @@ private:
 
 	double extrairValoresFaturados(vector<string>& linhasArquivo, int & posicaoAtual);
 
-	bool lerArquivoDeConsumo(const vector<string>& linhasArquivo, Consumo & consumo, int mes, int ano);
+	int calcularConsumo(const vector<string>& linhasArquivo, Consumo & consumo, int mes, int ano);
 
 	double obterConsumoKWh(const string & linhaDoConsumo);
 

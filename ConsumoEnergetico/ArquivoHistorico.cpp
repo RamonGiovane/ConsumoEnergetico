@@ -91,10 +91,17 @@ void ArquivoHistorico::escreverObjeto(Consumo consumo, const string & numeroClie
 	arqBin->getArquivoBinario().write(reinterpret_cast<const char *>(&registro), tamanhoRegistro());
 }
 
+Consumo* ArquivoHistorico::lerObjeto(unsigned int numeroRegistro) {
+	Consumo* consumo = new Consumo();
+	registroParaObjeto(*consumo, *lerRegistro(numeroRegistro));
+
+	return consumo;
+}
+
 /* Lê os dados de um registro do arquivo e armazena-os no objeto Consumo.
 * Retorna o objeto Consumo. Em caso de erro retorna NULL.
 */
-RegistroConsumo* ArquivoHistorico::lerObjeto(unsigned int numeroRegistro) {
+RegistroConsumo* ArquivoHistorico::lerRegistro(unsigned int numeroRegistro) {
 	RegistroConsumo registro;
 
 	// Posiciona no registro a ser lido.
@@ -127,7 +134,7 @@ bool ArquivoHistorico::excluirRegistro(unsigned int numeroRegistro) {
 		for (unsigned reg = 0; reg < registros; reg++)
 			if (reg != numeroRegistro) {
 				
-				RegistroConsumo * registroConsumo = lerObjeto(reg);
+				RegistroConsumo * registroConsumo = lerRegistro(reg);
 				
 				Consumo * consumo = new Consumo(registroConsumo->mes, registroConsumo->ano, registroConsumo->consumoKWh, 
 					registroConsumo->mediaConsumoDiario, registroConsumo->dias, registroConsumo->numeroInstalacao);
@@ -169,7 +176,7 @@ int ArquivoHistorico::pesquisarConsumoNoHistorico(string numeroCliente, string n
 	// Percorre o arquivo a procura do nome do consumo.
 	for (unsigned reg = 0; reg < registros; reg++) {
 		// Recupera o consumo do aquivo.
-		consumo = lerObjeto(reg);
+		consumo = lerRegistro(reg);
 
 		// Verifica se correpsponde aos termos pesquisados
 		if (numeroCliente.empty() ||  !_stricmp(numeroCliente.c_str(), consumo->numeroCliente)) {
@@ -207,7 +214,7 @@ int ArquivoHistorico::obterHistoricoConsumo(vector<Consumo> & historicoConsumo, 
 	// Percorre o arquivo a procura do nome do consumo.
 	for (unsigned reg = 0; reg < registros; reg++) {
 		// Recupera o consumo do aquivo.
-		registro = lerObjeto(reg);
+		registro = lerRegistro(reg);
 
 		// Verifica se é o número procurado.
 		if (!_stricmp(numeroCliente.c_str(), registro->numeroCliente)) {

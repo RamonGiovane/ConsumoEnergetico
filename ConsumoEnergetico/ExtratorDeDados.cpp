@@ -2,6 +2,7 @@
 #include "Fatura.h"
 #include "ArquivoTexto\ArquivoTexto.h"
 #include "EntradaESaida.h"
+#include "ArquivoHistorico.h"
 #include "Constantes.h"
 #include <regex>
 
@@ -365,23 +366,42 @@ bool ExtratorDeDados::lerArquivoDeConsumo(Consumo & consumo, const string & nume
 
 	arquivo.fechar();
 
-	return lerArquivoDeConsumo(linhas, consumo, mes, ano);
+	double consumoKWh = calcularConsumo(linhas, mes, ano);
+	if (consumoKWh == -1) return false;
+
+
+	consumo.setConsumoKWh(consumoKWh);
+
+	return gerarDadosConusmo(consumo);
 
 }
-bool ExtratorDeDados::lerArquivoDeConsumo(const vector<string> & linhasArquivo, Consumo & consumo, int mes, int ano) {
+bool gerarDadosConsumo(Consumo * consumoCalculado, Consumo * consumoFatura, const string & numeroInstalacao, int mes, int ano) {
+	ArquivoHistorico arquivo;
+	arquivo.abrir(FILE_HISTORICO_DAT);
+
+	int registro = arquivo.pesquisarConsumoNoHistorico(numeroInstalacao, mes, ano);
+	if (registro == -1) return false;
+	consumoCalculado =  arquivo.lerObjeto(registro);
+	consumoFatura = new Consumo(*consumoCalculado);
+
+
+
+
+}
+
+double ExtratorDeDados::calcularConsumo(const vector<string> & linhasArquivo, int mes, int ano) {
 	double valorConsumo, totalConsumo = 0;
 
 	for (size_t i = 1; i < linhasArquivo.size(); i++) {
 		valorConsumo = obterConsumoKWh(linhasArquivo[i]);
 		if (valorConsumo == -1) {
 			mensagemErro = MSG_SINTAXE_INVALIDA + ES::intToStr(i+1) + "\n\t>> " + linhasArquivo[i];
-			return false;
+			return -1;
 		}
 		totalConsumo += valorConsumo;
 	}
 
-	cout << endl << totalConsumo;
-	return true;
+	return totalConsumo;
 }
 
 double ExtratorDeDados::obterConsumoKWh(const string & linhaDoConsumo) {
