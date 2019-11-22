@@ -18,11 +18,19 @@ public:
 
 	static bool PDFToText(const string & caminhoArquivo, const string & caminhoPrograma, const string & arquivoDestino);
 
+	static bool PDFToTextTable(const string & caminhoArquivo, const string & arquivoDestino);
+
+	static bool PDFToTextTable(const string & caminhoArquivo, const string & caminhoPrograma, const string & arquivoDestino);
+
 	static bool removerArquivo(string caminhoArquivo);
 	static bool arquivoExiste(const string & nomeArquivo);
 	static void exibirAbortarOperacao();
 
 	static bool quebrarTexto(vector<string>& fragmentos, const string & texto, char delimitador);
+
+	bool quebrarTexto(vector<string>& fragmentos, char * texto, const char * delimitador);
+
+	static bool quebrarTexto(vector<string>& fragmentos, const string & texto, const char * delimitador);
 
 	static bool strMesAnoToInt(const string & mesAno, int & mes, int & ano);
 
@@ -40,8 +48,13 @@ public:
 	static string procurarPadrao(const vector<string>& linhasTexto, int & posicaoAtual, string padraoRegex);
 	static vector<string>& procurarLinha(const vector<string>& linhasArquivo, const string & termoPesquisado,
 		int & posicaoAtual, const string & termoFinal);
+	
 	static string procurarItem(const vector<string>& linhasArquivo, const string & termoPesquisado,
 		int & posicaoAtual, const string & termoFinal = "");
+	
+	
+	static int procurarLinha(vector<string>& resultado, const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoDeInicio = 0, const char * termoFinal = NULL);
+	
 	static int procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoInicial);
 
 

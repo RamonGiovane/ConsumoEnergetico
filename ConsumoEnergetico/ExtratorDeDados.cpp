@@ -8,6 +8,70 @@
 
 
 ExtratorDeDados::ExtratorDeDados(){ }
+ExtratorDeDados::ExtratorDeDados(const string & caminhoPrograma) {
+	setCaminhoDoPrograma(caminhoPrograma);
+}
+
+void ExtratorDeDados::setCaminhoDoPrograma(const string & caminhoPrograma) {
+	this->caminhoPrograma = caminhoPrograma;
+}
+
+string ExtratorDeDados::getCaminhoDoPrograma() {
+	return caminhoPrograma;
+}
+
+const char MSG_ERRO_ARQUIVO_NAO_LIDO[] = "\nFALHA: O arquivo não pôde ser lido. Provavelmente não é um arquivo PDF ou não existe.";
+const char MSG_CONVERTENDO_PDF[] = "\nConvertendo PDF... ";
+const char  MSG_LENDO_FATURA[] = "\nLendo a fatura digital... ";
+const char MSG_ERRO_ARQUIVO_CORROMPIDO[] = "\nFALHA: O conteúdo da fatura não pôde ser lido. Possivelmente o arquivo está corrompido.";
+const char MSG_OBTENDO_INFO[] = "\nObtendo informações da fatura... ";
+
+const char BARRA_N = '\n';
+const char ESPACO = ' ';
+
+
+/*Se o caminho do programa estiver indefinido retorna false, sem definir uma mensagem de erro.*/
+bool ExtratorDeDados::importarFaturaPDF(const string& caminhoArquivo) {
+	Fatura fatura;
+	
+	if (caminhoPrograma.empty()) return false;
+
+	cout << MSG_CONVERTENDO_PDF;
+	if (!ES::PDFToTextTable(caminhoArquivo, caminhoPrograma, FILE_SAIDA_TMP)) {
+		mensagemErro = MSG_ERRO_ARQUIVO_NAO_LIDO;
+		return false;
+	}
+
+	string conteudoConta;
+	vector<string> linhasArquivo;
+
+	cout << MSG_LENDO_FATURA;
+	if (!lerArquivoTexto(conteudoConta)) {
+		mensagemErro = MSG_ERRO_ARQUIVO_CORROMPIDO;
+		return false;
+	}
+
+	cout << MSG_OBTENDO_INFO;
+	ES::quebrarTexto(linhasArquivo, conteudoConta, BARRA_N);
+	if (!importarFatura(linhasArquivo)) return false;
+	
+	return true;
+}
+void extrairString(string & resultado, const vector<string> & palavras, const string & termoFinal) {
+	for (string s : palavras) {
+		if (s.find(termoFinal) != std::string::npos) break;
+		resultado.append(s).append(" ");
+	}
+}
+bool ExtratorDeDados::importarFatura(const vector<string> & linhas) {
+	int posicao = 0;
+	vector<string> palavras;
+	posicao = ES::procurarLinha(palavras, linhas, "Nº DO CLIENTE", posicao);
+	string nome;
+	extrairString(nome, palavras, "Nº DO CLIENTE");
+	return false;
+}
+
 
 //(Fatura & fatura, const string & caminhoPrograma, const string & caminhoArquivo)
 bool ExtratorDeDados::lerFaturaPDF(Fatura & fatura, const string & caminhoPrograma, const string& caminhoArquivo) {
@@ -50,9 +114,7 @@ bool ExtratorDeDados::lerFaturaPDF(Fatura & fatura, const string & caminhoProgra
 }
 
 
-string ExtratorDeDados::getMensagemErro() {
-	return mensagemErro;
-}
+
 
 
 bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo) {
@@ -62,6 +124,7 @@ bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo) {
 	arquivo.fechar();
 	return conteudoArquivo == "NULL" ? false : true;
 }
+
 
 bool ExtratorDeDados::obterInformacoes(vector<string>& linhasArquivo) {
 
@@ -362,7 +425,7 @@ bool ExtratorDeDados::lerArquivoDeConsumo(Consumo & consumo, const string & nume
 	ES::quebrarTexto(linhas, arquivoTexto, '\n');
 	if (linhas.empty()) { mensagemErro = MSG_ERRO_ARQUIVO_ENTRADA; return false; }
 
-	if (!lerValidarCabecalhoArquivoDeConsumo(linhas[0], mesArquivo, anoArquivo)) return false;
+	if (!lerValidarCabecalhoArquivoDeConsumo(linhas[100], mesArquivo, anoArquivo)) return false;
 
 	arquivo.fechar();
 
@@ -371,18 +434,18 @@ bool ExtratorDeDados::lerArquivoDeConsumo(Consumo & consumo, const string & nume
 
 
 	consumo.setConsumoKWh(consumoKWh);
-
-	return gerarDadosConusmo(consumo);
+	return 1;
+	//return gerarDadosConusmo(consumo, dias, mes, ano);
 
 }
-bool gerarDadosConsumo(Consumo * consumoCalculado, Consumo * consumoFatura, const string & numeroInstalacao, int mes, int ano) {
+bool gerarDadosConsumo(Consumo * consumo, const string & numeroInstalacao, int dias, int mes, int ano) {
 	ArquivoHistorico arquivo;
 	arquivo.abrir(FILE_HISTORICO_DAT);
 
 	int registro = arquivo.pesquisarConsumoNoHistorico(numeroInstalacao, mes, ano);
 	if (registro == -1) return false;
-	consumoCalculado =  arquivo.lerObjeto(registro);
-	consumoFatura = new Consumo(*consumoCalculado);
+	consumo =  arquivo.lerObjeto(registro);
+	//consumo = new Consumo(*consumoCalculado);
 
 
 
@@ -446,4 +509,8 @@ bool ExtratorDeDados::lerValidarCabecalhoArquivoDeConsumo(const string & linhaCa
 	}
 	mensagemErro = string(MSG_SINTAXE_INVALIDA) + " 1.\n\t>> " + cabecalho[0] + "\n" + dataInvalida;
 	return false;
+}
+
+string ExtratorDeDados::getMensagemErro() {
+	return mensagemErro;
 }

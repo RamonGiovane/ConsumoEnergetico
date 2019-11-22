@@ -17,6 +17,16 @@ public:
 
 	ExtratorDeDados();
 
+	ExtratorDeDados(const string & caminhoPrograma);
+
+	void setCaminhoDoPrograma(const string & caminhoPrograma);
+
+	string getCaminhoDoPrograma();
+
+	bool importarFaturaPDF(const string & caminhoArquivo);
+
+	bool importarFatura(const vector<string>& linhas);
+
 	bool lerFaturaPDF(Fatura & fatura, const string & caminhoPrograma, const string & caminhoArquivo);
 
 	bool lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada);

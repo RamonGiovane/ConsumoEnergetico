@@ -289,15 +289,19 @@ int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 
 bool CEE::lerContaDigital(const string & caminhoArquivo) {
 
-	Fatura f;
-	if (!extrator.lerFaturaPDF(f, caminhoPrograma, caminhoArquivo)) { cout << extrator.getMensagemErro(); return false; }
+	//Fatura f;
+	//if (!extrator.lerFaturaPDF(f, caminhoPrograma, caminhoArquivo)) { cout << extrator.getMensagemErro(); return false; }
 
-	//salvarDados(f);
+	////salvarDados(f);
 
-	ArquivoCliente arquivoCliente;
-	arquivoCliente.abrir(FILE_CLIENTE_DAT);
+	//ArquivoCliente arquivoCliente;
+	//arquivoCliente.abrir(FILE_CLIENTE_DAT);
 
-	return salvarDados(f);
+	//return salvarDados(f);
+	ExtratorDeDados extrator(caminhoPrograma);
+	
+	if (!extrator.importarFaturaPDF(caminhoArquivo)) { cout << extrator.getMensagemErro(); return false; }
+	return true;
 
 }
 bool CEE::salvarDados(Fatura fatura) {

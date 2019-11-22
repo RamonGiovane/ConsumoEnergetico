@@ -144,6 +144,21 @@ bool ES::PDFToText(const string & caminhoArquivo, const string & caminhoPrograma
 
 }
 
+/*Converte um arquivo PDF especificado em caminhoArquivo e um arquivo texto que será criado no caminho fornecido em arquivoDestino*/
+bool ES::PDFToTextTable(const string & caminhoArquivo, const string & caminhoPrograma, const string  & arquivoDestino) {
+	removerArquivo(arquivoDestino);
+
+	char comando[500];
+	sprintf_s(comando, 500, "%s%s -table  \"%s\" \"%s\" >nul 2>nul ", caminhoPrograma.c_str(), PATH_XPDF, caminhoArquivo.c_str(), arquivoDestino.c_str());
+
+	//cout << comando << endl;
+
+	system(string(comando).c_str());
+
+	return  arquivoExiste(arquivoDestino);
+
+}
+
 /*Remove um arquivo do disco rígido. Se a operação for bem sucedida, retorna true. Se o arquivo não existir ou um erro ocorrer, 
 retorna false.*/
 bool ES::removerArquivo(string caminhoArquivo) {
@@ -167,12 +182,26 @@ bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char deli
 	if (texto.empty()) return false;
 
 	stringstream ss(texto);
-	string linha;
-	while (getline(ss, linha, delimitador)) {
-		fragmentos.push_back(linha);
+	string token;
+	while (getline(ss, token, delimitador)) {
+		fragmentos.push_back(token);
 	}
 
-	return true;
+	return fragmentos.empty() ? false : true;
+}
+
+
+bool ES::quebrarTexto(vector<string> &fragmentos, const string & texto, const char * delimitador) {
+	char * nextToken;
+	char str[1000];
+	strncpy_s(str, 1000, texto.c_str(), texto.length());
+	char * token = strtok_s(str, delimitador, &nextToken);
+	while (token != NULL) {
+		fragmentos.push_back(token);
+		token = strtok_s(NULL, delimitador, &nextToken);
+	}
+	return fragmentos.empty() ? false : true;
+
 }
 bool ES::strMesAnoToInt(const string & mesAno, int & mes, int & ano) {
 	vector<string> v;
@@ -273,6 +302,38 @@ vector<string>& ES::procurarLinha(const vector<string> & linhasArquivo, const st
 
 	return linhasValores;
 }
+
+
+/*
+MÉTODO NOVO, PRECISA DE COMENTARIO
+Procura o número de uma linha dentro de um vector com as linhas do arquivo. Pesquisa um termo a partir de uma posição (int &) que será alterada na chamada
+da função, até a que seja encontrado um termo final ou o fim do arquivo.
+Retorna esse número se alguma linha conter o termo pesquisado, -1 do contrário*/
+int ES::procurarLinha(vector<string> & resultado, const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoDeInicio, const char * termoFinal){
+
+	string descricao, item;
+	int posicao = posicaoDeInicio;
+
+	//Iterar pelas linhas até encontrar o fim
+	for (; posicaoDeInicio < (int)linhasArquivo.size() - 1; posicaoDeInicio++) {
+		
+		if (termoFinal != NULL && linhasArquivo[posicaoDeInicio] == termoFinal) break;
+
+		if (linhasArquivo[posicaoDeInicio].find(termoPesquisado) != std::string::npos) {
+
+			//quebrarTexto(resultado, linhasArquivo[posicaoDeInicio], ' ');
+			quebrarTexto(resultado, linhasArquivo[posicaoDeInicio], "  ");
+			
+
+			return posicaoDeInicio;
+
+		}
+	}
+
+	return posicao;
+}
+
+
 
 /*Procura o número de uma linha que contém total ou parcialmente o termo pesquisado . Retorna esse número ou -1 caso a linha não seja identificada*/
 int ES::procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoAtual) {
