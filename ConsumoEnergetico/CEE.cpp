@@ -23,17 +23,7 @@ int CEE::interpretarComando(char * argumentos[]) {
 }
 
 void CEE::exibirInformacao() {
-	cout << "CEE versão 0.1: Relatório de Consumo de Energia Elétrica" << endl;
-	cout << "2019 Ramon Giovane https://github.com/RamonGiovane" << endl;
-
-
-	cout << "uso:\n1. Importando uma fatura ou várias faturas da CEMIG\n\tcee <fatura> | <diretório> " << endl << endl;
-	cout << "2. Pesquisa de consumo\n\tcee <numeroCliente> [mês e ano referente]\n\tExemplos:\n\t\tcee 8005243542\n\t\tcee 8005243542 set/2019" << endl << endl;
-	cout << "3. Exibir histórico de consumo\n\tcee <numeroCliente> <mesAnoIncial> <mesAnoFinal>" << endl << endl;
-	cout << "4. Cálculo de consumo de energia\n\tcee <numeroCliente> <mesAno> <arquivo>" << endl << endl;
-
-	cout << "Mais informações em: https://github.com/RamonGiovane/ConsumoEnergetico" << endl;
-
+	cout << PROG_INFO;
 }
 int CEE::iniciar(int numeroArgumentos, char * argumentos[]) {
 
@@ -43,7 +33,7 @@ int CEE::iniciar(int numeroArgumentos, char * argumentos[]) {
 	ES::mudarLocalizacao();
 
 	//Cria o diretório em que os arquivos binários ficarão
-	ES::criarDiretorio("data");
+	ES::criarDiretorio(DIR_DATA);
 
 	return interpretarComando(numeroArgumentos, argumentos);
 }
@@ -81,28 +71,28 @@ int CEE::importarFaturas(vector<string> listaArquivos, const string & caminhoDir
 }
 
 void CEE::relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados) {
-	string arquivoLidoStr = " arquivo lido com sucesso.", arquivosLidosStr = " arquivos lidos com sucesso.";
-	string arquivoIgnoradoStr = " arquivo com falha ignorado.", arquivosIgnoradosStr = " arquivos com falha ignorados.";
+	
 
-	cout << "\n\nA leitura terminou.\n" << arquivosLidos << (arquivosLidos == 1 ? arquivoLidoStr : arquivosLidosStr) <<
-		endl << arquivosIgnorados << (arquivosIgnorados == 1 ? arquivoIgnoradoStr : arquivosIgnoradosStr) << endl << endl;
+	cout << MSG_FIM_LEITURA << arquivosLidos << (arquivosLidos == 1 ? MSG_ARQUIVO_LIDO : MSG_ARQUIVOS_LIDOS) << endl;
+	cout << arquivosIgnorados << (arquivosIgnorados == 1 ? MSG_ARQUIVO_IGNORADO : MSG_ARQUIVOS_IGNORADOS);
+	cout << endl << endl;
 }
 
 /*Lê uma fatura em PDF do caminho especificado. Exibe ao usuário os status da operações. Retorna true em caso de sucesso, false em falha.*/
 bool CEE::importarFatura(const string & caminhoArquivo, bool printMensagemFinal) {
-	cout << "\nLendo " + caminhoArquivo;
+	cout << MSG_LENDO + caminhoArquivo;
 	if (!lerContaDigital(caminhoArquivo)) {
-		cout << "\nIgnorando arquivo...\n\n";
+		cout << MSG_IGNORANDO_ARQUIVO;
 		if (printMensagemFinal) relatorioImportacaoArquivos(0, 1);
 		return false;
 	}
 
-	cout << "\nArquivo lido e importado com sucesso...\n\n";
+	cout << MSG_ARQUIVO_IMPORTADO;
 
 	if (printMensagemFinal) relatorioImportacaoArquivos(1, 0);
 
 	return true;
-	////
+
 }
 
 int CEE::interpretarUmParametro(char * parametro) {
@@ -170,16 +160,16 @@ bool CEE::pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, c
 
 bool CEE::exibirHistorico(const vector<Consumo> & historico, char * mesAnoInicial, char * mesAnoFinal) {
 	
-	cout << "\n|| Histórico de consumo de " << mesAnoInicial << " a " << mesAnoFinal << ":";
+	cout << TITLE_HISTORICO << mesAnoInicial << STR_A << mesAnoFinal << STR_D_PERIOD;
 	
-	if (historico.empty()) cout << "\n" << MSG_DADOS_NAO_ENCONTRADOS;
+	if (historico.empty()) cout << SBARRA_N << MSG_DADOS_NAO_ENCONTRADOS;
 	
 	string instalacao;
 	for (Consumo consumo : historico) {
 		if (instalacao != consumo.getNumeroInstalacao()) {
 			instalacao = consumo.getNumeroInstalacao();
-			cout << "\n\n| Instalação Nº " << consumo.getNumeroInstalacao() << endl;
-			cout << " MÊS/ANO  CONSUMO  \tMÉDIA DIÁRIA\n";
+			cout << SUBTITLE_INSTALACAO << consumo.getNumeroInstalacao() << endl;
+			cout << SUBTITLE_HISTORICO;
 		}
 		cout << " " << consumo.toString() << endl;
 	}
@@ -193,9 +183,8 @@ bool CEE::organizarHistorico(vector<Consumo> & historico) {
 }
 
 bool CEE::verificarXPDF() {
-	if (!ES::arquivoExiste(PATH_XPDF)) {
-		cout << "\nDependência não encontrada:\n\t" <<
-			"> O arquivo " << PATH_XPDF << " não pôde ser localizado.\n\nO programa não pode prosseguir.\n";
+	if (!ES::arquivoExiste(caminhoPrograma + PATH_XPDF)) {
+		cout << MSG_ERRO_MISSING_XPDF;
 		return false;
 	}
 	return true;
@@ -241,13 +230,19 @@ bool CEE::pesquisaConsumo(char * numeroCliente, char * mesAno) {
 }
 
 void CEE::exibirPesquisaConsumo(Fatura * fatura) {
-	cout << endl << "Consumo da Instalação Nº " << fatura->getNumeroInstalacao() << ": " << fatura->getValoresFaturados().getConsumo() << " kWh";
-	cout << endl << "Valor a pagar: R$ " << fatura->getValorAPagar() << " | Data de Vencimento: " << fatura->getDataVencimento();
-	cout << endl << "Referente a: " << ES::mesToStr(fatura->getMesReferente()) << " de " << fatura->getAnoReferente() << endl;
+	cout << endl <<
+	STR_CONSUMO_INSTALACAO << fatura->getNumeroInstalacao() << STR_D_PERIOD
+		<< fatura->getValoresFaturados().getConsumo() << STR_KWH;
+	
+	cout << endl << 
+	STR_VALOR_A_PAGAR << fatura->getValorAPagar() << SEPARTOR <<  STR_DATA_VENC << fatura->getDataVencimento();
+	
+	cout << endl << 
+	STR_REFERENTE << ES::mesToStr(fatura->getMesReferente()) << STR_DE << fatura->getAnoReferente() << endl;
 }
 
 void CEE::exibirCliente(Cliente * cliente) {
-	cout << endl << "|| Pesquisando dados do cliente:" << endl << cliente->toString() << endl;
+	cout << endl << TITLE_PESQUISANDO_CLIENTE << endl << cliente->toString() << endl;
 
 }
 
@@ -259,7 +254,7 @@ bool CEE::pesquisarExibirCliente(const string & numeroCliente) {
 	int registro = arquivo.pesquisarCliente(numeroCliente);
 
 	if (registro == -1) {
-		cout << "\nCliente não localizado.\n"; return false;
+		cout << MSG_CLIENTE_NAO_LOCALIZADO; return false;
 	}
 	exibirCliente(arquivo.lerObjeto(registro));
 	return true;
@@ -313,7 +308,7 @@ bool CEE::salvarDados(Fatura fatura) {
 		fatura.getMesReferente(), fatura.getAnoReferente());
 	//verificar isso
 	if (registro != -1) {
-		cout << endl << "AVISO: Esta fatura já foi importada anteriormente.";
+		cout << endl << MSG_FATURA_JA_EXISTE;
 
 		return true;
 	}

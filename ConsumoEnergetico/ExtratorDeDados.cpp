@@ -20,14 +20,6 @@ string ExtratorDeDados::getCaminhoDoPrograma() {
 	return caminhoPrograma;
 }
 
-const char MSG_ERRO_ARQUIVO_NAO_LIDO[] = "\nFALHA: O arquivo não pôde ser lido. Provavelmente não é um arquivo PDF ou não existe.";
-const char MSG_CONVERTENDO_PDF[] = "\nConvertendo PDF... ";
-const char  MSG_LENDO_FATURA[] = "\nLendo a fatura digital... ";
-const char MSG_ERRO_ARQUIVO_CORROMPIDO[] = "\nFALHA: O conteúdo da fatura não pôde ser lido. Possivelmente o arquivo está corrompido.";
-const char MSG_OBTENDO_INFO[] = "\nObtendo informações da fatura... ";
-
-const char BARRA_N = '\n';
-const char ESPACO = ' ';
 
 
 /*Se o caminho do programa estiver indefinido retorna false, sem definir uma mensagem de erro.*/
@@ -52,7 +44,7 @@ bool ExtratorDeDados::importarFaturaPDF(const string& caminhoArquivo) {
 	}
 
 	cout << MSG_OBTENDO_INFO;
-	ES::quebrarTexto(linhasArquivo, conteudoConta, BARRA_N);
+	ES::quebrarTexto(linhasArquivo, conteudoConta, BARRA_N, ";");
 	if (!importarFatura(linhasArquivo)) return false;
 	
 	return true;

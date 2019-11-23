@@ -148,8 +148,8 @@ bool ES::PDFToText(const string & caminhoArquivo, const string & caminhoPrograma
 bool ES::PDFToTextTable(const string & caminhoArquivo, const string & caminhoPrograma, const string  & arquivoDestino) {
 	removerArquivo(arquivoDestino);
 
-	char comando[500];
-	sprintf_s(comando, 500, "%s%s -table  \"%s\" \"%s\" >nul 2>nul ", caminhoPrograma.c_str(), PATH_XPDF, caminhoArquivo.c_str(), arquivoDestino.c_str());
+	char comando[1000];
+	sprintf_s(comando, 1000, "%s%s -table  \"%s\" \"%s\" >nul 2>nul ", caminhoPrograma.c_str(), PATH_XPDF, caminhoArquivo.c_str(),  arquivoDestino.c_str());
 
 	//cout << comando << endl;
 
@@ -173,36 +173,44 @@ bool ES::arquivoExiste(const string& nomeArquivo) {
 	return f.good();
 }
 
-void ES::exibirAbortarOperacao() {
-	cout << "\nA operação foi abortada." << endl << endl;
-}
-
 bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char delimitador) {
 	
 	if (texto.empty()) return false;
 
 	stringstream ss(texto);
 	string token;
+
 	while (getline(ss, token, delimitador)) {
 		fragmentos.push_back(token);
 	}
 
 	return fragmentos.empty() ? false : true;
 }
+bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char delimitador, const string& separador) {
 
+	if (texto.empty()) return false;
 
-bool ES::quebrarTexto(vector<string> &fragmentos, const string & texto, const char * delimitador) {
-	char * nextToken;
-	char str[1000];
-	strncpy_s(str, 1000, texto.c_str(), texto.length());
-	char * token = strtok_s(str, delimitador, &nextToken);
-	while (token != NULL) {
+	stringstream ss(texto);
+	string token, lastToken = "";
+	bool repetido = false;
+	while (getline(ss, token, delimitador)) {
+		if (!fragmentos.empty() && token == lastToken) {
+			repetido = true;
+			continue;
+		}
+		else if (repetido) {
+			fragmentos.erase(fragmentos.end());
+			fragmentos.push_back(separador);
+
+		}
 		fragmentos.push_back(token);
-		token = strtok_s(NULL, delimitador, &nextToken);
+		lastToken = token;
 	}
-	return fragmentos.empty() ? false : true;
 
+	return fragmentos.empty() ? false : true;
 }
+
+
 bool ES::strMesAnoToInt(const string & mesAno, int & mes, int & ano) {
 	vector<string> v;
 	ES::quebrarTexto(v, mesAno, '/');
@@ -322,7 +330,7 @@ int ES::procurarLinha(vector<string> & resultado, const vector<string>& linhasAr
 		if (linhasArquivo[posicaoDeInicio].find(termoPesquisado) != std::string::npos) {
 
 			//quebrarTexto(resultado, linhasArquivo[posicaoDeInicio], ' ');
-			quebrarTexto(resultado, linhasArquivo[posicaoDeInicio], "  ");
+			quebrarTexto(resultado, linhasArquivo[posicaoDeInicio], ' ', ";");
 			
 
 			return posicaoDeInicio;

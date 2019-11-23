@@ -28,9 +28,7 @@ public:
 
 	static bool quebrarTexto(vector<string>& fragmentos, const string & texto, char delimitador);
 
-	bool quebrarTexto(vector<string>& fragmentos, char * texto, const char * delimitador);
-
-	static bool quebrarTexto(vector<string>& fragmentos, const string & texto, const char * delimitador);
+	static bool quebrarTexto(vector<string>& fragmentos, const string & texto, char delimitador, const string & separador);
 
 	static bool strMesAnoToInt(const string & mesAno, int & mes, int & ano);
 
