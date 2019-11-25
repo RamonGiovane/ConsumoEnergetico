@@ -75,6 +75,9 @@
     <ClCompile Include="CEE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CalculadoraDeConsumo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bandeira.h">
@@ -120,6 +123,9 @@
       <Filter>Header Files\Arquivo</Filter>
     </ClInclude>
     <ClInclude Include="CEE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CalculadoraDeConsumo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

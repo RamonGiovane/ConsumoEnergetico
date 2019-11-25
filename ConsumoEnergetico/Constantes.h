@@ -24,7 +24,7 @@ const char DIR_DATA[] = "data";
 const char PATH_XPDF[] = "xpdf\\pdftotext.exe";
 
 //Trecho de linha do arquivo texto das faturas
-const char TRECHO_BANDEIRA_AMARELA[] = "Band. Amarela - ";
+const char STR_N_DO_CLIENTE[] = "Nº DO CLIENTE";
 const char LINHA_BANDEIRA_AMARELA[] = "Bandeira Amarela";
 const char LINHA_BANDEIRA_VERMELHA[] = "Bandeira Vermelha";
 const char LINHA_HISTORICO_CONSUMO[] = "Histórico de Consumo";
@@ -58,7 +58,10 @@ const char MSGE_SINTAXE_INVALIDA[] = "FALHA: Sintaxe inválida na linha ";
 const char MSGE_VALORES_FATURADOS[] = "\nFALHA: Não foi possível computar os valores faturados.";
 const char MSGE_ARQUIVO_ENTRADA[] = "FALHA: O arquivo de entrada não pôde ser lido pois está corrompido ou vazio.";
 const char MSGE_ARQUIVO_NAO_LIDO[] = "\nFALHA: O arquivo não pôde ser lido. Provavelmente não é um arquivo PDF ou não existe.";
-const char MSGE_ARQUIVO_CORROMPIDO[] = "\nFALHA: O conteúdo da fatura não pôde ser lido. Possivelmente o arquivo está corrompido.";
+const char MSGE_ARQUIVO_CORROMPIDO[] = "Provavelmente o arquivo PDF está corrompido.";
+const char MSGE_FATURA_INVALIDA[] = "\nFALHA: O arquivo fornecido não corresponde a uma fatura CEMIG.";
+const string MSGE_DADOS_INCOMPLETOS_CLIENTE = "\nFALHA: Dados do cliente inconsistentes." + string(MSGE_ARQUIVO_CORROMPIDO);
+
 const string MSGE_MISSING_XPDF = "\nDependência não encontrada:\n\t" 
 										"> O arquivo " + string(PATH_XPDF) + " não pôde ser localizado.\n\nO programa não pode prosseguir.\n";
 
@@ -80,6 +83,7 @@ const char STR_DE[] = " de ";
 const char BARRA_N = '\n';
 const string SBARRA_N = "\n";
 const string VAZIO = "";
+const string SNULL = "NULL";
 const char ESPACO = ' ';
 const char BARRA = '/';
 const char SEPARTOR[] = " | ";

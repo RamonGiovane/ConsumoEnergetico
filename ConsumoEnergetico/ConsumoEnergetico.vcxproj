@@ -26,6 +26,7 @@
     <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp" />
     <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp" />
     <ClCompile Include="Bandeira.cpp" />
+    <ClCompile Include="CalculadoraDeConsumo.cpp" />
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="Consumo.cpp" />
     <ClCompile Include="CEE.cpp" />
@@ -42,6 +43,7 @@
     <ClInclude Include="ArquivoTexto\ArquivoTexto.h" />
     <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h" />
     <ClInclude Include="Bandeira.h" />
+    <ClInclude Include="CalculadoraDeConsumo.h" />
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="Constantes.h" />
     <ClInclude Include="Consumo.h" />

@@ -11,20 +11,6 @@
 #include <stdlib.h>
 
 using namespace std;
-string ES::lerString(string mensagem) {
-	string linha;
-	cout << mensagem;
-	while (linha == ""){
-		getline(cin, linha);
-	}
-	return linha;
-}
-int ES::lerInteiro(string mensagem) {
-	int opcao;
-	cout << mensagem;
-	cin >> opcao;
-	return opcao;
-}
 
 /*Identifica e retorna o número de um mês a partir de sua abreviação. Por exemplo: JAN = 1; AGO = 8; NOV = 11*/
 int  ES::identificarMesAbreviado(string strMes) {
@@ -85,7 +71,7 @@ string  ES::mesToStr(int mes) {
 		return "Dezembro";
 	}
 
-	return "";
+	return string();
 }
 
 void ES::mudarLocalizacao() {
@@ -130,21 +116,6 @@ bool ES::obterArquivosDiretorio( const string  & caminhoDiretorio, vector<string
 
 
 /*Converte um arquivo PDF especificado em caminhoArquivo e um arquivo texto que será criado no caminho fornecido em arquivoDestino*/
-bool ES::PDFToText(const string & caminhoArquivo, const string & caminhoPrograma, const string  & arquivoDestino) {
-	removerArquivo(arquivoDestino);
-
-	char comando[500];
-	sprintf_s(comando, 500, "%s%s -raw  \"%s\" \"%s\" >nul 2>nul ", caminhoPrograma.c_str(), PATH_XPDF, caminhoArquivo.c_str(), arquivoDestino.c_str());
-	
-	//cout << comando << endl;
-
-	system(string(comando).c_str());
-
-	return  arquivoExiste(arquivoDestino);
-
-}
-
-/*Converte um arquivo PDF especificado em caminhoArquivo e um arquivo texto que será criado no caminho fornecido em arquivoDestino*/
 bool ES::PDFToTextTable(const string & caminhoArquivo, const string & caminhoPrograma, const string  & arquivoDestino) {
 	removerArquivo(arquivoDestino);
 
@@ -187,12 +158,14 @@ bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char deli
 
 	return fragmentos.empty() ? false : true;
 }
+
+/*Divide uma string (parâmetro texto) a partir de um delimitador, retornando em um vector, o~s fragmentos obtidos na quebra.*/
 bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char delimitador, const string& separador) {
 
 	if (texto.empty()) return false;
 
 	stringstream ss(texto);
-	string token, lastToken = "";
+	string token, lastToken = VAZIO;
 	bool repetido = false;
 	while (getline(ss, token, delimitador)) {
 
@@ -231,21 +204,25 @@ bool ES::strMesAnoToInt(const string & mesAno, int & mes, int & ano) {
 	return true;
 }
 
+/*Converte um string e retorna um string para long. Se o contéudo  da string não for um número válido, retorna 0*/
 long ES::strToLong(const string & str)
 {
 	return str.empty() || !isNumber(str) ? 0 : stol(str);
 }
 
+/*Converte um string e retorna um string para int. Se o contéudo  da string não for um número válido, retorna 0*/
 int ES::strToInt(const string & str)
 {
 	return str.empty() || !isNumber(str) ? 0 : stoi(str);
 }
 
+/*Converte um string e retorna um string para double. Se o contéudo  da string não for um número válido, retorna 0*/
 double ES::strToDouble(const string & str)
 {
 	return str.empty() || !isNumber(str) ? 0 : stod(str);
 }
 
+/*Converte e retorna um double para string. Uma precisão de números depois da vírgula pode ser definida*/
 string ES::doubleToStr(const double & numero, int precision)
 {
 	stringstream stream;
@@ -253,6 +230,7 @@ string ES::doubleToStr(const double & numero, int precision)
 	return stream.str();
 }
 
+/*Converte e retorna um int para string.*/
 string ES::intToStr(const int & numero)
 {
 	stringstream stream;
@@ -266,13 +244,14 @@ void ES::criarDiretorio(const string & nomeDir, bool ocultarSaida) {
 	system(("mkdir " + nomeDir + ((ocultarSaida) ? " >nul 2>nul" : "")).c_str());
 }
 
+/*Verifica se o conteúdo de uma string contém apenas dígitos ou '.' e ','.*/
 bool ES::isNumber(const string& s)
 {
 	return !s.empty() && find_if(s.begin(),
 		s.end(), [](char c) { return (!isdigit(c) && c != ',' && c != '.'); }) == s.end();
 }
 
-
+/*Procura um padrão (regex) em uma string. Se encontrado, retorna true e a string que casou com o padrão fornecido no parâmetro padraoRegex */
 bool ES::procurarPadrao(string & resultado, const string & texto, string padraoRegex) {
 	regex r(padraoRegex);
 	string s1;
@@ -294,7 +273,7 @@ string ES::procurarPadrao(const vector<string>& linhasTexto, int & posicaoAtual,
 		if (procurarPadrao(resultado, linhasTexto[posicaoAtual], padraoRegex)) 
 			return resultado;
 	}
-	return "";
+	return string();
 }
 
 /*Procura o número de uma linha dentro de um vector com as linhas do arquivo. Pesquisa um termo a partir de uma posição (int &) que será alterada na chamada
@@ -360,6 +339,23 @@ int ES::procurarLinha(vector<string> & resultado, const vector<string>& linhasAr
 	return posicao;
 }
 
+/*Copia os caracteres de uma string até que seja encontrado dois ou mais espaços em branco. Retorna os caracteres em uma nova string*/
+string ES::quebrarString(const string & str) {
+	bool charVazio = false;
+	string resultado;
+
+	for (char c : str) {
+		if (c == ESPACO) {
+			if (charVazio) break;
+			charVazio = true;
+		}
+		else
+			charVazio = false;
+
+		resultado.push_back(c);
+	}
+	return resultado;
+}
 
 
 /*Procura o número de uma linha que contém total ou parcialmente o termo pesquisado . Retorna esse número ou -1 caso a linha não seja identificada*/

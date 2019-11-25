@@ -10,21 +10,15 @@ class ES {
 #define SUCESSO_STR = "Sucesso."
 public:
 	static string lerString(string mensagem);
-	static int lerInteiro(string mensagem);
 	static int identificarMesAbreviado(string strMes);
 	static string mesToStr(int mes);
 	static void mudarLocalizacao();
 	static bool obterArquivosDiretorio(const string & caminhoDiretorio, vector<string>& listaArquivos);
 
-	static bool PDFToText(const string & caminhoArquivo, const string & caminhoPrograma, const string & arquivoDestino);
-
-	static bool PDFToTextTable(const string & caminhoArquivo, const string & arquivoDestino);
-
 	static bool PDFToTextTable(const string & caminhoArquivo, const string & caminhoPrograma, const string & arquivoDestino);
 
 	static bool removerArquivo(string caminhoArquivo);
 	static bool arquivoExiste(const string & nomeArquivo);
-	static void exibirAbortarOperacao();
 
 	static bool quebrarTexto(vector<string>& fragmentos, const string & texto, char delimitador);
 
@@ -57,14 +51,13 @@ public:
 	
 	
 	static int procurarLinha(vector<string>& resultado, const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoDeInicio = 0, const char * termoFinal = NULL);
+
+	static string quebrarString(const string & str);
 	
 	static int procurarNumeroLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoInicial);
 
 
-	enum CodigoDeSaida {
 
-		SEM_ERROS = 0, ERRO_ABRIR_ARQUIVO_PDF = 1, ERRO_ABRIR_ARQUIVO_SAIDA = 2, ERRO_DE_PERMISSAO = 3
-	};
 
 
 };

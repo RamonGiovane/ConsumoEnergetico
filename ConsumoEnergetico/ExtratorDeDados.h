@@ -25,6 +25,15 @@ public:
 
 	bool importarFaturaPDF(const string & caminhoArquivo);
 
+	string getMensagemErro();
+
+private:
+
+	inline bool ExtratorDeDados::erro(const string & mensagemErro) {
+		this->mensagemErro = mensagemErro;
+		return false;
+	}
+
 	//new
 	bool extrairCEPCidade(Cliente & cliente, const string & linha);
 
@@ -33,9 +42,7 @@ public:
 
 	//new
 	bool extrairDadosCliente(const vector<string>& linhas);
-	
-	//new
-	bool erro(const string & mensagemErro);
+
 
 	//new 
 	bool obterPrecoEConsumo(ValoresFaturados & valores, const vector<string>& linhas, int & posicao);
@@ -53,27 +60,9 @@ public:
 	//new
 	bool importarFatura(vector<string>& linhas);
 
-	bool lerFaturaPDF(Fatura & fatura, const string & caminhoPrograma, const string & caminhoArquivo);
-
 	bool lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada);
 
-	double calcularConsumo(const vector<string>& linhasArquivo, int mes, int ano);
-
-	string getMensagemErro();
-
-private:
-	
-	string caminhoPrograma;
-
-	bool interpretarSaidaConversor(int codigoSaida);
-
 	bool lerArquivoTexto(string & conteudoArquivo);
-
-	bool obterInformacoes(vector<string>& linhasArquivo);
-
-	bool lerTextoModo1(vector<string>& linhasArquivo, Fatura & fatura, Cliente & cliente, ValoresFaturados & valores);
-
-	bool lerTextoModo2(vector<string>& linhasArquivo, Fatura & fatura, Cliente & cliente, ValoresFaturados & valores);
 
 	//new
 	bool obterMesAnoReferente(const vector<string>& linhasArquivo, int & posicaoAtual);
@@ -90,19 +79,7 @@ private:
 
 	bool obterMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual);
 
-	bool obterCliente(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual, const string & termoReferencia);
-
-	bool obterValoresFaturados(vector<string>& linhasArquivo, ValoresFaturados & fatura, int & posicaoAtual);
-
-	bool obterHistoricoConsumo(vector<string>& linhasArquivo, int & posicaoAtual, const string & termoReferencia);
-
 	bool obterHistoricoConsumo(const string & linha);
-
-	double extrairValoresFaturados(vector<string>& linhasArquivo, int & posicaoAtual);
-
-	int calcularConsumo(const vector<string>& linhasArquivo, Consumo & consumo, int mes, int ano);
-
-	double obterConsumoKWh(const string & linhaDoConsumo);
 
 	bool lerValidarCabecalhoArquivoDeConsumo(const string & linhaCabecalho, int & mes, int & ano);
 
@@ -111,10 +88,9 @@ private:
 
 	string mensagemErro;
 
+	string caminhoPrograma;
+
 };
 
 
-
-
 #endif // !EXTRATOR_DE_DADOS_H
-
