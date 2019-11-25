@@ -25,7 +25,33 @@ public:
 
 	bool importarFaturaPDF(const string & caminhoArquivo);
 
-	bool importarFatura(const vector<string>& linhas);
+	//new
+	bool extrairCEPCidade(Cliente & cliente, const string & linha);
+
+	//new
+	bool extrairEndereco(Cliente & cliente, const vector<string>& linhas, int & posicao);
+
+	//new
+	bool extrairDadosCliente(string & numeroDaInstalacao, const vector<string>& linhas);
+	
+	//new
+	bool erro(const string & mensagemErro);
+
+	//new 
+	bool obterPrecoEConsumo(ValoresFaturados & valores, const vector<string>& linhas, int & posicao);
+
+	//new
+	bool obterValoresFaturados(const vector<string>& linhas, int & posicao);
+
+	//new 
+	bool salvarFatura();
+
+	void popularConsumo(const vector<string>& itensLinha, const string & numeroInstalacao, const string & mesAno);
+
+	bool extrairHistoricoConsumo(const vector<string>& linhas, int & posicao, const string & numeroInstalacao);
+
+	//new
+	bool importarFatura(vector<string>& linhas);
 
 	bool lerFaturaPDF(Fatura & fatura, const string & caminhoPrograma, const string & caminhoArquivo);
 
@@ -49,7 +75,10 @@ private:
 
 	bool lerTextoModo2(vector<string>& linhasArquivo, Fatura & fatura, Cliente & cliente, ValoresFaturados & valores);
 
-	bool obterDatasDeLeitura(vector<string>& linhasArquivo, int & posicaoAtual);
+	//new
+	bool obterMesAnoReferente(const vector<string>& linhasArquivo, int & posicaoAtual);
+
+	bool obterDatasDeLeitura(const vector<string>& linhasArquivo, int & posicaoAtual);
 
 	int procurarAnoReferente(const vector<string>& linhasArquivo, int posicaoAtual);
 

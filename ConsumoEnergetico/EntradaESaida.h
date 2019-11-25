@@ -42,10 +42,15 @@ public:
 	static void criarDiretorio(const string & nomeDir, bool ocultarSaida = true);
 	
 	static bool isNumber(const std::string& s);
+	//new procura padrao numa string
+	static bool procurarPadrao(string & resultado, const string & texto, string padraoRegex);
 
 	static string procurarPadrao(const vector<string>& linhasTexto, int & posicaoAtual, string padraoRegex);
 	static vector<string>& procurarLinha(const vector<string>& linhasArquivo, const string & termoPesquisado,
 		int & posicaoAtual, const string & termoFinal);
+
+	//new
+	static string procurarLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int & posicaoDeInicio);
 	
 	static string procurarItem(const vector<string>& linhasArquivo, const string & termoPesquisado,
 		int & posicaoAtual, const string & termoFinal = "");

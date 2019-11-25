@@ -12,6 +12,7 @@ struct RegistroCliente {
 	char bairro[TAMANHO_NOMES];
 	char cidade[TAMANHO_NOMES];
 	char CEP[TAMANHO_CODIGOS];
+	char CPF[TAMANHO_CODIGOS];
 	char numero[TAMANHO_CODIGOS];
 };
 

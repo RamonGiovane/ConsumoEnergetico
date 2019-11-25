@@ -181,6 +181,7 @@ bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char deli
 	string token;
 
 	while (getline(ss, token, delimitador)) {
+		if (token == "") continue;
 		fragmentos.push_back(token);
 	}
 
@@ -194,13 +195,15 @@ bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char deli
 	string token, lastToken = "";
 	bool repetido = false;
 	while (getline(ss, token, delimitador)) {
+
 		if (!fragmentos.empty() && token == lastToken) {
 			repetido = true;
 			continue;
 		}
 		else if (repetido) {
-			fragmentos.erase(fragmentos.end());
+			fragmentos.pop_back();
 			fragmentos.push_back(separador);
+			repetido = false;
 
 		}
 		fragmentos.push_back(token);
@@ -266,19 +269,27 @@ bool ES::isNumber(const string& s)
 		s.end(), [](char c) { return (!isdigit(c) && c != ',' && c != '.'); }) == s.end();
 }
 
-/*Procura um termo usando expressão regular em uma linha que contenha total ou parcialmente o termo pesquisado . Retorna o termo que case com a expressão
-ou string vazia se nenhuma linha coincidir com ela*/
-string ES::procurarPadrao(const vector<string>& linhasTexto, int & posicaoAtual, string padraoRegex) {
 
+bool ES::procurarPadrao(string & resultado, const string & texto, string padraoRegex) {
 	regex r(padraoRegex);
 	string s1;
 	smatch match;
+	if (regex_search(texto, match, r)) {
+
+		resultado = match.str();
+		return true;
+	}
+	return false;
+}
+
+/*Procura um termo usando expressão regular em uma linha que contenha total ou parcialmente o termo pesquisado . Retorna o termo que case com a expressão
+ou string vazia se nenhuma linha coincidir com ela*/
+string ES::procurarPadrao(const vector<string>& linhasTexto, int & posicaoAtual, string padraoRegex) {
+	string resultado;
 	for (; posicaoAtual < (int)linhasTexto.size() - 1; posicaoAtual++) {
 
-		if (regex_search(linhasTexto[posicaoAtual], match, r)) {
-
-			return match.str();
-		}
+		if (procurarPadrao(resultado, linhasTexto[posicaoAtual], padraoRegex)) 
+			return resultado;
 	}
 	return "";
 }
@@ -299,7 +310,7 @@ vector<string>& ES::procurarLinha(const vector<string> & linhasArquivo, const st
 
 		if (linhasArquivo[posicaoAtual].find(termoPesquisado) != std::string::npos) {
 
-			quebrarTexto(linhasValores, linhasArquivo[posicaoAtual], ' ');
+			quebrarTexto(linhasValores, linhasArquivo[posicaoAtual], ESPACO);
 
 			return linhasValores;
 
@@ -311,6 +322,13 @@ vector<string>& ES::procurarLinha(const vector<string> & linhasArquivo, const st
 	return linhasValores;
 }
 
+//new
+string ES::procurarLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int & posicaoDeInicio) {
+	for (; posicaoDeInicio < linhasArquivo.size(); posicaoDeInicio++)
+		if (linhasArquivo[posicaoDeInicio].find(termoPesquisado) != std::string::npos)
+			return linhasArquivo[posicaoDeInicio];
+	return string();
+}
 
 /*
 MÉTODO NOVO, PRECISA DE COMENTARIO
@@ -329,9 +347,7 @@ int ES::procurarLinha(vector<string> & resultado, const vector<string>& linhasAr
 
 		if (linhasArquivo[posicaoDeInicio].find(termoPesquisado) != std::string::npos) {
 
-			//quebrarTexto(resultado, linhasArquivo[posicaoDeInicio], ' ');
-			quebrarTexto(resultado, linhasArquivo[posicaoDeInicio], ' ', ";");
-			
+			quebrarTexto(resultado, linhasArquivo[posicaoDeInicio], ' ', "");
 
 			return posicaoDeInicio;
 

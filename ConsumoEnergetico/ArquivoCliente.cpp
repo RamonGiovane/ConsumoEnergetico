@@ -60,7 +60,7 @@ unsigned int ArquivoCliente::numeroRegistros() {
 *  4 bytes do preço.
 */
 unsigned int ArquivoCliente::tamanhoRegistro() {
-	return (TAMANHO_NOMES * sizeof(char) * 4) + (TAMANHO_CODIGOS * sizeof(char) * 2);
+	return (TAMANHO_NOMES * sizeof(char) * 4) + (TAMANHO_CODIGOS * sizeof(char) * 3);
 }
 
 // Escreve o objeto Cliente como um registro do arquivo.
@@ -68,9 +68,10 @@ void ArquivoCliente::escreverObjeto(Cliente cliente) {
 	RegistroCliente registro;
 
 	// Copiando os atributos do objeto Cliente para a estrutura RegistroCliente.
-	strncpy_s(registro.nome, TAMANHO_NOMES, cliente.getNome().c_str(), cliente.getNome().length());
-	strncpy_s(registro.bairro, TAMANHO_NOMES, cliente.getBairro().c_str(), cliente.getBairro().length());
+	strncpy_s(registro.nome, cliente.getNome().c_str(), _TRUNCATE);
+	strncpy_s(registro.bairro, cliente.getBairro().c_str(), _TRUNCATE);
 	strncpy_s(registro.CEP, TAMANHO_CODIGOS, cliente.getCEP().c_str(), cliente.getCEP().length());
+	strncpy_s(registro.CPF, TAMANHO_CODIGOS, cliente.getCEP().c_str(), cliente.getCEP().length());
 	strncpy_s(registro.cidade, TAMANHO_NOMES, cliente.getCidade().c_str(), cliente.getCidade().length());
 	strncpy_s(registro.rua, TAMANHO_NOMES, cliente.getRua().c_str(), cliente.getRua().length());
 	strncpy_s(registro.numero, TAMANHO_CODIGOS, cliente.getNumero().c_str(), cliente.getNumero().length());
@@ -98,7 +99,7 @@ Cliente* ArquivoCliente::lerObjeto(unsigned int numeroRegistro) {
 	Cria um objeto Cliente com os dados recuperados do arquivo e armazenados na estrutura registro.
 	*/
 	if (arqBin->getArquivoBinario())
-		return new Cliente(registro.numero, registro.nome, registro.rua, registro.bairro, registro.CEP, registro.cidade);
+		return new Cliente(registro.numero, registro.nome, registro.CPF, registro.rua, registro.bairro, registro.CEP, registro.cidade);
 	else return NULL;
 }
 

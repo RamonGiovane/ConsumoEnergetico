@@ -24,7 +24,9 @@ const char DIR_DATA[] = "data";
 const char PATH_XPDF[] = "xpdf\\pdftotext.exe";
 
 //Trecho de linha do arquivo texto das faturas
-const char LINHA_BANDEIRA_AMARELA[] = "Band. Amarela - ";
+const char TRECHO_BANDEIRA_AMARELA[] = "Band. Amarela - ";
+const char LINHA_BANDEIRA_AMARELA[] = "Bandeira Amarela";
+const char LINHA_BANDEIRA_VERMELHA[] = "Bandeira Vermelha";
 const char LINHA_HISTORICO_CONSUMO[] = "Histórico de Consumo";
 
 //Mensagem a ser exibidada ao usuário
@@ -71,6 +73,10 @@ const char BARRA_N = '\n';
 const string SBARRA_N = "\n";
 const char ESPACO = ' ';
 const char SEPARTOR[] = " | ";
+
+//Expressão regular
+const char REGEX_MES_REFERENTE[] = "[A-Z]{3}[/]\\d{4}";
+const char REGEX_DATAS_LEITURA[] = "\\s*\\d{2}[/]\\d{2}\\s*\\d{2}[/]\\d{2}\\s*\\d{2}[/]\\d{2}";
 
 const string PROG_INFO = "CEE versão 0.1: Relatório de Consumo de Energia Elétrica"  + SBARRA_N 
 + "2019 Ramon Giovane https://github.com/RamonGiovane"  + SBARRA_N 

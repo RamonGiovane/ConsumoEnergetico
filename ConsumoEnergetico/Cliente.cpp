@@ -4,9 +4,9 @@ Cliente::Cliente()
 {
 }
 
-Cliente::Cliente(string numero, string nome, string rua, string bairro, string CEP, string cidade)
+Cliente::Cliente(string numero, string nome, string CPF, string rua, string bairro, string CEP, string cidade)
 {
-	setNumero(numero).setNome(nome).setBairro(bairro).setRua(rua).setCidade(cidade).setCEP(CEP);
+	setNumero(numero).setNome(nome).setBairro(bairro).setRua(rua).setCidade(cidade).setCEP(CEP).setCPF(CPF);
 }
 
 
@@ -46,6 +46,12 @@ Cliente & Cliente::setNumero(string numero)
 	return *this;
 }
 
+Cliente & Cliente::setCPF(string cpf)
+{
+	this->cpf = cpf;
+	return *this;
+}
+
 string Cliente::getNome()
 {
 	return nome;
@@ -69,6 +75,11 @@ string Cliente::getCidade()
 string Cliente::getCEP()
 {
 	return CEP;
+}
+
+string Cliente::getCPF()
+{
+	return cpf;
 }
 
 string Cliente::getNumero()
