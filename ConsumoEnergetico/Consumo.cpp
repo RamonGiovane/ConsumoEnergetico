@@ -5,12 +5,12 @@
 using namespace std;
 
 Consumo::Consumo(){
-	mes = ano = dias = consumoKWh = 0;
-	mediaConsumoDiario = 0;
+	mes = ano = dias = 0;
+	consumoKWh = mediaConsumoDiario = 0;
 }
 
 
-Consumo::Consumo(int mes, int ano, int consumoKWh, double mediaConsumoDiario, int dias, string numeroInstalcao){
+Consumo::Consumo(int mes, int ano, double consumoKWh, double mediaConsumoDiario, int dias, string numeroInstalcao){
 	setMes(mes).setAno(ano).setConsumoKWh(consumoKWh).setMediaConsumoDiario(mediaConsumoDiario).setDias(dias).setNumeroInstalacao(numeroInstalcao);
 }
 
@@ -26,7 +26,7 @@ Consumo & Consumo::setAno(int ano)
 	return *this;
 }
 
-Consumo & Consumo::setConsumoKWh(int consumo)
+Consumo & Consumo::setConsumoKWh(double consumo)
 {
 	consumoKWh = consumo;
 	return *this;
@@ -75,7 +75,7 @@ bool Consumo::definirMesAno(string mesAnoStr)
 
 string Consumo::toString() {
 	char str[1000];
-	sprintf_s(str, 1000, "%1.2d/%d  %1.3d kWh  %1.2f kWh/dia em %d dias", mes, ano, consumoKWh, mediaConsumoDiario, dias);
+	sprintf_s(str, 1000, "%1.2d/%d  %1.3d kWh  %1.2f kWh/dia em %d dias", mes, ano, (int)consumoKWh, mediaConsumoDiario, dias);
 	return str;
 }
 
@@ -104,7 +104,7 @@ int Consumo::getAno()
 	return ano;
 }
 
-int Consumo::getConsumoKWh()
+double Consumo::getConsumoKWh()
 {
 	return consumoKWh;
 }

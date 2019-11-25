@@ -6,10 +6,10 @@ class Consumo
 {
 public:
 	Consumo();
-	Consumo(int mes, int ano, int consumoKWh, double mediaConsumoDiario, int dias, string numeroInstalcao);
+	Consumo(int mes, int ano, double consumoKWh, double mediaConsumoDiario, int dias, string numeroInstalcao);
 	Consumo& setMes(int mes);
 	Consumo& setAno(int ano);
-	Consumo& setConsumoKWh(int consumo);
+	Consumo& setConsumoKWh(double consumo);
 	Consumo& setMediaConsumoDiario(double media);
 	Consumo& setDias(int dias);
 	Consumo& setNumeroInstalacao(string numeroInstalacao);
@@ -17,7 +17,7 @@ public:
 
 	int getMes();
 	int getAno();
-	int getConsumoKWh();
+	double getConsumoKWh();
 	double getMediaConsumoDiario();
 	int getDias();
 	string getNumeroInstalacao();
@@ -29,7 +29,7 @@ public:
 private:
 	int mes;
 	int ano;
-	int consumoKWh;
+	double consumoKWh;
 	double mediaConsumoDiario;
 	int dias;
 	string numeroInstalcao;

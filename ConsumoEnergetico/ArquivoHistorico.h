@@ -11,8 +11,8 @@ using namespace std;
 struct RegistroConsumo {
 	int mes;
 	int ano;
-	int consumoKWh;
 	int dias;
+	double consumoKWh;
 	double mediaConsumoDiario;
 	char numeroCliente[TAMANHO_CODIGOS];
 	char numeroInstalacao[TAMANHO_CODIGOS];

@@ -59,15 +59,15 @@ unsigned int ArquivoHistorico::numeroRegistros() {
 *  4 bytes do preço.
 */
 unsigned int ArquivoHistorico::tamanhoRegistro() {
-	return (sizeof(int) * 4) + sizeof(double) + (TAMANHO_CODIGOS * sizeof(char) * 2);
+	return (sizeof(int) * 4) + (sizeof(double) * 2) + (TAMANHO_CODIGOS * sizeof(char) * 2);
 }
 
 void ArquivoHistorico::objetoParaRegistro(Consumo & consumo, RegistroConsumo & registro, const string & numeroCliente) {
 	registro.ano = consumo.getAno();
 	registro.mes = consumo.getMes();
-	registro.mediaConsumoDiario = consumo.getMediaConsumoDiario();
-	registro.consumoKWh = consumo.getConsumoKWh();
 	registro.dias = consumo.getDias();
+	registro.consumoKWh = consumo.getConsumoKWh();
+	registro.mediaConsumoDiario = consumo.getMediaConsumoDiario();
 
 	strncpy_s(registro.numeroCliente, TAMANHO_CODIGOS, numeroCliente.c_str(), numeroCliente.length());
 	strncpy_s(registro.numeroInstalacao, TAMANHO_CODIGOS, consumo.getNumeroInstalacao().c_str(), consumo.getNumeroInstalacao().length());

@@ -184,7 +184,7 @@ bool CEE::organizarHistorico(vector<Consumo> & historico) {
 
 bool CEE::verificarXPDF() {
 	if (!ES::arquivoExiste(caminhoPrograma + PATH_XPDF)) {
-		cout << MSG_ERRO_MISSING_XPDF;
+		cout << MSGE_MISSING_XPDF;
 		return false;
 	}
 	return true;
@@ -284,18 +284,12 @@ int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 
 bool CEE::lerContaDigital(const string & caminhoArquivo) {
 
-	//Fatura f;
-	//if (!extrator.lerFaturaPDF(f, caminhoPrograma, caminhoArquivo)) { cout << extrator.getMensagemErro(); return false; }
-
-	////salvarDados(f);
-
-	//ArquivoCliente arquivoCliente;
-	//arquivoCliente.abrir(FILE_CLIENTE_DAT);
-
-	//return salvarDados(f);
 	ExtratorDeDados extrator(caminhoPrograma);
 	
-	if (!extrator.importarFaturaPDF(caminhoArquivo)) { cout << extrator.getMensagemErro(); return false; }
+	if (!extrator.importarFaturaPDF(caminhoArquivo)) { 
+		cout << extrator.getMensagemErro(); 
+		return false; 
+	}
 	return true;
 
 }
@@ -317,18 +311,14 @@ bool CEE::salvarDados(Fatura fatura) {
 	arquivoFatura.fechar();
 
 	return true;
-	//ArquivoHistorico arquivoHistorico;
-	//arquivoHistorico.abrir(FILE_HISTORICO_DAT);
-	//int reg = arquivoHistorico.pesquisarHistorico(fatura.getCliente().getNumero());
 
-	//return false;
 }
 
 
 void CEE::definirCaminhoPrograma(char * argv[]) {
 
 	caminhoPrograma = argv[0];
-	int i = caminhoPrograma.size() - 1;
+	size_t i = caminhoPrograma.size() - 1;
 
 	while (true) {
 		if (caminhoPrograma[i--] == '\\') break;

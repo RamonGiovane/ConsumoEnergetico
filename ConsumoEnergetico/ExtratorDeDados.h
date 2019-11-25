@@ -29,10 +29,10 @@ public:
 	bool extrairCEPCidade(Cliente & cliente, const string & linha);
 
 	//new
-	bool extrairEndereco(Cliente & cliente, const vector<string>& linhas, int & posicao);
+	bool extrairNomeEEndereco(Cliente & cliente, const vector<string>& linhas, int & posicao);
 
 	//new
-	bool extrairDadosCliente(string & numeroDaInstalacao, const vector<string>& linhas);
+	bool extrairDadosCliente(const vector<string>& linhas);
 	
 	//new
 	bool erro(const string & mensagemErro);
@@ -86,7 +86,7 @@ private:
 
 	int obterMesData(const string & data);
 
-	bool obterNumeroClienteEInstalacao(vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
+	bool obterNumeroClienteEInstalacao(const vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
 
 	bool obterMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual);
 

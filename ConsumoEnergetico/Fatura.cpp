@@ -2,6 +2,7 @@
 #include "Consumo.h"
 #include "ValoresFaturados.h"
 #include "EntradaESaida.h"
+#include "Constantes.h"
 #include <iostream>
 
 Fatura::Fatura() {
@@ -101,14 +102,17 @@ bool Fatura::adicionarHistoricoConsumo(Consumo consumo)
 	if (pos == CAPACIDADE_HISTORICO_CONSUMO) {
 		return false;
 	}
+
+	consumo.setNumeroInstalacao(numeroInstalacao);
 	historicoConsumo[pos++] = consumo;
+	
 	if (pos == CAPACIDADE_HISTORICO_CONSUMO) pos = 0;
 	return true;
 }
 string  Fatura::obterHistoricoConsumoStr() {
 	string historico;
 	for (int i = 0; i < CAPACIDADE_HISTORICO_CONSUMO; i++)
-		historico.append(historicoConsumo[i].toString() + "\n");
+		historico.append(historicoConsumo[i].toString() + SBARRA_N);
 	return historico;
 }
 

@@ -216,7 +216,7 @@ bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char deli
 
 bool ES::strMesAnoToInt(const string & mesAno, int & mes, int & ano) {
 	vector<string> v;
-	ES::quebrarTexto(v, mesAno, '/');
+	ES::quebrarTexto(v, mesAno, BARRA);
 
 	if (v.size() != 2) return false;
 
@@ -224,6 +224,9 @@ bool ES::strMesAnoToInt(const string & mesAno, int & mes, int & ano) {
 	ano = ES::strToInt(v[1]);
 
 	if (mes == 0 || ano == 0) return false;
+
+	if (ano < 2000)
+		ano += 2000;
 
 	return true;
 }
