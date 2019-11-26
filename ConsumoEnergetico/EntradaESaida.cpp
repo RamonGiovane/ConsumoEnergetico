@@ -306,7 +306,7 @@ vector<string>& ES::procurarLinha(const vector<string> & linhasArquivo, const st
 
 //new
 string ES::procurarLinha(const vector<string>& linhasArquivo, const string & termoPesquisado, int & posicaoDeInicio) {
-	for (; posicaoDeInicio < linhasArquivo.size(); posicaoDeInicio++)
+	for (; posicaoDeInicio < (int) linhasArquivo.size(); posicaoDeInicio++)
 		if (linhasArquivo[posicaoDeInicio].find(termoPesquisado) != std::string::npos)
 			return linhasArquivo[posicaoDeInicio];
 	return string();

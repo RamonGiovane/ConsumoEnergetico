@@ -51,7 +51,7 @@ bool ExtratorDeDados::importarFaturaPDF(const string& caminhoArquivo) {
 	return true;
 }
 
-string extrairPalavra(const string linha, int numeroItem = 0) {
+string extrairPalavra(const string linha, size_t numeroItem = 0) {
 
 	vector<string> palavras;
 	ES::quebrarTexto(palavras, linha, ESPACO);
@@ -87,7 +87,7 @@ bool ExtratorDeDados::extrairNomeEEndereco(Cliente & cliente, const vector<strin
 	posicao = 0;
 	string resultadoRegex;
 
-	for (; itens.size() < numeroItens && posicao < linhas.size(); posicao++) {
+	for (; (int) itens.size() < numeroItens && posicao < (int)linhas.size(); posicao++) {
 		if (!ES::procurarPadrao(resultadoRegex, linhas[posicao], REGEX_CEP_E_NOMES)) continue;
 		ES::quebrarTexto(itens, linhas[posicao], BARRA_N);
 
@@ -157,9 +157,9 @@ bool ExtratorDeDados::obterValoresFaturados(const vector<string> & linhas, int &
 
 	int posicaoCopia = posicao;
 
-	//Procurando contrib. iluminacão. (Não pode falhar)
+	//Procurando contrib. iluminacão. (Se falhar, volta a posicao para a copia)
 	string iluminacao = ES::procurarItem(linhas, LINHA_ILUMINACAO, posicao);
-	if (iluminacao.empty()) return false;
+	if (iluminacao.empty()) posicao = posicaoCopia;
 
 	valores.setValorIluminacaoPublica(ES::strToDouble(iluminacao));
 
@@ -440,8 +440,6 @@ bool ExtratorDeDados::lerArquivoDeConsumo(Consumo & consumo, const string & nume
 	//return gerarDadosConusmo(consumo, dias, mes, ano);
 
 }
-
-
 
 bool ExtratorDeDados::lerValidarCabecalhoArquivoDeConsumo(const string & linhaCabecalho, int & mes, int & ano) {
 	vector<string> cabecalho;
