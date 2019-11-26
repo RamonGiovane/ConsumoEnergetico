@@ -1,4 +1,4 @@
-#include "ExtratorDeDados.h"
+#include "ExtratorDeFaturas.h"
 #include "Fatura.h"
 #include "ArquivoTexto\ArquivoTexto.h"
 #include "EntradaESaida.h"
@@ -8,30 +8,30 @@
 #include <regex>
 
 
-ExtratorDeDados::ExtratorDeDados() { }
-ExtratorDeDados::ExtratorDeDados(const string & caminhoPrograma) {
+ExtratorDeFaturas::ExtratorDeFaturas() { }
+ExtratorDeFaturas::ExtratorDeFaturas(const string & caminhoPrograma) {
 	setCaminhoDoPrograma(caminhoPrograma);
 }
 
-void ExtratorDeDados::setCaminhoDoPrograma(const string & caminhoPrograma) {
+void ExtratorDeFaturas::setCaminhoDoPrograma(const string & caminhoPrograma) {
 	this->caminhoPrograma = caminhoPrograma;
 }
 
-string ExtratorDeDados::getCaminhoDoPrograma() {
+string ExtratorDeFaturas::getCaminhoDoPrograma() {
 	return caminhoPrograma;
 }
 
 
 
 /*Se o caminho do programa estiver indefinido retorna false, sem definir uma mensagem de erro.*/
-bool ExtratorDeDados::importarFaturaPDF(const string& caminhoArquivo) {
+bool ExtratorDeFaturas::importarFaturaPDF(const string& caminhoArquivo) {
 	Fatura fatura;
 
 	if (caminhoPrograma.empty()) return false;
 
 	cout << MSG_CONVERTENDO_PDF;
 	if (!ES::PDFToTextTable(caminhoArquivo, caminhoPrograma, FILE_SAIDA_TMP)) {
-		mensagemErro = MSGE_ARQUIVO_NAO_LIDO;
+		setMensagemErro(MSGE_ARQUIVO_NAO_LIDO);
 		return false;
 	}
 
@@ -39,8 +39,8 @@ bool ExtratorDeDados::importarFaturaPDF(const string& caminhoArquivo) {
 	vector<string> linhasArquivo;
 
 	cout << MSG_LENDO_FATURA;
-	if (!lerArquivoTexto(conteudoConta, FILE_SAIDA_TMP)) {
-		mensagemErro = MSGE_ARQUIVO_CORROMPIDO;
+	if (!ES::lerArquivoTexto(conteudoConta, FILE_SAIDA_TMP)) {
+		setMensagemErro(MSGE_ARQUIVO_CORROMPIDO);
 		return false;
 	}
 
@@ -64,7 +64,7 @@ string extrairPalavra(const string linha, size_t numeroItem = 0) {
 
 /*A partir da linha contendo o a cep e a cidade do cliente, extrai e armazena em um objeto esses itens.
 Retorna false em caso de falha e armazena uma mensagem de erro contendo a causa*/
-bool ExtratorDeDados::extrairCEPCidade(Cliente & cliente, const string & linha) {
+bool ExtratorDeFaturas::extrairCEPCidade(Cliente & cliente, const string & linha) {
 	vector<string> palavras;
 
 	ES::quebrarTexto(palavras, linha, ' ');
@@ -81,7 +81,7 @@ bool ExtratorDeDados::extrairCEPCidade(Cliente & cliente, const string & linha) 
 /*A partir de um vector com as linhas do arquivo e uma posicao de leitura, extrai e armazena em um objeto
 os campos que correspondem ao nome e endereço do cliente.
 Retorna false em caso de falha e armazena uma mensagem erro contendo a causa*/
-bool ExtratorDeDados::extrairNomeEEndereco(Cliente & cliente, const vector<string> & linhas, int & posicao) {
+bool ExtratorDeFaturas::extrairNomeEEndereco(Cliente & cliente, const vector<string> & linhas, int & posicao) {
 	vector<string> itens;
 	int numeroItens = 4;
 	posicao = 0;
@@ -104,7 +104,7 @@ bool ExtratorDeDados::extrairNomeEEndereco(Cliente & cliente, const vector<strin
 	return erro(MSGE_DADOS_INCOMPLETOS_CLIENTE);
 }
 
-bool ExtratorDeDados::extrairDadosCliente(const vector<string> & linhas) {
+bool ExtratorDeFaturas::extrairDadosCliente(const vector<string> & linhas) {
 	vector<string> palavras;
 	Cliente cliente;
 
@@ -129,7 +129,7 @@ bool ExtratorDeDados::extrairDadosCliente(const vector<string> & linhas) {
 }
 
 
-bool ExtratorDeDados::obterPrecoEConsumo(ValoresFaturados & valores, const vector<string> & linhas, int & posicao) {
+bool ExtratorDeFaturas::obterPrecoEConsumo(ValoresFaturados & valores, const vector<string> & linhas, int & posicao) {
 
 	//Exemplo da linha sendo lida nesta função:
 	//O pagamento desta conta não quita débitos anteriores.		Energia Elétrica   kWh	125	0,97485177	121,84	
@@ -151,7 +151,7 @@ bool ExtratorDeDados::obterPrecoEConsumo(ValoresFaturados & valores, const vecto
 	}
 	return false;
 }
-bool ExtratorDeDados::obterValoresFaturados(const vector<string> & linhas, int & posicao) {
+bool ExtratorDeFaturas::extrairValoresFaturados(const vector<string> & linhas, int & posicao) {
 	ValoresFaturados valores;
 	if (!obterPrecoEConsumo(valores, linhas, posicao)) return erro(MSGE_VALORES_FATURADOS);
 
@@ -171,7 +171,7 @@ bool ExtratorDeDados::obterValoresFaturados(const vector<string> & linhas, int &
 	fatura.setValoresFaturados(valores);
 	return true;
 }
-bool ExtratorDeDados::salvarFatura() {
+bool ExtratorDeFaturas::salvarFatura() {
 
 	ArquivoFatura arquivoFatura;
 	arquivoFatura.abrir(FILE_FATURA_DAT);
@@ -192,7 +192,7 @@ bool ExtratorDeDados::salvarFatura() {
 }
 
 
-void ExtratorDeDados::popularConsumo(const vector<string> & itensLinha, const string & numeroInstalacao, int mes, int ano) {
+void ExtratorDeFaturas::popularConsumo(const vector<string> & itensLinha, const string & numeroInstalacao, int mes, int ano) {
 	
 	//verifica se a posicao 0 da linha corresponde ao mes/ano. se sim, pula para a posicao 1
 	int posicao = ES::isNumber(itensLinha[0]) ? 0 : 1; 
@@ -209,7 +209,7 @@ void ExtratorDeDados::popularConsumo(const vector<string> & itensLinha, const st
 }
 
 
-bool ExtratorDeDados::extrairHistoricoConsumo(const vector<string> & linhas, int & posicao, const string & numeroInstalacao) {
+bool ExtratorDeFaturas::extrairHistoricoConsumo(const vector<string> & linhas, int & posicao, const string & numeroInstalacao) {
 	int numeroLinha = ES::procurarNumeroLinha(linhas, LINHA_HISTORICO, posicao);
 
 	if (numeroLinha == -1) return erro(MSGE_HISTORICO_NAO_ENCONTRADO); else posicao = numeroLinha;
@@ -244,7 +244,7 @@ bool ExtratorDeDados::extrairHistoricoConsumo(const vector<string> & linhas, int
 	return true;
 }
 
-bool ExtratorDeDados::importarFatura(vector<string> & linhas) {
+bool ExtratorDeFaturas::importarFatura(vector<string> & linhas) {
 	int posicao = 0;
 	vector<string> palavras;
 
@@ -252,15 +252,15 @@ bool ExtratorDeDados::importarFatura(vector<string> & linhas) {
 
 	if (extrairDadosCliente(linhas))
 
-		if (obterMesAnoReferente(linhas, posicao))
+		if (extrairMesAnoReferente(linhas, posicao))
 
-			if (obterDatasDeLeitura(linhas, posicao))
+			if (extrairDatasDeLeitura(linhas, posicao))
 
-				if (obterValoresFaturados(linhas, posicao))
+				if (extrairValoresFaturados(linhas, posicao))
 
 					if (extrairHistoricoConsumo(linhas, posicao, numeroInstalacao))
 
-						if (obterMesVencimentoEValor(linhas, posicao)) {
+						if (extrairMesVencimentoEValor(linhas, posicao)) {
 
 							salvarFatura();
 
@@ -270,25 +270,15 @@ bool ExtratorDeDados::importarFatura(vector<string> & linhas) {
 	return false;
 }
 
-
-
-bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo, const string & caminhoArquivo) {
-	ArquivoTexto arquivo;
-	arquivo.abrir(caminhoArquivo, TipoDeAcesso::LEITURA);
-	conteudoArquivo = arquivo.ler();
-	arquivo.fechar();
-	return conteudoArquivo == SNULL ? false : true;
-}
-
-bool ExtratorDeDados::obterMesAnoReferente(const vector<string>& linhasArquivo, int & posicaoAtual) {
+bool ExtratorDeFaturas::extrairMesAnoReferente(const vector<string>& linhasArquivo, int & posicaoAtual) {
 	string data = ES::procurarPadrao(linhasArquivo, posicaoAtual, REGEX_MES_REFERENTE);
-	if (data.empty() || !fatura.setMesAnoReferente(data)) { mensagemErro = "Não foi possível computar datas da fatura"; return false; }
+	if (data.empty() || !fatura.setMesAnoReferente(data)) { return erro("Não foi possível computar datas da fatura"); return false; }
 
 	return true;
 }
 
 const char MSGE_DATAS_LEITURA[] = "FALHA:\n Não foi possível computar as datas de leitura";
-bool ExtratorDeDados::obterDatasDeLeitura(const vector<string>& linhasArquivo, int & posicaoAtual)
+bool ExtratorDeFaturas::extrairDatasDeLeitura(const vector<string>& linhasArquivo, int & posicaoAtual)
 {
 
 	string datas = ES::procurarPadrao(linhasArquivo, posicaoAtual, REGEX_DATAS_LEITURA);
@@ -315,18 +305,18 @@ bool ExtratorDeDados::obterDatasDeLeitura(const vector<string>& linhasArquivo, i
 }
 
 //old
-int ExtratorDeDados::procurarAnoReferente(const vector<string> & linhasArquivo, int posicaoAtual) {
+int ExtratorDeFaturas::procurarAnoReferente(const vector<string> & linhasArquivo, int posicaoAtual) {
 	vector<string> data;
 	ES::quebrarTexto(data, linhasArquivo[posicaoAtual + 1], BARRA);
 	return ES::strToInt(data[2]);
 }
 
 /*Insere às datas de leitura, anterior, atual e proxima, seus respectivos anos. Em seguida, as armazena no objeto fatura.*/
-bool ExtratorDeDados::formatarEAdicionarDatasDeLeitura(const string & dataLeituraAnterior, const string & dataLeituraAtual, const string & proximaDataLeitura, int ano) {
+bool ExtratorDeFaturas::formatarEAdicionarDatasDeLeitura(const string & dataLeituraAnterior, const string & dataLeituraAtual, const string & proximaDataLeitura, int ano) {
 
 	if (ano == 0) ano = fatura.getAnoReferente();
 
-	string anoAtualStr = "/" + ES::intToStr(ano);
+	string anoAtualStr = BARRA + ES::intToStr(ano);
 
 	//Se a data da leitura anterior for em dezembro, então decrementa-se o ano  atual para ela.
 	if (obterMesData(dataLeituraAnterior) == 12)
@@ -347,7 +337,7 @@ bool ExtratorDeDados::formatarEAdicionarDatasDeLeitura(const string & dataLeitur
 }
 
 /*Retorna o número de um mês a partir de uma data no formato "MM/yyyy"*/
-int ExtratorDeDados::obterMesData(const string & data) {
+int ExtratorDeFaturas::obterMesData(const string & data) {
 	vector<string> v;
 	ES::quebrarTexto(v, data, BARRA);
 	return ES::strToInt(v[0]);
@@ -355,7 +345,7 @@ int ExtratorDeDados::obterMesData(const string & data) {
 }
 
 
-bool ExtratorDeDados::obterNumeroClienteEInstalacao(const vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual)
+bool ExtratorDeFaturas::obterNumeroClienteEInstalacao(const vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual)
 {
 	//Exemplo de linha que esta função está tentando encontrar e processar:
 	// 7008637570                                  3000755750
@@ -373,7 +363,7 @@ bool ExtratorDeDados::obterNumeroClienteEInstalacao(const vector<string>& linhas
 	return true;
 }
 
-bool ExtratorDeDados::obterMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual)
+bool ExtratorDeFaturas::extrairMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual)
 {
 	string dataVencimentoEValor = ES::procurarPadrao(linhasArquivo, posicaoAtual, REGEX_DATA_E_VALOR);
 
@@ -399,7 +389,7 @@ bool ExtratorDeDados::obterMesVencimentoEValor(vector<string>& linhasArquivo, in
 
 }
 
-bool ExtratorDeDados::obterHistoricoConsumo(const string & linha) {
+bool ExtratorDeFaturas::obterHistoricoConsumo(const string & linha) {
 	vector<string> dados;
 	ES::quebrarTexto(dados, linha, ' ');
 
@@ -417,46 +407,3 @@ bool ExtratorDeDados::obterHistoricoConsumo(const string & linha) {
 	return true;
 }
 
-bool ExtratorDeDados::lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada) {
-	string textoArquivo;
-	lerArquivoTexto(textoArquivo, caminhoArquivoEntrada);
-
-	if (textoArquivo == SNULL) return erro(MSGE_ARQUIVO_ENTRADA);
-
-	vector<string> linhas;
-	int mesArquivo, anoArquivo;
-	ES::quebrarTexto(linhas, textoArquivo, BARRA_N);
-	if (linhas.empty()) { mensagemErro = MSGE_ARQUIVO_ENTRADA; return false; }
-
-	if (!lerValidarCabecalhoArquivoDeConsumo(linhas[0], mesArquivo, anoArquivo)) return false;
-
-	double consumoKWh = 0;// calcularConsumo(linhas, mes, ano);
-	if (consumoKWh == -1) return false;
-
-
-	consumo.setConsumoKWh(consumoKWh);
-	return 1;
-	//return gerarDadosConusmo(consumo, dias, mes, ano);
-
-}
-
-const string HASH_TAG = "#";
-bool ExtratorDeDados::lerValidarCabecalhoArquivoDeConsumo(const string & linhaCabecalho, int & mes, int & ano) {
-	vector<string> cabecalho;
-	ES::quebrarTexto(cabecalho, linhaCabecalho, ESPACO);
-	
-	string dataInvalida;
-	
-	if (cabecalho[0] == HASH_TAG && cabecalho.size() == 4) {
-		if (!ES::strMesAnoToInt(cabecalho[3], mes, ano))
-			dataInvalida = BARRA_N + MSG_DATA_INVALIDA;
-		else
-			return true;
-	}
-	mensagemErro = string(MSGE_SINTAXE_INVALIDA) + " 1.\n\t>> " + cabecalho[0] + "\n" + dataInvalida;
-	return false;
-}
-
-string ExtratorDeDados::getMensagemErro() {
-	return mensagemErro;
-}

@@ -1,23 +1,21 @@
-#ifndef EXTRATOR_DE_DADOS_H
-#define EXTRATOR_DE_DADOS_H
+#ifndef EXTRATOR_DE_FATURAS_H
+#define EXTRATOR_DE_FATURAS_H
 #include <string>
 #include <vector>
 #include "Cliente.h"
 #include "ValoresFaturados.h"
 #include "Fatura.h"
+#include "RelatorDeErros.h"
 
-const string CAMINHO_SAIDA = string("xpdf\\saida.tmp");
 
-class ExtratorDeDados
+class ExtratorDeFaturas : public RelatorDeErros
 {
-
-
 
 public:
 
-	ExtratorDeDados();
+	ExtratorDeFaturas();
 
-	ExtratorDeDados(const string & caminhoPrograma);
+	ExtratorDeFaturas(const string & caminhoPrograma);
 
 	void setCaminhoDoPrograma(const string & caminhoPrograma);
 
@@ -25,18 +23,7 @@ public:
 
 	bool importarFaturaPDF(const string & caminhoArquivo);
 
-	bool lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada);
-
-	string getMensagemErro();
-
 private:
-
-	inline bool ExtratorDeDados::erro(const string & mensagemErro) {
-		this->mensagemErro = mensagemErro;
-		return false;
-	}
-
-	bool lerArquivoTexto(string & conteudoArquivo, const string & caminhoArquivo);
 
 	//new
 	bool extrairCEPCidade(Cliente & cliente, const string & linha);
@@ -52,7 +39,7 @@ private:
 	bool obterPrecoEConsumo(ValoresFaturados & valores, const vector<string>& linhas, int & posicao);
 
 	//new
-	bool obterValoresFaturados(const vector<string>& linhas, int & posicao);
+	bool extrairValoresFaturados(const vector<string>& linhas, int & posicao);
 
 	//new 
 	bool salvarFatura();
@@ -67,9 +54,9 @@ private:
 
 
 	//new
-	bool obterMesAnoReferente(const vector<string>& linhasArquivo, int & posicaoAtual);
+	bool extrairMesAnoReferente(const vector<string>& linhasArquivo, int & posicaoAtual);
 
-	bool obterDatasDeLeitura(const vector<string>& linhasArquivo, int & posicaoAtual);
+	bool extrairDatasDeLeitura(const vector<string>& linhasArquivo, int & posicaoAtual);
 
 	int procurarAnoReferente(const vector<string>& linhasArquivo, int posicaoAtual);
 
@@ -79,20 +66,17 @@ private:
 
 	bool obterNumeroClienteEInstalacao(const vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
 
-	bool obterMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual);
+	bool extrairMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual);
 
 	bool obterHistoricoConsumo(const string & linha);
 
-	bool lerValidarCabecalhoArquivoDeConsumo(const string & linhaCabecalho, int & mes, int & ano);
 
 
 	Fatura fatura;
-
-	string mensagemErro;
 
 	string caminhoPrograma;
 
 };
 
 
-#endif // !EXTRATOR_DE_DADOS_H
+#endif // !EXTRATOR_DE_FATURAS_H

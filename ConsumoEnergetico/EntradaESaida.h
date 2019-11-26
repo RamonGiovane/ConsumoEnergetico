@@ -7,10 +7,12 @@
 
 using namespace std;
 class ES {
-#define SUCESSO_STR = "Sucesso."
+
 public:
-	static string lerString(string mensagem);
-	static int identificarMesAbreviado(string strMes);
+
+	static int identificarMesAbreviado(const string & strMes);
+	
+
 	static string mesToStr(int mes);
 	static void mudarLocalizacao();
 	static bool obterArquivosDiretorio(const string & caminhoDiretorio, vector<string>& listaArquivos);
@@ -32,6 +34,8 @@ public:
 	static double strToDouble(const string& str);
 	static string doubleToStr(const double & numero, int precision = 2);
 	static string intToStr(const int & numero);
+
+	static bool lerArquivoTexto(string & conteudoArquivo, const string & caminhoArquivo);
 	
 	static void criarDiretorio(const string & nomeDir, bool ocultarSaida = true);
 	
@@ -50,7 +54,8 @@ public:
 		int & posicaoAtual, const string & termoFinal = "");
 	
 	
-	static int procurarLinha(vector<string>& resultado, const vector<string>& linhasArquivo, const string & termoPesquisado, int posicaoDeInicio = 0, const char * termoFinal = NULL);
+	static int procurarLinha(vector<string>& resultado, const vector<string>& linhasArquivo, 
+		const string & termoPesquisado, int posicaoDeInicio = 0, const char * termoFinal = NULL);
 
 	static string quebrarString(const string & str);
 	

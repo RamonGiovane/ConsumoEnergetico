@@ -1,8 +1,11 @@
 #ifndef CONSTANTES_H
 #define CONSTANTES_H
 #include <string>
-#include <sstream>
 using namespace std;
+
+//Meses abreviados
+const string MESES_ABREVIADOS[] = {"", "jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez" };
+const string MESES_STR[] = {"", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" };
 
 //Tamanho de string
 const int TAMANHO_NOMES = 75;
@@ -16,6 +19,7 @@ const char FILE_CLIENTE_TMP[] = "data\\Cliente.tmp";
 const char FILE_HISTORICO_DAT[] = "data\\Historico.dat";
 const char FILE_HISTORICO_TMP[] = "data\\Historico.tmp";
 const char FILE_SAIDA_TMP[] = "saida.tmp";
+const static char FILE_DIR_LIST[] = "files.tmp";
 
 //Diretório
 const char DIR_DATA[] = "data";
@@ -84,9 +88,23 @@ const char BARRA_N = '\n';
 const string SBARRA_N = "\n";
 const string VAZIO = "";
 const string SNULL = "NULL";
+const string HASH_TAG = "#";
 const char ESPACO = ' ';
 const char BARRA = '/';
 const char SEPARTOR[] = " | ";
+const char VIRGULA = ',';
+const char PONTO = '.';
+const char ITEM_LINHA[] = "\n\t >>";
+const char KWH[] = "kWh";
+const char H[] = "h";
+const char W[] = "w";
+
+//Comando do windows
+const static char REDIRECTOR[] = " > ";
+const static char NUL_REDIRECTOR[] = " >nul 2>nul";
+const static char COM_MKDIR[] = "mkdir ";
+const static char COM_DIR[] = "dir /b ";
+
 
 //Casa com um mês e ano referente no formato: "NOV/2019"
 const char REGEX_MES_REFERENTE[] = "[A-Z]{3}[/]\\d{4}";

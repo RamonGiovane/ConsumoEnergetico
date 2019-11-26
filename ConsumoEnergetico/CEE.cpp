@@ -1,4 +1,4 @@
-#include "ExtratorDeDados.h"
+#include "ExtratorDeFaturas.h"
 #include "CEE.h"
 #include "EntradaESaida.h"
 #include "ArquivoTexto\ArquivoTexto.h"
@@ -7,6 +7,7 @@
 #include "Cliente.h"
 #include "Constantes.h"
 #include "ArquivoHistorico.h"
+#include "ExtratorArquivoConsumo.h"
 #include <string>
 #include <vector>
 
@@ -122,7 +123,7 @@ int CEE::interpretarTresParametros(char * parametro1, char * parametro2, char * 
 
 
 bool CEE::calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * arquivoEntrada) {
-	ExtratorDeDados extrator;
+	ExtratorArquivoConsumo extrator;
 	Consumo consumo;
 	if (!extrator.lerArquivoDeConsumo(consumo, numeroCliente, arquivoEntrada)) {
 		cout << endl << extrator.getMensagemErro();
@@ -170,7 +171,7 @@ bool CEE::exibirHistorico(const vector<Consumo> & historico, char * mesAnoInicia
 			cout << SUBTITLE_INSTALACAO << consumo.getNumeroInstalacao() << endl;
 			cout << SUBTITLE_HISTORICO;
 		}
-		cout << " " << consumo.toString() << endl;
+		cout << VAZIO << consumo.toString() << endl;
 	}
 
 	return true;
@@ -283,7 +284,7 @@ int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 
 bool CEE::lerContaDigital(const string & caminhoArquivo) {
 
-	ExtratorDeDados extrator(caminhoPrograma);
+	ExtratorDeFaturas extrator(caminhoPrograma);
 	
 	if (!extrator.importarFaturaPDF(caminhoArquivo)) { 
 		cout << extrator.getMensagemErro(); 

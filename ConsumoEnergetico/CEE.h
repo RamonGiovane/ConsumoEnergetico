@@ -61,7 +61,7 @@ private:
 
 	Fatura conta;
 
-	ExtratorDeDados extrator;
+	ExtratorDeFaturas extrator;
 
 	string caminhoPrograma;
 };

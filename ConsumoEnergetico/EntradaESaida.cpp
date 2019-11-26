@@ -13,100 +13,50 @@
 using namespace std;
 
 /*Identifica e retorna o número de um mês a partir de sua abreviação. Por exemplo: JAN = 1; AGO = 8; NOV = 11*/
-int  ES::identificarMesAbreviado(string strMes) {
-	if (strMes == "JAN" || strMes == "jan")
-		return 1;
-	if (strMes == "FEV" || strMes == "fev")
-		return 2;
-	if (strMes == "MAR" || strMes == "mar")
-		return 3;
-	if (strMes == "ABR" || strMes == "abr")
-		return 4;
-	if (strMes == "MAI" || strMes == "mai")
-		return 5;
-	if (strMes == "JUN" || strMes == "jun")
-		return 6;
-	if (strMes == "JUL" || strMes == "jul")
-		return 7;
-	if (strMes == "AGO" || strMes == "ago")
-		return 8;
-	if (strMes == "SET" || strMes == "set")
-		return 9;
-	if (strMes == "OUT" || strMes == "out")
-		return 10;
-	if (strMes == "NOV" || strMes == "nov")
-		return 11;
-	if (strMes == "DEZ" || strMes == "dez")
-		return 12;
+int  ES::identificarMesAbreviado(const string & strMes) {
+	for (int i = 1; i <= 12; i++) 
+		if (_strnicmp(MESES_ABREVIADOS[i].c_str(), strMes.c_str(), 3) == 0)
+			return i;
 	return 0;
+	
 }
 
 /*Retorna a representação textual de um mês a partir de seu número. Caso o número fornecido não corresponda a um mês, uma string vazia será retornada*/
 string  ES::mesToStr(int mes) {
-	switch (mes)
-	{
-	case 1:
-		return "Janeiro";
-	case 2:
-		return "Fevereiro";
-	case 3:
-		return "Março";
-	case 4:
-		return "Abril";
-	case 5:
-		return "Maio";
-	case 6:
-		return "Junho";
-	case 7:
-		return "Julho";
-	case 8:
-		return "Agosto";
-	case 9:
-		return "Setembro";
-	case 10:
-		return "Outubro";
-	case 11:
-		return "Novembro";
-	case 12:
-		return "Dezembro";
-	}
-
-	return string();
+	
+	if (mes < 1 || mes > 12) return string();
+	
+	else return MESES_STR[mes];
+	
 }
 
 void ES::mudarLocalizacao() {
 	setlocale(LC_ALL, "pt-BR");
 }
 
-int executarWinCommand(const string & comando) {
-	return WinExec(comando.c_str(), SW_HIDE);
-}
 
-
-const static string DIR_LIST = "files.tmp";
 bool ES::obterArquivosDiretorio( const string  & caminhoDiretorio, vector<string> & listaArquivos) {
 
-	
+	string arquivosStr;
 	listaArquivos = vector<string>();
 	
 	//Verifica se o caminho solicitado não é um arquivo ao invés de um diretório
 	if (ES::arquivoExiste(caminhoDiretorio)) return true;
 
 	//Caso seja um diretório, limpa o arquivo que conterá a lista de diretórios.
-	removerArquivo(DIR_LIST);
+	removerArquivo(FILE_DIR_LIST);
 
 	//Realiza uma chamada de sistema que lista os arquivos informados dentro do arquivo DIR_LIST
-	system(("dir /b " + caminhoDiretorio + " > " + DIR_LIST).c_str());
+	system((COM_DIR + caminhoDiretorio + REDIRECTOR + FILE_DIR_LIST).c_str());
 
 	//Tentando ler o arquivo gerado...
-	ArquivoTexto arquivo;
-	if (!arquivo.abrir(DIR_LIST, LEITURA)) return false;
+	if(!lerArquivoTexto(arquivosStr, FILE_DIR_LIST)) return false;
 
 	//Direcionando para o vector de resposta
-	quebrarTexto(listaArquivos, arquivo.ler(), '\n');
+	quebrarTexto(listaArquivos, arquivosStr, BARRA_N);
 
-	arquivo.fechar();
-	ES::removerArquivo(DIR_LIST);
+	//Apaga o arquivo temp gerado
+	ES::removerArquivo(FILE_DIR_LIST);
 
 	//Se o vector estiver vazio, não há arquivos para ler
 	if (listaArquivos.empty()) return false;
@@ -120,11 +70,11 @@ bool ES::PDFToTextTable(const string & caminhoArquivo, const string & caminhoPro
 	removerArquivo(arquivoDestino);
 
 	char comando[1000];
-	sprintf_s(comando, 1000, "%s%s -table  \"%s\" \"%s\" >nul 2>nul ", caminhoPrograma.c_str(), PATH_XPDF, caminhoArquivo.c_str(),  arquivoDestino.c_str());
+	
+	sprintf_s(comando, 1000, "%s%s -table  \"%s\" \"%s\"%s", caminhoPrograma.c_str(), PATH_XPDF, caminhoArquivo.c_str(), 
+		arquivoDestino.c_str(), NUL_REDIRECTOR);
 
-	//cout << comando << endl;
-
-	system(string(comando).c_str());
+	system(comando);
 
 	return  arquivoExiste(arquivoDestino);
 
@@ -152,7 +102,7 @@ bool ES::quebrarTexto(vector<string> &fragmentos, const string& texto, char deli
 	string token;
 
 	while (getline(ss, token, delimitador)) {
-		if (token == "") continue;
+		if (token == VAZIO) continue;
 		fragmentos.push_back(token);
 	}
 
@@ -238,17 +188,25 @@ string ES::intToStr(const int & numero)
 	return stream.str();
 }
 
+bool ES::lerArquivoTexto(string& conteudoArquivo, const string & caminhoArquivo) {
+	ArquivoTexto arquivo;
+	if(!arquivo.abrir(caminhoArquivo, TipoDeAcesso::LEITURA)) return false;
+	conteudoArquivo = arquivo.ler();
+	arquivo.fechar();
+	return conteudoArquivo == SNULL ? false : true;
+}
+
 /*Cria um diretório no caminho ou nome especificado. Se o diretório já existir, exibe no console uma mensagem de erro, 
 isto se for passado false para o campo opcional "ocultarSaida"*/
 void ES::criarDiretorio(const string & nomeDir, bool ocultarSaida) {
-	system(("mkdir " + nomeDir + ((ocultarSaida) ? " >nul 2>nul" : "")).c_str());
+	system((COM_MKDIR + nomeDir + ((ocultarSaida) ? NUL_REDIRECTOR : VAZIO)).c_str());
 }
 
 /*Verifica se o conteúdo de uma string contém apenas dígitos ou '.' e ','.*/
 bool ES::isNumber(const string& s)
 {
 	return !s.empty() && find_if(s.begin(),
-		s.end(), [](char c) { return (!isdigit(c) && c != ',' && c != '.'); }) == s.end();
+		s.end(), [](char c) { return (!isdigit(c) && c != VIRGULA && c != PONTO); }) == s.end();
 }
 
 /*Procura um padrão (regex) em uma string. Se encontrado, retorna true e a string que casou com o padrão fornecido no parâmetro padraoRegex */
@@ -329,7 +287,7 @@ int ES::procurarLinha(vector<string> & resultado, const vector<string>& linhasAr
 
 		if (linhasArquivo[posicaoDeInicio].find(termoPesquisado) != std::string::npos) {
 
-			quebrarTexto(resultado, linhasArquivo[posicaoDeInicio], ' ', "");
+			quebrarTexto(resultado, linhasArquivo[posicaoDeInicio], ESPACO, VAZIO);
 
 			return posicaoDeInicio;
 
@@ -393,7 +351,7 @@ string ES::procurarItem(const vector<string> & linhasArquivo, const string & ter
 	if (!linhasValores.empty())
 		return linhasValores[linhasValores.size() - 1];
 
-	return string("");
+	return string();
 
 }
 

@@ -57,9 +57,6 @@
     <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="ExtratorDeDados.cpp">
-      <Filter>Source Files\Util</Filter>
-    </ClCompile>
     <ClCompile Include="Fatura.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
@@ -75,8 +72,11 @@
     <ClCompile Include="CEE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CalculadoraDeConsumo.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ExtratorDeFaturas.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtratorArquivoConsumo.cpp">
+      <Filter>Source Files\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -104,9 +104,6 @@
     <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
-    <ClInclude Include="ExtratorDeDados.h">
-      <Filter>Header Files\Util</Filter>
-    </ClInclude>
     <ClInclude Include="Fatura.h">
       <Filter>Header Files\Modelo</Filter>
     </ClInclude>
@@ -125,7 +122,13 @@
     <ClInclude Include="CEE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CalculadoraDeConsumo.h">
+    <ClInclude Include="ExtratorDeFaturas.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="RelatorDeErros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtratorArquivoConsumo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
