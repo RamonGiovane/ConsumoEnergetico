@@ -19,11 +19,13 @@ public:
 	void exibirInformacao();
 	int iniciar(int argc, char * argv[]);
 
-	int importarFaturas(vector<string> listaArquivos, const string & caminhoDiretorio);
+	int importarFaturas(vector<string> listaArquivos, string caminhoDiretorio);
 
 	void relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados);
 
 	bool importarFatura(const string & caminhoArquivo, bool printMensagemFinal = false);
+
+	int promptImportarFaturas();
 
 	int interpretarUmParametro(char * paramtero);
 	

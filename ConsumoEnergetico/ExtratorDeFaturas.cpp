@@ -67,7 +67,7 @@ Retorna false em caso de falha e armazena uma mensagem de erro contendo a causa*
 bool ExtratorDeFaturas::extrairCEPCidade(Cliente & cliente, const string & linha) {
 	vector<string> palavras;
 
-	ES::quebrarTexto(palavras, linha, ' ');
+	ES::quebrarTexto(palavras, linha, ESPACO);
 
 	if (palavras.empty()) return false;
 

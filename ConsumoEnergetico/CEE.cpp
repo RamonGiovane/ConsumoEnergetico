@@ -53,10 +53,13 @@ string formatarCaminhoCompleto(const string & caminhoDiretorio, const string & n
 /*Lê várias faturas PDF de um caminho especificado. É necessário a lista de arquivos do diretório e seu caminho absoluto,
 para que eles sejam encontrados.
 Exibe ao usuário os status da operações. Retorna true em caso de sucesso, false em falha.*/
-int CEE::importarFaturas(vector<string> listaArquivos, const string & caminhoDiretorio) {
+int CEE::importarFaturas(vector<string> listaArquivos, string caminhoDiretorio) {
 	int arquivosIgnorados = 0, arquivosLidos = 0;
 	string caminhoCompleto;
 
+	//Se o dietório passado é um ou vários esapços em branco 
+	if (std::all_of(caminhoDiretorio.begin(),caminhoDiretorio.end(),isspace)) caminhoDiretorio = caminhoPrograma;
+	cout << endl << "foda : [" << caminhoDiretorio << "]";
 	for (string arquivo : listaArquivos) {
 		caminhoCompleto = formatarCaminhoCompleto(caminhoDiretorio, arquivo);
 		if (importarFatura(caminhoCompleto))
@@ -95,9 +98,30 @@ bool CEE::importarFatura(const string & caminhoArquivo, bool printMensagemFinal)
 
 }
 
+
+
+
+int CEE::promptImportarFaturas() {
+	
+	cout << NO_PARAM_INFO;
+
+	cin.ignore();
+
+	return interpretarUmParametro("");
+}
+
+//Parâmetro para visualizar ajuda do programa
+const char HELP_COM1[] = "-h";
+const char HELP_COM2[] = "--help";
+
 int CEE::interpretarUmParametro(char * parametro) {
 	string caminhoDiretorio = parametro;
-
+	cout << parametro;
+	if (string(parametro) == HELP_COM1 || string(parametro) == HELP_COM2) {
+		exibirInformacao();
+		return 1;
+	}
+		
 	vector<string> arquivos;
 	if (ES::obterArquivosDiretorio(caminhoDiretorio, arquivos)) {
 		if (!verificarXPDF()) return false;
@@ -264,6 +288,10 @@ bool CEE::pesquisarExibirCliente(const string & numeroCliente) {
 int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 
 	switch (numeroArgumentos) {
+	
+	case 1:
+		return promptImportarFaturas();
+
 	case 2:
 		return interpretarUmParametro(argumentos[1]);
 		break;

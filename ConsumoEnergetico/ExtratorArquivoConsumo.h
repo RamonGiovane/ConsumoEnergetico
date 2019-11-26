@@ -12,6 +12,10 @@ class ExtratorArquivoConsumo : public RelatorDeErros
 public:
 	bool lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada);
 
+	inline string getConteudoResposta() {
+		return conteudoResposta;
+	}
+
 private:
 	
 	bool lerValidarCabecalhoArquivoDeConsumo(const string & linhaCabecalho, int & mes, int & ano);
@@ -20,6 +24,8 @@ private:
 
 	double obterConsumoKWh(const string & linhaDoConsumo);
 
+
+	string conteudoResposta;
 	
 };
 

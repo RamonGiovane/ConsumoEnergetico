@@ -129,7 +129,11 @@ const char REGEX_LINHA_HISTORICO[] = "([A-Z]{3}[/]\\d{2})?\\s+\\d{1,4}\\s+\\d{1,
 const int TAMANHO_HISTORICO = 13;
 
 
-//Informações de do programa e ajuda
+//Informações do programa e ajuda
+const string NO_PARAM_INFO = "\nO programa foi iniciado sem parâmetros. Logo, fará importações de faturas do diretório atual.\n" + string(ITEM_LINHA) +
+" Pressione ENTER para aceitar ou CTRL+C para cancelar." +
+"\n\nPara mais informações re-execute o programa utilizando o parâmetro -h ou --help.\n";
+
 const string PROG_INFO = "CEE versão 0.1: Relatório de Consumo de Energia Elétrica"  + SBARRA_N 
 + "2019 Ramon Giovane https://github.com/RamonGiovane"  + SBARRA_N 
 
