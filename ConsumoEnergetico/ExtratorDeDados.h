@@ -25,6 +25,8 @@ public:
 
 	bool importarFaturaPDF(const string & caminhoArquivo);
 
+	bool lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada);
+
 	string getMensagemErro();
 
 private:
@@ -33,6 +35,8 @@ private:
 		this->mensagemErro = mensagemErro;
 		return false;
 	}
+
+	bool lerArquivoTexto(string & conteudoArquivo, const string & caminhoArquivo);
 
 	//new
 	bool extrairCEPCidade(Cliente & cliente, const string & linha);
@@ -60,9 +64,7 @@ private:
 	//new
 	bool importarFatura(vector<string>& linhas);
 
-	bool lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada);
 
-	bool lerArquivoTexto(string & conteudoArquivo);
 
 	//new
 	bool obterMesAnoReferente(const vector<string>& linhasArquivo, int & posicaoAtual);

@@ -39,7 +39,7 @@ bool ExtratorDeDados::importarFaturaPDF(const string& caminhoArquivo) {
 	vector<string> linhasArquivo;
 
 	cout << MSG_LENDO_FATURA;
-	if (!lerArquivoTexto(conteudoConta)) {
+	if (!lerArquivoTexto(conteudoConta, FILE_SAIDA_TMP)) {
 		mensagemErro = MSGE_ARQUIVO_CORROMPIDO;
 		return false;
 	}
@@ -272,9 +272,9 @@ bool ExtratorDeDados::importarFatura(vector<string> & linhas) {
 
 
 
-bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo) {
+bool ExtratorDeDados::lerArquivoTexto(string& conteudoArquivo, const string & caminhoArquivo) {
 	ArquivoTexto arquivo;
-	arquivo.abrir(FILE_SAIDA_TMP, TipoDeAcesso::LEITURA);
+	arquivo.abrir(caminhoArquivo, TipoDeAcesso::LEITURA);
 	conteudoArquivo = arquivo.ler();
 	arquivo.fechar();
 	return conteudoArquivo == SNULL ? false : true;
@@ -418,18 +418,17 @@ bool ExtratorDeDados::obterHistoricoConsumo(const string & linha) {
 }
 
 bool ExtratorDeDados::lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada) {
-	ArquivoTexto arquivo;
-	arquivo.abrir(caminhoArquivoEntrada, LEITURA);
-	int mes = 0, ano = 0;
-	string arquivoTexto = arquivo.ler();
+	string textoArquivo;
+	lerArquivoTexto(textoArquivo, caminhoArquivoEntrada);
+
+	if (textoArquivo == SNULL) return erro(MSGE_ARQUIVO_ENTRADA);
+
 	vector<string> linhas;
 	int mesArquivo, anoArquivo;
-	ES::quebrarTexto(linhas, arquivoTexto, '\n');
+	ES::quebrarTexto(linhas, textoArquivo, BARRA_N);
 	if (linhas.empty()) { mensagemErro = MSGE_ARQUIVO_ENTRADA; return false; }
 
-	if (!lerValidarCabecalhoArquivoDeConsumo(linhas[100], mesArquivo, anoArquivo)) return false;
-
-	arquivo.fechar();
+	if (!lerValidarCabecalhoArquivoDeConsumo(linhas[0], mesArquivo, anoArquivo)) return false;
 
 	double consumoKWh = 0;// calcularConsumo(linhas, mes, ano);
 	if (consumoKWh == -1) return false;
@@ -441,13 +440,16 @@ bool ExtratorDeDados::lerArquivoDeConsumo(Consumo & consumo, const string & nume
 
 }
 
+const string HASH_TAG = "#";
 bool ExtratorDeDados::lerValidarCabecalhoArquivoDeConsumo(const string & linhaCabecalho, int & mes, int & ano) {
 	vector<string> cabecalho;
-	ES::quebrarTexto(cabecalho, linhaCabecalho, ' ');
-	string dataInvalida = "";
-	if (cabecalho[0] == "#" && cabecalho.size() == 4) {
+	ES::quebrarTexto(cabecalho, linhaCabecalho, ESPACO);
+	
+	string dataInvalida;
+	
+	if (cabecalho[0] == HASH_TAG && cabecalho.size() == 4) {
 		if (!ES::strMesAnoToInt(cabecalho[3], mes, ano))
-			dataInvalida = string("\n") + MSG_DATA_INVALIDA;
+			dataInvalida = BARRA_N + MSG_DATA_INVALIDA;
 		else
 			return true;
 	}

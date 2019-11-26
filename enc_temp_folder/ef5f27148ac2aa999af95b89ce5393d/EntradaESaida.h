@@ -20,7 +20,7 @@ public:
 	static bool removerArquivo(string caminhoArquivo);
 	static bool arquivoExiste(const string & nomeArquivo);
 
-	static bool quebrarTexto(vector<string>&fragmentos, const string & texto, char delimitador);
+	static bool quebrarTexto(vector<string>& fragmentos, const string & texto, char delimitador);
 
 	static bool quebrarTexto(vector<string>& fragmentos, const string & texto, char delimitador, const string & separador);
 
