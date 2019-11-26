@@ -103,8 +103,8 @@ const char REGEX_CLIENTE_INSTALACAO[] = "\\d{5,11}\\s*\\d{5,11}";
 //Casa com um string que comece com uma letra maiúscula (correspondente a um nome) ou com um CEP
 const char REGEX_CEP_E_NOMES[] = "(^[A-Z]+)|(^\\d{5}[-]\\d{3})";
 
-//Casa com um mês e ano do histórico de consumo no formato: "NOV/19";
-const char REGEX_DATA_HISTORICO[] = "[A-Z]{3}[/]\\d{2}";
+//Casa com uma linha de consumo do histórico de consumo, podendo ter ou não o mês e ano referentes.
+const char REGEX_LINHA_HISTORICO[] = "([A-Z]{3}[/]\\d{2})?\\s+\\d{1,4}\\s+\\d{1,3}[,]\\d{2}\\s+\\d{1,2}";
 
 
 

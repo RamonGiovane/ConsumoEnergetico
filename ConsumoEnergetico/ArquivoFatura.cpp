@@ -122,7 +122,7 @@ bool ArquivoFatura::salvarHistoricoConsumo(Fatura & fatura) {
 	const int TAMANHO_HISTORICO = 12;
 	arquivo.abrir(FILE_HISTORICO_DAT);
 	
-	for (int i = 0; i < TAMANHO_HISTORICO; i++) {
+	for (int i = 0; i <= TAMANHO_HISTORICO; i++) {
 		Consumo consumo;
 		if (!fatura.obterConsumoDoHistorico(consumo, i)) { arquivo.fechar(); return false; }
 

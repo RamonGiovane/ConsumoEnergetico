@@ -192,17 +192,17 @@ bool ExtratorDeDados::salvarFatura() {
 }
 
 
-void ExtratorDeDados::popularConsumo(const vector<string> & itensLinha, const string & numeroInstalacao, const string & mesAno) {
-	int mes, ano;
-	ES::strMesAnoToInt(mesAno, mes, ano);
-
+void ExtratorDeDados::popularConsumo(const vector<string> & itensLinha, const string & numeroInstalacao, int mes, int ano) {
+	
+	//verifica se a posicao 0 da linha corresponde ao mes/ano. se sim, pula para a posicao 1
+	int posicao = ES::isNumber(itensLinha[0]) ? 0 : 1; 
 	Consumo consumo;
-
+	
 	consumo.setMes(mes);
 	consumo.setAno(ano);
-	consumo.setConsumoKWh(ES::strToInt(itensLinha[1]));
-	consumo.setMediaConsumoDiario(ES::strToInt(itensLinha[2]));
-	consumo.setDias(ES::strToInt(itensLinha[3]));
+	consumo.setConsumoKWh(ES::strToInt(itensLinha[posicao++]));
+	consumo.setMediaConsumoDiario(ES::strToDouble(itensLinha[posicao++]));
+	consumo.setDias(ES::strToInt(itensLinha[posicao++]));
 	consumo.setNumeroInstalacao(numeroInstalacao);
 
 	fatura.adicionarHistoricoConsumo(consumo);
@@ -215,8 +215,11 @@ bool ExtratorDeDados::extrairHistoricoConsumo(const vector<string> & linhas, int
 	if (numeroLinha == -1) return erro(MSGE_HISTORICO_NAO_ENCONTRADO); else posicao = numeroLinha;
 
 	int valoresComputados = 0;
-	string mesAno;
+	string padraoEncontrado;
 	vector<string> itensLinha;
+	
+	int mes = fatura.getMesReferente();
+	int ano = fatura.getAnoReferente();
 
 	for (++posicao; (size_t)posicao < linhas.size(); posicao++) {
 
@@ -226,11 +229,14 @@ bool ExtratorDeDados::extrairHistoricoConsumo(const vector<string> & linhas, int
 
 		ES::quebrarTexto(itensLinha, linhas[posicao], ESPACO);
 
-		if (!ES::procurarPadrao(mesAno, itensLinha[0], REGEX_DATA_HISTORICO)) continue;
+		if (!ES::procurarPadrao(padraoEncontrado, linhas[posicao], REGEX_LINHA_HISTORICO)) continue;
 
-		popularConsumo(itensLinha, numeroInstalacao, mesAno);
+		popularConsumo(itensLinha, numeroInstalacao, mes, ano);
 
 		valoresComputados++;
+		
+		mes--;
+		if (mes == 0) { ano--; mes = 12; };
 	}
 
 	if (valoresComputados != TAMANHO_HISTORICO) return erro(MSGE_HISTORICO_INCONSISTENTE);
@@ -376,8 +382,15 @@ bool ExtratorDeDados::obterMesVencimentoEValor(vector<string>& linhasArquivo, in
 	vector<string> itens;
 	ES::quebrarTexto(itens, dataVencimentoEValor, ESPACO);
 
+	//A string com o valor pode estar como: dd/MM/yyyy R$ xx,xx ou dd/MM/yyyy R$xx,xx
 	if (itens.size() == 3)
+		//apagando a palavra 'R$' na posiçao 1
 		itens.erase(itens.begin() + 1);
+	else { 
+		//apagando a string 'R$' na frente do valor
+		itens[1].erase(itens[1].begin());
+		itens[1].erase(itens[1].begin());
+	}
 
 	fatura.setDataVencimento(itens[0]);
 	fatura.setValorAPagar(ES::strToDouble(itens[1]));

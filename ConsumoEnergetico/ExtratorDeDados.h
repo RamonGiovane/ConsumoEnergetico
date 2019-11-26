@@ -53,7 +53,7 @@ private:
 	//new 
 	bool salvarFatura();
 
-	void popularConsumo(const vector<string>& itensLinha, const string & numeroInstalacao, const string & mesAno);
+	void popularConsumo(const vector<string>& itensLinha, const string & numeroInstalacao, int mes, int ano);
 
 	bool extrairHistoricoConsumo(const vector<string>& linhas, int & posicao, const string & numeroInstalacao);
 
