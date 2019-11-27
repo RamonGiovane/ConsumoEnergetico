@@ -3,6 +3,7 @@
 #include "RelatorDeErros.h"
 #include "Consumo.h"
 #include "ArquivoHistorico.h"
+#include "ArquivoFatura.h"
 #include <string>
 #include <vector>
 
@@ -19,7 +20,8 @@ public:
 	}
 
 	inline ~ExtratorArquivoConsumo() {
-		arquivo.fechar();
+		arquivoHistorico.fechar();
+		arquivoFatura.fechar();
 	}
 
 private:
@@ -27,9 +29,7 @@ private:
 
 	bool interpretarArquivoDeConsumo(vector<string>& linhas, const string & numeroCliente, int mesFatura, int anoFatura);
 
-	bool calcularDadosConsumo(Consumo & consumoResposta, Consumo consumo);
-
-	double calcularMediaDiaria(double consumo, int diasFaturados);
+	double procurarPrecoEnergia(Consumo & consumo);
 
 	bool gerarResultados(vector<Consumo> consumosMesAnoArquivo, vector<Consumo> consumoMesAnoSintaxe, double consumoCalculado);
 
@@ -44,7 +44,9 @@ private:
 
 	string conteudoResposta;
 
-	ArquivoHistorico arquivo;
+	ArquivoHistorico arquivoHistorico;
+
+	ArquivoFatura arquivoFatura;
 	
 };
 

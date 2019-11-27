@@ -3,6 +3,7 @@
 #include "Consumo.h"
 #include "EntradaESaida.h"
 #include "Constantes.h"
+#include "ArquivoFatura.h"
 #include <vector>
 #include <string>
 
@@ -80,6 +81,17 @@ const char STR_DADOS_FATURA_EM[] = " >> Dados da fatura Cemig em ";
 const char STR_DADOS_CALCULADOS[] = ">> Dados calculados para ";
 const char RS[] = "R$ ";
 
+
+
+double ExtratorArquivoConsumo::procurarPrecoEnergia(Consumo & consumo) {
+
+	arquivoFatura.abrir(FILE_FATURA_DAT);
+	arquivoFatura.pesquisarFatura(consumo.get)
+	
+
+
+}
+
 string gerarResultado(Consumo consumo, bool valorConsumoEnergia = false) {
 	double consumoKwH = consumo.getConsumoKWh();
 	int dias = consumo.getDias();
@@ -88,9 +100,9 @@ string gerarResultado(Consumo consumo, bool valorConsumoEnergia = false) {
 
 	return STR_CONSUMO_MENSAL + ES::doubleToStr(consumoKwH) + KWH +
 		//calcular media fora desse metodo
-		STR_CONSUMO_DIARIO + ES::doubleToStr(calcularMediaDiaria(consumoKwH, dias)) + KWH +
+		STR_CONSUMO_DIARIO + ES::doubleToStr(consumo.getMediaConsumoDiario()) + KWH +
 		STR_VALOR_CONSUMO  + ES::doubleToStr(valorConsumo) + KWH +
-		STR_NUMERO_DIAS + RS + ES::doubleToStr(valorConsumo);
+		STR_NUMERO_DIAS + RS + ES::doubleToStr(consumo.getDias());
 }
 bool compararConsumos(Consumo c1, Consumo c2) {
 	return c1.getNumeroInstalacao() == c1.getNumeroInstalacao() && c1.getAno() == c2.getAno() && c1.getMes() == c2.getMes();
@@ -100,7 +112,7 @@ bool gerarResultado(Consumo consumoArquivo, Consumo consumoFatura) {
 	string r = STR_DADOS_FATURA_EM + ES::mesToStr(consumoFatura.getMes()) + BARRA + ES::intToStr(consumoFatura.getAno());
 	r += gerarResultado(consumoFatura);
 	
-	string r = STR_DADOS_CALCULADOS + ES::mesToStr(consumoArquivo.getMes()) + BARRA + ES::intToStr(consumoArquivo.getAno());
+	r += STR_DADOS_CALCULADOS + ES::mesToStr(consumoArquivo.getMes()) + BARRA + ES::intToStr(consumoArquivo.getAno());
 	r += gerarResultado(consumoArquivo, compararConsumos(consumoArquivo, consumoFatura));
 
 	
@@ -126,8 +138,8 @@ bool ExtratorArquivoConsumo::gerarResultados(vector<Consumo> consumosMesAnoArqui
 
 bool ExtratorArquivoConsumo::procurarConsumosDoCliente(vector<Consumo> & consumos, const string & numeroCliente, int mes, int ano) {
 
-	if (!arquivo.abrir(FILE_HISTORICO_DAT) ||
-		!arquivo.obterHistoricoConsumo(consumos, numeroCliente, mes, ano)) return false;
+	if (!arquivoHistorico.abrir(FILE_HISTORICO_DAT) ||
+		!arquivoHistorico.obterHistoricoConsumo(consumos, numeroCliente, mes, ano)) return false;
 	
 	return true;
 
@@ -150,17 +162,7 @@ bool ExtratorArquivoConsumo::lerValidarCabecalhoArquivoDeConsumo(const string & 
 	return false;
 }
 
-bool gerarDadosConsumo(Consumo * consumo, const string & numeroInstalacao, int dias, int mes, int ano) {
-	ArquivoHistorico arquivo;
-	arquivo.abrir(FILE_HISTORICO_DAT);
 
-	int registro = arquivo.pesquisarConsumoNoHistorico(numeroInstalacao, mes, ano);
-	if (registro == -1) return false;
-	consumo = arquivo.lerObjeto(registro);
-
-	return true;
-
-}
 
 double ExtratorArquivoConsumo::calcularConsumo(const vector<string> & linhasArquivo, int mes, int ano) {
 	double valorConsumo, totalConsumo = 0;
@@ -203,7 +205,7 @@ double ExtratorArquivoConsumo::obterConsumoKWh(const string & linhaDoConsumo) {
 		
 			watts = ES::strToDouble(itemsLinha[posicao - 1]);
 
-			return watts / 1000 * horas;
+			return horas == 0 ? 0 : watts / 1000 * horas;
 		}
 	}
 

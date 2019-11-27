@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Arquivo.cpp" />
     <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp" />
     <ClCompile Include="ArquivoCliente.cpp" />
     <ClCompile Include="ArquivoFatura.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="ValoresFaturados.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Arquivo.h" />
     <ClInclude Include="ArquivoBinario\ArquivoBinario.h" />
     <ClInclude Include="ArquivoCliente.h" />
     <ClInclude Include="ArquivoFatura.h" />

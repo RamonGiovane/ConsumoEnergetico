@@ -78,6 +78,9 @@
     <ClCompile Include="ExtratorArquivoConsumo.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
+    <ClCompile Include="Arquivo.cpp">
+      <Filter>Source Files\Arquivo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bandeira.h">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="ExtratorArquivoConsumo.h">
       <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Arquivo.h">
+      <Filter>Header Files\Arquivo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
