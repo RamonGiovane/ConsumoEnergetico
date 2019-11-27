@@ -68,9 +68,8 @@ public:
 
 	int pesquisarConsumoNoHistorico(const string & numeroInstalacao, int mes, int ano);
 
-	int obterHistoricoConsumo(vector<Consumo> & historicoConsumo, const string & numeroCliente, int mesInicial, int anoInicial, int mesaFinal, int anoFinal);
 
-
+	bool obterHistoricoConsumo(vector<Consumo> & historicoConsumo, const string & numeroCliente, int mesInicial, int anoInicial, int mesFinal = 0, int anoFinal = 0);
 
 private:
 	ArquivoBinario *arqBin;

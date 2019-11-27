@@ -1,14 +1,13 @@
 #include "EntradaESaida.h"
 #include <string>
 #include <fstream>
-#include <cstdio>
 #include <iostream>
 #include <filesystem>
 #include <regex>
 #include "ArquivoTexto\ArquivoTexto.h"
 #include "Constantes.h"
-#include <Windows.h>
-#include <stdlib.h>
+#include "Consumo.h"
+
 
 using namespace std;
 
@@ -19,6 +18,12 @@ int  ES::identificarMesAbreviado(const string & strMes) {
 			return i;
 	return 0;
 	
+}
+
+/*Organiza um vector de consumos de acorda com a função de comparação definida na classe Consumo*/
+bool ES::organizarConsumos(vector<Consumo> & historico) {
+	sort(historico.begin(), historico.end(), Consumo::comparador);
+	return true;
 }
 
 /*Retorna a representação textual de um mês a partir de seu número. Caso o número fornecido não corresponda a um mês, uma string vazia será retornada*/

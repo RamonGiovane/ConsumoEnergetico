@@ -198,12 +198,20 @@ int mesAnoEmNumeroUnico(int mes, int ano) {
 
 
 
-/* Pesquisa o número de um consumo no arquivo. Em caso de sucesso retorna o número do registro
-* onde o consumo está armazenado, caso contrário, retorna -1.
+/* Pesquisa e retorna em um vector todo o histórico de consumo de um cliente em intervalo de meses e anos qualquer.
+	Se o mês e ano finais foram omitidos (ou passados como 0), para tais, serão considerados o mês e ano iniciais.
+*	Retorna os dados obtidos por referência em um vector. 
+	Retorna true se algum dado de consumo for encotrado, false do contrário.
 */
-int ArquivoHistorico::obterHistoricoConsumo(vector<Consumo> & historicoConsumo, const string & numeroCliente, int mesInicial, int anoInicial, int mesaFinal, int anoFinal) {
+bool ArquivoHistorico::obterHistoricoConsumo(vector<Consumo> & historicoConsumo, const string & numeroCliente, int mesInicial, int anoInicial, int mesaFinal, int anoFinal) {
 	RegistroConsumo *registro;
 	Consumo consumo;
+	
+	if (mesaFinal == 0 || anoFinal == 0) {
+		mesaFinal = mesInicial;
+		anoFinal = anoInicial;
+	}
+	
 	// Obtém o número de registros do arquivo.
 	unsigned registros = numeroRegistros();
 
@@ -225,5 +233,5 @@ int ArquivoHistorico::obterHistoricoConsumo(vector<Consumo> & historicoConsumo, 
 			}
 		}
 	}
-	return -1;
+	return historicoConsumo.empty() ? false : true;
 }

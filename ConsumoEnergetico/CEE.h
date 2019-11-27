@@ -36,8 +36,6 @@ public:
 	bool pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, char * mesAnoFinal);
 
 	bool exibirHistorico(const vector<Consumo>& historico, char * mesAnoInicial, char * mesAnoFinal);
-
-	bool organizarHistorico(vector<Consumo>& historico);
 	
 	bool verificarXPDF();
 

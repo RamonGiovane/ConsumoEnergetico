@@ -149,7 +149,7 @@ int CEE::interpretarTresParametros(char * parametro1, char * parametro2, char * 
 bool CEE::calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * arquivoEntrada) {
 	ExtratorArquivoConsumo extrator;
 	Consumo consumo;
-	if (!extrator.lerArquivoDeConsumo(consumo, numeroCliente, arquivoEntrada)) {
+	if (!extrator.lerArquivoDeConsumo(numeroCliente, arquivoEntrada, mesAno)) {
 		cout << endl << extrator.getMensagemErro();
 		return false;
 	}
@@ -173,7 +173,7 @@ bool CEE::pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, c
 	
 	arquivo.obterHistoricoConsumo(historico, numeroCliente, mesInicial, anoInicial, mesFinal, anoFinal);
 	
-	organizarHistorico(historico);
+	ES::organizarConsumos(historico);
 
 	exibirHistorico(historico, mesAnoInicial, mesAnoFinal);
 
@@ -201,10 +201,7 @@ bool CEE::exibirHistorico(const vector<Consumo> & historico, char * mesAnoInicia
 	return true;
 }
 
-bool CEE::organizarHistorico(vector<Consumo> & historico) {
-	sort(historico.begin(), historico.end(), Consumo::comparador);
-	return true;
-}
+
 
 bool CEE::verificarXPDF() {
 	if (!ES::arquivoExiste(caminhoPrograma + PATH_XPDF)) {

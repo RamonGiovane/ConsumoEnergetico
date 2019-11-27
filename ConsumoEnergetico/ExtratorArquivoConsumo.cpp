@@ -7,7 +7,13 @@
 #include <string>
 
 using namespace std;
-bool ExtratorArquivoConsumo::lerArquivoDeConsumo(Consumo & consumo, const string & numeroCliente, const string & caminhoArquivoEntrada) {
+
+bool ExtratorArquivoConsumo::lerArquivoDeConsumo(const string & numeroCliente, const string & caminhoArquivoEntrada, char * mesAno) {
+	int mes, ano;
+	ES::strMesAnoToInt(mesAno, mes, ano);
+	return lerArquivoDeConsumo(numeroCliente, caminhoArquivoEntrada, mes, ano);
+}
+bool ExtratorArquivoConsumo::lerArquivoDeConsumo(const string & numeroCliente, const string & caminhoArquivoEntrada, int mesFatura, int anoFatura) {
 	string textoArquivo;
 
 	Consumo consumoDoMes;
@@ -16,9 +22,17 @@ bool ExtratorArquivoConsumo::lerArquivoDeConsumo(Consumo & consumo, const string
 	if (textoArquivo == SNULL) return erro(MSGE_ARQUIVO_ENTRADA);
 
 	vector<string> linhas;
-	int mesArquivo, anoArquivo;
 	ES::quebrarTexto(linhas, textoArquivo, BARRA_N);
 	if (linhas.empty()) { return erro(MSGE_ARQUIVO_ENTRADA); }
+
+	return interpretarArquivoDeConsumo(linhas, numeroCliente, mesFatura, anoFatura);
+}
+
+bool ExtratorArquivoConsumo::interpretarArquivoDeConsumo(vector<string> & linhas, const string & numeroCliente, int mesFatura, int anoFatura) {
+	int mesArquivo, anoArquivo;
+
+	Consumo consumoArquivo;
+	vector<Consumo> consumosMesAnoArquivo, consumosMesAnoSintaxe;
 
 	if (!lerValidarCabecalhoArquivoDeConsumo(linhas[0], mesArquivo, anoArquivo)) return false;
 
@@ -26,13 +40,98 @@ bool ExtratorArquivoConsumo::lerArquivoDeConsumo(Consumo & consumo, const string
 	if (consumoCalculado == -1) return false;
 
 
-	consumo.setConsumoKWh(consumoCalculado);
+	consumoArquivo.setConsumoKWh(consumoCalculado);
+	
+	//Procurando consumos do mês e ano fornecidos no arquivo de entrada
+	if (!procurarConsumosDoCliente(consumosMesAnoArquivo, numeroCliente, mesArquivo, anoArquivo))
+		return erro("\nFALHA: Não há dados de consumo deste cliente para o mês/ano fornecidos no arquivo de entrada: " + mesArquivo + BARRA + anoArquivo);
 
-	return 1;
-	//return gerarDadosConusmo(consumo, dias, mes, ano);
+	//Procurando consumos do mês e ano fornecidos na sintaxe do programa
+	if (!procurarConsumosDoCliente(consumosMesAnoSintaxe, numeroCliente, mesArquivo, anoArquivo))
+		return erro("\nFALHA: Não há dados de consumo deste cliente para o mês/ano fornecidos nos parâmetros de entrada do programa: " + mesArquivo + BARRA + anoArquivo);
+
+	ES::organizarConsumos(consumosMesAnoSintaxe);
+	ES::organizarConsumos(consumosMesAnoArquivo);
+
+	return gerarResultados(consumosMesAnoArquivo, consumosMesAnoSintaxe, consumoCalculado);
 
 }
 
+//bool ExtratorArquivoConsumo::calcularDadosConsumo(Consumo & consumoResposta, Consumo consumo, double consumoKWhCalculado) {
+//	consumoResposta.setDias(consumo.getDias());
+//	consumoResposta.setConsumoKWh(consumoKWhCalculado);
+//	consumoResposta.setMediaConsumoDiario(consumoKWhCalculado / consumo.getDias());
+//	consumo.
+//}
+
+double calcularMediaDiaria(double consumo, int diasFaturados) {
+	return diasFaturados == 0 ? 0 : consumo / diasFaturados;
+}
+
+double obterValorConsumoEletrico(Consumo consumo) {
+	static int valorConsumo = 0;
+	return 0;
+}
+const char STR_CONSUMO_MENSAL[] = "\n  Consumo mensal: ";
+const char STR_CONSUMO_DIARIO[] = "\n  Consumo médio diário: ";
+const char STR_VALOR_CONSUMO[] = "\n  Valor do consumo elétrico: ";
+const char STR_NUMERO_DIAS[] = "\n  Número de dias: ";
+const char STR_DADOS_FATURA_EM[] = " >> Dados da fatura Cemig em ";
+const char STR_DADOS_CALCULADOS[] = ">> Dados calculados para ";
+const char RS[] = "R$ ";
+
+string gerarResultado(Consumo consumo, bool valorConsumoEnergia = false) {
+	double consumoKwH = consumo.getConsumoKWh();
+	int dias = consumo.getDias();
+	static double valorConsumo = 0;
+	valorConsumo = valorConsumoEnergia ? obterValorConsumoEletrico(consumo) : valorConsumo;
+
+	return STR_CONSUMO_MENSAL + ES::doubleToStr(consumoKwH) + KWH +
+		//calcular media fora desse metodo
+		STR_CONSUMO_DIARIO + ES::doubleToStr(calcularMediaDiaria(consumoKwH, dias)) + KWH +
+		STR_VALOR_CONSUMO  + ES::doubleToStr(valorConsumo) + KWH +
+		STR_NUMERO_DIAS + RS + ES::doubleToStr(valorConsumo);
+}
+bool compararConsumos(Consumo c1, Consumo c2) {
+	return c1.getNumeroInstalacao() == c1.getNumeroInstalacao() && c1.getAno() == c2.getAno() && c1.getMes() == c2.getMes();
+}
+bool gerarResultado(Consumo consumoArquivo, Consumo consumoFatura) {
+
+	string r = STR_DADOS_FATURA_EM + ES::mesToStr(consumoFatura.getMes()) + BARRA + ES::intToStr(consumoFatura.getAno());
+	r += gerarResultado(consumoFatura);
+	
+	string r = STR_DADOS_CALCULADOS + ES::mesToStr(consumoArquivo.getMes()) + BARRA + ES::intToStr(consumoArquivo.getAno());
+	r += gerarResultado(consumoArquivo, compararConsumos(consumoArquivo, consumoFatura));
+
+	
+
+}
+
+bool ExtratorArquivoConsumo::gerarResultados(vector<Consumo> consumosMesAnoArquivo, vector<Consumo> consumoMesAnoSintaxe, double consumoCalculado) {
+	int posicaoConsumosArquivo = 0, posicaoConsumosFaturas = 0;
+	string numeroInstalacao;
+	while (true) {
+		
+		
+		if (posicaoConsumosArquivo < consumoMesAnoSintaxe.size()) {
+			numeroInstalacao = consumoMesAnoSintaxe[posicaoConsumosFaturas].getNumeroInstalacao();
+			adicionarConteudoResposta(SUBTITLE_INSTALACAO);
+
+		}
+
+		
+			
+	}
+}
+
+bool ExtratorArquivoConsumo::procurarConsumosDoCliente(vector<Consumo> & consumos, const string & numeroCliente, int mes, int ano) {
+
+	if (!arquivo.abrir(FILE_HISTORICO_DAT) ||
+		!arquivo.obterHistoricoConsumo(consumos, numeroCliente, mes, ano)) return false;
+	
+	return true;
+
+}
 
 bool ExtratorArquivoConsumo::lerValidarCabecalhoArquivoDeConsumo(const string & linhaCabecalho, int & mes, int & ano) {
 	const string LINHA_1 = " 1.";

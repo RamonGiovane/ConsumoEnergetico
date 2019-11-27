@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <iomanip>
+#include "Consumo.h"
 
 using namespace std;
 class ES {
@@ -11,6 +12,8 @@ class ES {
 public:
 
 	static int identificarMesAbreviado(const string & strMes);
+
+	static bool organizarConsumos(vector<Consumo>& historico);
 	
 
 	static string mesToStr(int mes);
