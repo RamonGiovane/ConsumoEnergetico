@@ -21,7 +21,22 @@ string ExtratorDeFaturas::getCaminhoDoPrograma() {
 	return caminhoPrograma;
 }
 
+const char ARRAB = '\\';
+const char DIR_FATURAS[] = "faturas\\";
+bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo, const string & caminhoPrograma) {
 
+	char comando[1000];
+	string filePath;
+	vector<string> files;
+	ES::quebrarTexto(files, caminhoArquivo, ARRAB);
+
+	if (!ES::copiarArquivo(FILE_SAIDA_TMP, caminhoPrograma + DIR_FATURAS))
+		return erro("\nAVISO: Não foi possível guardar um cópia do arquivo texto desta fatura. Pois a conversão do PDF falhou");
+
+	cout << "A fatura foi salva como  texto em ";
+	return true;
+	
+}
 
 /*Se o caminho do programa estiver indefinido retorna false, sem definir uma mensagem de erro.*/
 bool ExtratorDeFaturas::importarFaturaPDF(const string& caminhoArquivo) {
@@ -34,6 +49,7 @@ bool ExtratorDeFaturas::importarFaturaPDF(const string& caminhoArquivo) {
 		setMensagemErro(MSGE_ARQUIVO_NAO_LIDO);
 		return false;
 	}
+
 
 	string conteudoConta;
 	vector<string> linhasArquivo;

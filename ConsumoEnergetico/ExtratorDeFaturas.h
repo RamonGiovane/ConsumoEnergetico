@@ -21,6 +21,8 @@ public:
 
 	string getCaminhoDoPrograma();
 
+	bool salvarCopiaArquivoTexto(const string & caminhoArquivo, const string & caminhoPrograma);
+
 	bool importarFaturaPDF(const string & caminhoArquivo);
 
 private:

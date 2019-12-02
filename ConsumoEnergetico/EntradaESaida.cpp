@@ -68,7 +68,15 @@ bool ES::obterArquivosDiretorio( const string  & caminhoDiretorio, vector<string
 
 	return true;
 }
+const char COM_CP[] = "cp  %s %s %s";
+bool ES::copiarArquivo(const string & origem, const string & destino) {
+	char comando[1000];
+	sprintf_s(comando, 1000, COM_CP, origem, destino, NUL_REDIRECTOR);
 
+	return arquivoExiste(destino);
+
+
+}
 
 /*Converte um arquivo PDF especificado em caminhoArquivo e um arquivo texto que será criado no caminho fornecido em arquivoDestino*/
 bool ES::PDFToTextTable(const string & caminhoArquivo, const string & caminhoPrograma, const string  & arquivoDestino) {

@@ -20,6 +20,8 @@ public:
 	static void mudarLocalizacao();
 	static bool obterArquivosDiretorio(const string & caminhoDiretorio, vector<string>& listaArquivos);
 
+	static bool copiarArquivo(const string & origem, const string & destino);
+
 	static bool PDFToTextTable(const string & caminhoArquivo, const string & caminhoPrograma, const string & arquivoDestino);
 
 	static bool removerArquivo(string caminhoArquivo);
