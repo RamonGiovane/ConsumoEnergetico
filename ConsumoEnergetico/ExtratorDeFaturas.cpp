@@ -32,7 +32,7 @@ bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo, c
 
 	if (!ES::copiarArquivo(FILE_SAIDA_TMP, caminhoPrograma + DIR_FATURAS))
 		return erro("\nAVISO: Não foi possível guardar um cópia do arquivo texto desta fatura. Pois a conversão do PDF falhou");
-
+	precisa testar isso
 	cout << "A fatura foi salva como  texto em ";
 	return true;
 	
