@@ -77,6 +77,8 @@ public:
 
 	Fatura * lerObjeto(unsigned int numeroRegistro, bool consultaDetalhada = true);
 
+	RegistroFatura * lerRegistro(unsigned int numeroRegistro);
+
 	Fatura registroParaFatura(Fatura & fatura, const RegistroFatura & registro, bool consultaDetalhada = true);
 
 
@@ -85,18 +87,27 @@ public:
 	*/
 	bool excluirRegistro(unsigned int numeroRegistro);
 
+	Fatura * obterFatura(int mesReferente, int anoReferente, const string & numeroInstalacao);
+	Fatura * obterFatura(const string & numeroCliente, int mesReferente, int anoReferente);
 
 	/* Pesquisa uma fatura no arquivo. Em caso de sucesso retorna o número do registro
 	* onde o fatura está armazenado, caso contrário, retorna -1.
 	*/
 	int pesquisarFatura(string numeroCliente, int mesReferente = 0, int anoReferente = 0, int posicao = 0);
+	int pesquisarFatura(int mesReferente, int anoReferente, string numeroCliente = "", string numeroInstalacao = "");
 
 
 private:
 	ArquivoBinario *arqBin;
+
+	bool posicionarNoInicio();
+
+	bool posicionarNoFinal();
 
 	bool salvarCliente(const Cliente & cliente);
 	bool salvarHistoricoConsumo(Fatura & fatura);
 };
 
 #endif // !ARQUIVO_FATURA_H
+
+

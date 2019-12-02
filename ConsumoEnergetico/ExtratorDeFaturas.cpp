@@ -143,7 +143,7 @@ bool ExtratorDeFaturas::obterPrecoEConsumo(ValoresFaturados & valores, const vec
 		ultimaPosicao = palavras.size() - 1;
 		if (ultimaPosicao <= 1) return false;
 
-		valores.setValorDaFatura(ES::strToInt(palavras[ultimaPosicao]));
+		valores.setValorDaFatura(ES::strToDouble(palavras[ultimaPosicao]));
 		valores.setPreco(ES::strToDouble(palavras[--ultimaPosicao]));
 		valores.setConsumo(ES::strToInt(palavras[--ultimaPosicao]));
 

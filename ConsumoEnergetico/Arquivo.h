@@ -33,6 +33,6 @@ public:
 
 private:
 	string nomeArquivo;
-	fstream Arquivo; // Arquivo binário para escrita e leitura de dados. 
+	fstream arquivoBinario; // Arquivo binário para escrita e leitura de dados. 
 };
 #endif

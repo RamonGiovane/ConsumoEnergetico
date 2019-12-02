@@ -32,6 +32,7 @@ string ArquivoBinario::getNomeArquivo() {
 
 // Obtém o tamanho do arquivo em bytes.
 unsigned long ArquivoBinario::tamanhoArquivo() {
+	arquivoBinario.clear();
 	// Obtém a posição inicial do arquivo.
 	arquivoBinario.seekp(0, ios::beg);
 	unsigned long inicio = static_cast<unsigned long>(arquivoBinario.tellp());

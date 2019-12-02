@@ -153,6 +153,7 @@ bool CEE::calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * a
 		cout << endl << extrator.getMensagemErro();
 		return false;
 	}
+	cout << endl << extrator.getConteudoResposta();
 	return true;
 }
 bool CEE::pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, char * mesAnoFinal) {

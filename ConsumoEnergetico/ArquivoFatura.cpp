@@ -109,6 +109,19 @@ bool ArquivoFatura::escreverObjeto(Fatura fatura) {
 	return true;
 }
 
+
+bool ArquivoFatura::posicionarNoInicio() {
+	if (arqBin == NULL) return false;
+	arqBin->getArquivoBinario().seekp(0, ios::beg);
+	return true;
+}
+
+bool ArquivoFatura::posicionarNoFinal() {
+	if (arqBin == NULL) return false;
+	arqBin->getArquivoBinario().seekp(0, ios::end);
+	return true;
+}
+
 bool ArquivoFatura::salvarCliente(const Cliente & cliente) {
 	ArquivoCliente arquivo;
 	arquivo.abrir(FILE_CLIENTE_DAT);
@@ -158,6 +171,24 @@ Fatura* ArquivoFatura::lerObjeto(unsigned int numeroRegistro, bool consultaDetal
 		Fatura* fatura = new Fatura();
 		registroParaFatura(*fatura, registro);
 		return fatura;
+	}
+	else return NULL;
+}
+
+RegistroFatura* ArquivoFatura::lerRegistro(unsigned int numeroRegistro) {
+	RegistroFatura registro;
+
+	// Posiciona no registro a ser lido.
+	arqBin->getArquivoBinario().seekg(numeroRegistro * tamanhoRegistro());
+
+	// Lê o registro e armazena os dados no objeto fatura.
+	arqBin->getArquivoBinario().read(reinterpret_cast<char *>(&registro), tamanhoRegistro());
+
+	/* Se a leitura não falhar o objeto Fatura será retornado com os dados lidos do arquivo.
+	Cria um objeto Fatura com os dados recuperados do arquivo e armazenados na estrutura registro.
+	*/
+	if (arqBin->getArquivoBinario()) {
+		return new RegistroFatura(registro);
 	}
 	else return NULL;
 }
@@ -233,11 +264,21 @@ bool ArquivoFatura::excluirRegistro(unsigned int numeroRegistro) {
 	return false;
 }
 
+Fatura* ArquivoFatura::obterFatura(int mesReferente, int anoReferente, const string & numeroInstalacao) {
+	return lerObjeto(pesquisarFatura(mesReferente, anoReferente, VAZIO, numeroInstalacao));
+
+}
+
+Fatura* ArquivoFatura::obterFatura(const string & numeroCliente, int mesReferente, int anoReferente) {
+	return lerObjeto(pesquisarFatura(mesReferente, anoReferente, numeroCliente, VAZIO));
+}
+
+
 /* Pesquisa o número de um cliente no arquivo. Em caso de sucesso retorna o número do registro
 * onde o fatura está armazenado, caso contrário, retorna -1.
 */
 int ArquivoFatura::pesquisarFatura(string numeroCliente, int mesReferente, int anoReferente, int posicao) {
-	Fatura *fatura;
+	RegistroFatura *fatura;
 
 	// Obtém o número de registros do arquivo.
 	unsigned registros = numeroRegistros();
@@ -245,14 +286,14 @@ int ArquivoFatura::pesquisarFatura(string numeroCliente, int mesReferente, int a
 	// Percorre o arquivo a procura do nome do fatura.
 	for (unsigned reg = posicao; reg < registros; reg++) {
 		// Recupera o fatura do aquivo.
-		fatura = lerObjeto(reg, false);
+		fatura = lerRegistro(reg);
 
 		// Verifica se é o número procurado.
-		if (!_stricmp(numeroCliente.c_str(), fatura->getCliente().getNumero().c_str())) {
+		if (!_stricmp(numeroCliente.c_str(), fatura->numeroCliente)) {
 
 			if ((anoReferente == 0 && mesReferente == 0) ||
-				mesReferente == fatura->getMesReferente() &&
-				anoReferente == fatura->getAnoReferente()) {
+				mesReferente == fatura->mesReferente &&
+				anoReferente == fatura->anoReferente) {
 
 				return reg;
 			}
@@ -261,6 +302,37 @@ int ArquivoFatura::pesquisarFatura(string numeroCliente, int mesReferente, int a
 	return -1;
 }
 
+/* Pesquisa o número de um cliente no arquivo. Em caso de sucesso retorna o número do registro
+* onde o fatura está armazenado, caso contrário, retorna -1.
+*/
+int ArquivoFatura::pesquisarFatura(int mesReferente, int anoReferente, string numeroCliente, string numeroInstalacao) {
+	RegistroFatura *fatura;
 
+	if (numeroCliente.empty() && numeroInstalacao.empty()) return -1;
+
+	bool a = posicionarNoInicio();
+
+	// Obtém o número de registros do arquivo.
+	unsigned registros = numeroRegistros();
+
+	// Percorre o arquivo a procura do nome do fatura.
+	for (unsigned reg = 0; reg < registros; reg++) {
+		// Recupera o fatura do aquivo.
+		fatura = lerRegistro(reg);
+
+		// Verifica se é o número procurado.
+		if (!_stricmp(numeroCliente.c_str(), fatura->numeroCliente) == 0
+			|| !_stricmp(numeroInstalacao.c_str(), fatura->numeroInstalacao) == 0) {
+
+			if ((mesReferente == 0 && anoReferente == 0) ||
+				mesReferente == fatura->mesReferente &&
+				anoReferente == fatura->anoReferente) {
+
+				return reg;
+			}
+		}
+	}
+	return -1;
+}
 
 

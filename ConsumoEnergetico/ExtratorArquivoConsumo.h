@@ -27,9 +27,22 @@ public:
 private:
 	bool lerArquivoDeConsumo(const string & numeroCliente, const string & caminhoArquivoEntrada, int mesFatura, int anoFatura);
 
+	bool calcularConsumosArquivo(vector<Consumo>& consumos, double consumoArquivoCalculado, const string & numeroCliente, int mes, int ano);
+
 	bool interpretarArquivoDeConsumo(vector<string>& linhas, const string & numeroCliente, int mesFatura, int anoFatura);
 
+	double calcularMediaDiaria(double consumo, int diasFaturados);
+
+	double obterValorConsumoEletrico(Consumo consumo, bool calcularConsumo);
+
 	double procurarPrecoEnergia(Consumo & consumo);
+
+	Fatura * procurarFatura(Consumo & consumo);
+
+	string gerarResultado(Consumo consumo, bool valorConsumoEnergia);
+
+
+	string gerarStringResultado(Consumo * consumoArquivo, Consumo * consumoFatura);
 
 	bool gerarResultados(vector<Consumo> consumosMesAnoArquivo, vector<Consumo> consumoMesAnoSintaxe, double consumoCalculado);
 
@@ -40,6 +53,8 @@ private:
 	double calcularConsumo(const vector<string>& linhasArquivo, int mes, int ano);
 
 	double obterConsumoKWh(const string & linhaDoConsumo);
+
+	void adicionarConteudoResposta(const string & conteudo);
 
 
 	string conteudoResposta;
