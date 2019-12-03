@@ -14,8 +14,6 @@ public:
 
 	int interpretarComando(int numeroArgumentos, char * argumentos[]);
 	
-	int interpretarComando(char * argumentos[]);
-	
 	void exibirInformacao();
 	int iniciar(int argc, char * argv[]);
 

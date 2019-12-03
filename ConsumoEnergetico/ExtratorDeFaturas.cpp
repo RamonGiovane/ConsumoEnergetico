@@ -21,8 +21,7 @@ string ExtratorDeFaturas::getCaminhoDoPrograma() {
 	return caminhoPrograma;
 }
 
-const char ARRAB = '\\';
-const char DIR_FATURAS[] = "faturas\\";
+
 bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo, const string & caminhoPrograma) {
 
 	char comando[1000];
@@ -30,10 +29,11 @@ bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo, c
 	vector<string> files;
 	ES::quebrarTexto(files, caminhoArquivo, ARRAB);
 
-	if (!ES::copiarArquivo(FILE_SAIDA_TMP, caminhoPrograma + DIR_FATURAS))
-		return erro("\nAVISO: Não foi possível guardar um cópia do arquivo texto desta fatura. Pois a conversão do PDF falhou");
-	precisa testar isso
-	cout << "A fatura foi salva como  texto em ";
+	string caminhoCopia = caminhoPrograma + DIR_FATURAS + files[files.size() - 1] + TXT;
+	if (files.empty() || !ES::copiarArquivo(caminhoPrograma + FILE_SAIDA_TMP, caminhoCopia))
+		cout << MSG_ARQ_TEXTO_FALHOU;
+	else cout << MSG_ARQ_TEXTO_SALVO + caminhoCopia;
+
 	return true;
 	
 }
@@ -41,21 +41,23 @@ bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo, c
 /*Se o caminho do programa estiver indefinido retorna false, sem definir uma mensagem de erro.*/
 bool ExtratorDeFaturas::importarFaturaPDF(const string& caminhoArquivo) {
 	Fatura fatura;
-
+	cout << "yo";
 	if (caminhoPrograma.empty()) return false;
 
+	ES::criarDiretorio(caminhoPrograma + DIR_FATURAS);
+
 	cout << MSG_CONVERTENDO_PDF;
-	if (!ES::PDFToTextTable(caminhoArquivo, caminhoPrograma, FILE_SAIDA_TMP)) {
+	if (!ES::PDFToTextTable(caminhoArquivo, caminhoPrograma, caminhoPrograma + FILE_SAIDA_TMP)) {
 		setMensagemErro(MSGE_ARQUIVO_NAO_LIDO);
 		return false;
 	}
-
+	salvarCopiaArquivoTexto(caminhoArquivo, caminhoPrograma);
 
 	string conteudoConta;
 	vector<string> linhasArquivo;
 
 	cout << MSG_LENDO_FATURA;
-	if (!ES::lerArquivoTexto(conteudoConta, FILE_SAIDA_TMP)) {
+	if (!ES::lerArquivoTexto(conteudoConta, caminhoPrograma + FILE_SAIDA_TMP)) {
 		setMensagemErro(MSGE_ARQUIVO_CORROMPIDO);
 		return false;
 	}

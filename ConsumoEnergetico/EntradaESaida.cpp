@@ -62,17 +62,18 @@ bool ES::obterArquivosDiretorio( const string  & caminhoDiretorio, vector<string
 
 	//Apaga o arquivo temp gerado
 	ES::removerArquivo(FILE_DIR_LIST);
-
+	
+	cout << "yo5";
 	//Se o vector estiver vazio, não há arquivos para ler
 	if (listaArquivos.empty()) return false;
 
 	return true;
 }
-const char COM_CP[] = "cp  %s %s %s";
+
 bool ES::copiarArquivo(const string & origem, const string & destino) {
 	char comando[1000];
-	sprintf_s(comando, 1000, COM_CP, origem, destino, NUL_REDIRECTOR);
-
+	sprintf_s(comando, 1000, COM_CP, origem.c_str(), destino.c_str(), NUL_REDIRECTOR);
+	system(comando);
 	return arquivoExiste(destino);
 
 
@@ -84,8 +85,8 @@ bool ES::PDFToTextTable(const string & caminhoArquivo, const string & caminhoPro
 
 	char comando[1000];
 	
-	sprintf_s(comando, 1000, "%s%s -table  \"%s\" \"%s\"%s", caminhoPrograma.c_str(), PATH_XPDF, caminhoArquivo.c_str(), 
-		arquivoDestino.c_str(), NUL_REDIRECTOR);
+	sprintf_s(comando, 1000, COM_PDF_TO_TXT, caminhoPrograma.c_str(), PATH_XPDF, caminhoArquivo.c_str(), 
+	arquivoDestino.c_str(), NUL_REDIRECTOR);
 
 	system(comando);
 

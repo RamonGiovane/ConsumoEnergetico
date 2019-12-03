@@ -20,9 +20,11 @@ const char FILE_HISTORICO_DAT[] = "data\\Historico.dat";
 const char FILE_HISTORICO_TMP[] = "data\\Historico.tmp";
 const char FILE_SAIDA_TMP[] = "saida.tmp";
 const static char FILE_DIR_LIST[] = "files.tmp";
-
+const string PONTO_BARRA = ".\\";
+const char CEE_EXE[] = "cee.exe";
 //Diretório
 const char DIR_DATA[] = "data";
+const char DIR_FATURAS[] = "faturas\\";
 
 //Caminho de programa
 const char PATH_XPDF[] = "xpdf\\pdftotext.exe";
@@ -44,7 +46,7 @@ const char MSG_ARQUIVOS_LIDOS[] = " arquivos lidos com sucesso.";
 const char MSG_ARQUIVO_IGNORADO[] = " arquivo com falha ignorado.";
 const char MSG_ARQUIVOS_IGNORADOS[] = " arquivos com falha ignorados.";
 const char MSG_CONVERTENDO_PDF[] = "\nConvertendo PDF... ";
-const char MSG_LENDO_FATURA[] = "\nLendo a fatura digital... ";
+const char MSG_LENDO_FATURA[] = "\nLendo a fatura digital em texto... ";
 const char MSG_OBTENDO_INFO[] = "\nObtendo informações da fatura... ";
 const char MSG_FIM_LEITURA[] = "\n\nA leitura terminou.\n";
 const char MSG_LENDO[] = "\nLendo ";
@@ -52,7 +54,8 @@ const char MSG_IGNORANDO_ARQUIVO[] = "\nIgnorando arquivo...\n\n";
 const char MSG_ARQUIVO_IMPORTADO[] = "\nArquivo lido e importado com sucesso...\n\n";
 const char MSG_CLIENTE_NAO_LOCALIZADO[] = "\nCliente não localizado.\n";
 const char MSG_FATURA_JA_EXISTE[] = "AVISO: Esta fatura já foi importada anteriormente.";
-
+const char MSG_ARQ_TEXTO_FALHOU[] = "\nAVISO: Não foi possível guardar uma cópia do arquivo texto desta fatura.\nA conversão do PDF para texto falhou.";
+const char MSG_ARQ_TEXTO_SALVO[] = "\nA fatura foi salva como texto em\n\t";
 //Mensagem de erro a ser exibidada ao usuário
 const char MSGE_HISTORICO_NAO_ENCONTRADO[] = "\nFALHA: Dados de histórico de consumo não encontrados. ";
 const char MSGE_HISTORICO_INCONSISTENTE[] = "\nFALHA: Dados de histórico de consumo inconsistentes. ";
@@ -61,7 +64,7 @@ const char MSGE_DATA_E_VALOR_NAO_ENCONTRADO[] = "\nFALHA: Dados da fatura incomp
 const char MSGE_SINTAXE_INVALIDA[] = "FALHA: Sintaxe inválida na linha ";
 const char MSGE_VALORES_FATURADOS[] = "\nFALHA: Não foi possível computar os valores faturados.";
 const char MSGE_ARQUIVO_ENTRADA[] = "FALHA: O arquivo de entrada não pôde ser lido pois está corrompido ou vazio.";
-const char MSGE_ARQUIVO_NAO_LIDO[] = "\nFALHA: O arquivo não pôde ser lido. Provavelmente não é um arquivo PDF ou não existe.";
+const char MSGE_ARQUIVO_NAO_LIDO[] = "\nFALHA: O arquivo não pôde ser lido nem guardado como texto. Provavelmente não é um arquivo PDF ou não existe.";
 const char MSGE_ARQUIVO_CORROMPIDO[] = "Provavelmente o arquivo PDF está corrompido.";
 const char MSGE_FATURA_INVALIDA[] = "\nFALHA: O arquivo fornecido não corresponde a uma fatura CEMIG.";
 const string MSGE_DADOS_INCOMPLETOS_CLIENTE = "\nFALHA: Dados do cliente inconsistentes." + string(MSGE_ARQUIVO_CORROMPIDO);
@@ -94,17 +97,20 @@ const char BARRA = '/';
 const char SEPARTOR[] = " | ";
 const char VIRGULA = ',';
 const char PONTO = '.';
+const char ARRAB = '\\';
+const char TXT[] = ".txt";
 const char ITEM_LINHA[] = "\n\t >>";
 const char KWH[] = "kWh";
 const char H[] = "h";
 const char W[] = "w";
 
 //Comando do windows
-const static char REDIRECTOR[] = " > ";
-const static char NUL_REDIRECTOR[] = " >nul 2>nul";
-const static char COM_MKDIR[] = "mkdir ";
-const static char COM_DIR[] = "dir /b ";
-
+const char REDIRECTOR[] = " > ";
+const char NUL_REDIRECTOR[] = " >nul 2>nul";
+const char COM_MKDIR[] = "mkdir ";
+const char COM_DIR[] = "dir /b ";
+const char COM_CP[] = "copy %s %s %s";
+const char COM_PDF_TO_TXT[] = "%s%s -table \"%s\" \"%s\"%s";
 
 //Casa com um mês e ano referente no formato: "NOV/2019"
 const char REGEX_MES_REFERENTE[] = "[A-Z]{3}[/]\\d{4}";

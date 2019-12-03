@@ -17,11 +17,6 @@ using namespace std;
 CEE::CEE() { }
 
 
-
-int CEE::interpretarComando(char * argumentos[]) {
-	return 0;
-}
-
 void CEE::exibirInformacao() {
 	cout << PROG_INFO;
 }
@@ -34,7 +29,6 @@ int CEE::iniciar(int numeroArgumentos, char * argumentos[]) {
 
 	//Cria o diretório em que os arquivos binários ficarão
 	ES::criarDiretorio(DIR_DATA);
-
 	return interpretarComando(numeroArgumentos, argumentos);
 }
 
@@ -121,7 +115,7 @@ int CEE::interpretarUmParametro(char * parametro) {
 		exibirInformacao();
 		return 1;
 	}
-		
+	cout << "yo4";
 	vector<string> arquivos;
 	if (ES::obterArquivosDiretorio(caminhoDiretorio, arquivos)) {
 		if (!verificarXPDF()) return false;
@@ -340,22 +334,25 @@ bool CEE::salvarDados(Fatura fatura) {
 
 }
 
-
 void CEE::definirCaminhoPrograma(char * argv[]) {
 
 	caminhoPrograma = argv[0];
+	
+	if (caminhoPrograma == CEE_EXE) {
+		caminhoPrograma = PONTO_BARRA;
+		return;
+	}
+
 	size_t i = caminhoPrograma.size() - 1;
 
 	while (true) {
-		if (caminhoPrograma[i--] == '\\') break;
+		if (caminhoPrograma[i--] == ARRAB) break;
 		caminhoPrograma.pop_back();
 	}
-
 
 }
 
 int main(int argc, char * argv[]) {
-
 	CEE().iniciar(argc, argv);
 	cout << endl; 
 	return system("pause");
