@@ -4,6 +4,7 @@
 #include <vector>
 #include "Cliente.h"
 #include "Fatura.h"
+#include "Constantes.h"
 using namespace std;
 
 class CEE
@@ -21,13 +22,17 @@ public:
 
 	void relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados);
 
-	bool importarFatura(const string & caminhoArquivo, bool printMensagemFinal = false);
+	bool importarFatura(const string & caminhoArquivo, bool printMensagemFinal = false, int tipoArquivo = TIPO_PDF);
+
+	//bool importarFatura(const string & caminhoArquivo, bool printMensagemFinal = false);
 
 	int promptImportarFaturas();
 
 	int interpretarUmParametro(char * paramtero);
 	
 	int interpretarTresParametros(char * paramtero1, char * paramtero2, char * paramtero3);
+
+	int interpretarDoisParametros(char * parametro1, char * parametro2);
 
 	bool calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * arquivoEntrada);
 
@@ -50,7 +55,7 @@ public:
 private:
 
 
-	bool lerContaDigital(const string & caminhoArquivo);
+	bool lerContaDigital(const string & caminhoArquivo, int tipoArquivo = TIPO_PDF);
 
 	bool salvarDados(Fatura fatura);
 	

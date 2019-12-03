@@ -1,0 +1,88 @@
+HELTON SEBASTIAO ROSA                                                                                                  Nº DO CLIENTE                            Nº DA INSTALAÇÃO
+
+RUA IRMA ELIZABETH CUNHA 181 CS                                                             7008637570                                                        3000755750
+
+BROGOTO
+
+36202-460 BARBACENA, MG                                                                 Referente a                                   Vencimento                   Valor a pagar (R$)
+
+CPF 963.165.356-00                                                                  SET/2019                                        22/10/2019                       193,23
+
+2ª VIA - CONTA DE ENERGIA ELÉTRICA
+
+         Classe                    Subclasse                Modalidade Tarifária                                              Datas de Leitura                       Data de Emissão
+
+Residencial                 Residencial                     Convencional B1                                            Anterior     Atual              Próxima       13/09/2019
+
+Monofásico                                                                                                             13/08        13/09              14/10
+
+                                                                    Informações Técnicas
+
+Tipo de Medição             Medição                       Leitura Anterior        Leitura Atual                                  Constante de Multiplicação          Consumo kWh
+
+Energia kWh                 ABI057037937                    26.928                  27.090                                                          1                       162
+
+                    Informações Gerais                                                                                           Valores Faturados
+
+Tarifa vigente conforme Res Aneel nº 2.550, de 21/05/2019.                  Descrição                                               Quantidade           Tarifa/Preço (R$)       Valor (R$)
+
+O pagamento desta conta não quita débitos anteriores.                       Energia Elétrica kWh                                                    162  1,01279001              164,04
+
+Para estes, estão sujeitas penalidades legais vigentes
+
+(multas) e/ou atualização financeira (juros)baseadas no                                                                Encargos/Cobranças
+
+vencimento das mesmas.                                                      Contrib Ilum Publica Municipal                                                                       29,19
+
+É dever do consumidor manter os dados cadastrais sempre                                                                Tarifas Aplicadas (sem impostos)
+
+atualizados e informar alterações da atividade
+
+exercida no local.                                                          Energia Elétrica kWh                                                         0,66833000
+
+Leitura realizada conforme calendário de faturamento                                Adicional Bandeiras - Já incluído no Valor a Pagar
+
+                                                                            Bandeira Vermelha                                                                                    9,81
+
+AGO/2019 Band. Verm. P1 - SET/2019 Band. Verm. P1
+
+                 Histórico  de     Consumo
+
+MÊS/ANO    CONSUMO kWh             MÉDIA kWh/Dia            Dias
+
+SET/19              162                     5,22            31
+
+AGO/19              165                     5,15            32
+
+JUL/19              132                     4,40            30
+
+JUN/19              119                     4,10            29
+
+MAI/19              119                     3,71            32
+
+ABR/19              93                      3,32            28
+
+MAR/19              133                     4,43            30                                                                   Reservado ao Fisco
+
+FEV/19              130                     4,33            30                                                         SEM VALOR FISCAL
+
+JAN/19              144                     4,50            32
+
+DEZ/18              146                     4,86            30                          Base                           de cálculo (R$)                 Alíquota (%)  Valor (R$)
+
+NOV/18              137                     4,72            29              ICMS                                                 -                              -                -
+
+                    145                     4,53            32              PASEP                                                -                              -                -
+
+OUT/18                                                                      COFINS                                               -                              -                -
+
+SET/18              159                     4,81            33
+
+Ouvidoria  CEMIG: 0800 728 3838 -  Agência  Nacional  de  Energia Elétrica - ANEEL - Telefone: 167 - Ligação gratuita  de telefones fixos e móveis
+
+                         Código de Débito Automático                        Instalação                                 Vencimento                               Total a pagar
+
+                                   000088011333                             3000755750                                 22/10/2019                                  R$193,23
+
+                                   Comprovante de Pagamento                                                                                                   Setembro/2019
+

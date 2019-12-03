@@ -71,7 +71,7 @@ bool ES::obterArquivosDiretorio( const string  & caminhoDiretorio, vector<string
 }
 
 bool ES::copiarArquivo(const string & origem, const string & destino) {
-	char comando[1000];
+	char comando[SIZE_STR];
 	sprintf_s(comando, 1000, COM_CP, origem.c_str(), destino.c_str(), NUL_REDIRECTOR);
 	system(comando);
 	return arquivoExiste(destino);
@@ -83,7 +83,7 @@ bool ES::copiarArquivo(const string & origem, const string & destino) {
 bool ES::PDFToTextTable(const string & caminhoArquivo, const string & caminhoPrograma, const string  & arquivoDestino) {
 	removerArquivo(arquivoDestino);
 
-	char comando[1000];
+	char comando[SIZE_STR];
 	
 	sprintf_s(comando, 1000, COM_PDF_TO_TXT, caminhoPrograma.c_str(), PATH_XPDF, caminhoArquivo.c_str(), 
 	arquivoDestino.c_str(), NUL_REDIRECTOR);

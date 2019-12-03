@@ -25,6 +25,8 @@ public:
 
 	bool importarFaturaPDF(const string & caminhoArquivo);
 
+	bool importarFaturaTXT(const string & caminhoArquivo);
+
 private:
 
 	//new
@@ -52,8 +54,6 @@ private:
 
 	//new
 	bool importarFatura(vector<string>& linhas);
-
-
 
 	//new
 	bool extrairMesAnoReferente(const vector<string>& linhasArquivo, int & posicaoAtual);

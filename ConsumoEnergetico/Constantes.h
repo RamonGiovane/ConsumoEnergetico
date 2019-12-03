@@ -112,6 +112,10 @@ const char COM_DIR[] = "dir /b ";
 const char COM_CP[] = "copy %s %s %s";
 const char COM_PDF_TO_TXT[] = "%s%s -table \"%s\" \"%s\"%s";
 
+//Tipo de arquivo em que a fatura se encontra
+const int TIPO_PDF = 0;
+const int TIPO_TEXTO = 1;
+
 //Casa com um mês e ano referente no formato: "NOV/2019"
 const char REGEX_MES_REFERENTE[] = "[A-Z]{3}[/]\\d{4}";
 
@@ -133,6 +137,7 @@ const char REGEX_LINHA_HISTORICO[] = "([A-Z]{3}[/]\\d{2})?\\s+\\d{1,4}\\s+\\d{1,
 
 
 const int TAMANHO_HISTORICO = 13;
+const int SIZE_STR = 1200;
 
 
 //Informações do programa e ajuda

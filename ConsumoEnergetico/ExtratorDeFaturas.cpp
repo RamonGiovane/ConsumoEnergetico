@@ -24,7 +24,7 @@ string ExtratorDeFaturas::getCaminhoDoPrograma() {
 
 bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo, const string & caminhoPrograma) {
 
-	char comando[1000];
+	char comando[SIZE_STR];
 	string filePath;
 	vector<string> files;
 	ES::quebrarTexto(files, caminhoArquivo, ARRAB);
@@ -41,7 +41,7 @@ bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo, c
 /*Se o caminho do programa estiver indefinido retorna false, sem definir uma mensagem de erro.*/
 bool ExtratorDeFaturas::importarFaturaPDF(const string& caminhoArquivo) {
 	Fatura fatura;
-	cout << "yo";
+
 	if (caminhoPrograma.empty()) return false;
 
 	ES::criarDiretorio(caminhoPrograma + DIR_FATURAS);
@@ -53,20 +53,8 @@ bool ExtratorDeFaturas::importarFaturaPDF(const string& caminhoArquivo) {
 	}
 	salvarCopiaArquivoTexto(caminhoArquivo, caminhoPrograma);
 
-	string conteudoConta;
-	vector<string> linhasArquivo;
-
-	cout << MSG_LENDO_FATURA;
-	if (!ES::lerArquivoTexto(conteudoConta, caminhoPrograma + FILE_SAIDA_TMP)) {
-		setMensagemErro(MSGE_ARQUIVO_CORROMPIDO);
-		return false;
-	}
-
-	cout << MSG_OBTENDO_INFO;
-	ES::quebrarTexto(linhasArquivo, conteudoConta, BARRA_N);
-	if (!importarFatura(linhasArquivo)) return false;
-
-	return true;
+	return importarFaturaTXT(caminhoArquivo);
+	
 }
 
 string extrairPalavra(const string linha, size_t numeroItem = 0) {
@@ -79,6 +67,22 @@ string extrairPalavra(const string linha, size_t numeroItem = 0) {
 	return palavras[numeroItem];
 }
 
+bool ExtratorDeFaturas::importarFaturaTXT(const string & caminhoArquivo) {
+	string conteudoConta;
+	vector<string> linhasArquivo;
+
+	cout << MSG_LENDO_FATURA;
+	if (!ES::lerArquivoTexto(conteudoConta, caminhoArquivo)) {
+		setMensagemErro(MSGE_ARQUIVO_CORROMPIDO);
+		return false;
+	}
+
+	cout << MSG_OBTENDO_INFO;
+	ES::quebrarTexto(linhasArquivo, conteudoConta, BARRA_N);
+	if (!importarFatura(linhasArquivo)) return false;
+
+	return true;
+}
 
 /*A partir da linha contendo o a cep e a cidade do cliente, extrai e armazena em um objeto esses itens.
 Retorna false em caso de falha e armazena uma mensagem de erro contendo a causa*/

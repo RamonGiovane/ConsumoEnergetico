@@ -75,10 +75,11 @@ void CEE::relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados) 
 	cout << endl << endl;
 }
 
+
 /*Lê uma fatura em PDF do caminho especificado. Exibe ao usuário os status da operações. Retorna true em caso de sucesso, false em falha.*/
-bool CEE::importarFatura(const string & caminhoArquivo, bool printMensagemFinal) {
+bool CEE::importarFatura(const string & caminhoArquivo, bool printMensagemFinal, int tipoArquivo) {
 	cout << MSG_LENDO + caminhoArquivo;
-	if (!lerContaDigital(caminhoArquivo)) {
+	if (!lerContaDigital(caminhoArquivo, tipoArquivo)) {
 		cout << MSG_IGNORANDO_ARQUIVO;
 		if (printMensagemFinal) relatorioImportacaoArquivos(0, 1);
 		return false;
@@ -115,7 +116,7 @@ int CEE::interpretarUmParametro(char * parametro) {
 		exibirInformacao();
 		return 1;
 	}
-	cout << "yo4";
+
 	vector<string> arquivos;
 	if (ES::obterArquivosDiretorio(caminhoDiretorio, arquivos)) {
 		if (!verificarXPDF()) return false;
@@ -138,7 +139,12 @@ int CEE::interpretarTresParametros(char * parametro1, char * parametro2, char * 
 	return pesquisaHistoricoConsumo(parametro1, parametro2, parametro3);
 
 }
-
+const string BARRA_I = "/i";
+int CEE::interpretarDoisParametros(char * parametro1, char * parametro2) {
+	if (parametro1 == BARRA_I) 
+		return importarFatura(parametro2, true, TIPO_TEXTO);
+	return pesquisaConsumo(parametro1, parametro2);
+}
 
 bool CEE::calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * arquivoEntrada) {
 	ExtratorArquivoConsumo extrator;
@@ -288,7 +294,7 @@ int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 		return interpretarUmParametro(argumentos[1]);
 		break;
 	case 3:
-		return pesquisaConsumo(argumentos[1], argumentos[2]);
+		interpretarDoisParametros(argumentos[1], argumentos[2]);
 		break;
 	case 4:
 		return interpretarTresParametros(argumentos[1], argumentos[2], argumentos[3]);
@@ -302,16 +308,26 @@ int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 }
 
 
-bool CEE::lerContaDigital(const string & caminhoArquivo) {
+bool CEE::lerContaDigital(const string & caminhoArquivo, int tipoArquivo) {
 
 	ExtratorDeFaturas extrator(caminhoPrograma);
-	
-	if (!extrator.importarFaturaPDF(caminhoArquivo)) { 
-		cout << extrator.getMensagemErro(); 
-		return false; 
+	bool status;
+	switch (tipoArquivo) {
+
+	case TIPO_PDF:
+		status = extrator.importarFaturaPDF(caminhoArquivo);
+		break;
+
+	case TIPO_TEXTO:
+		status = extrator.importarFaturaTXT(caminhoArquivo);
+		break;
+
+	}
+	if (!status) {
+		cout << extrator.getMensagemErro();
+		return false;
 	}
 	return true;
-
 }
 bool CEE::salvarDados(Fatura fatura) {
 
