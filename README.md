@@ -1,5 +1,5 @@
 # ConsumoEnergetico
-Programa que realiza o cálculo de gastos de energia elétrica e exibe históricos a partir do PDF de  faturas digitais da CEMIG
+Programa que realiza o cálculo de gastos de energia elétrica e exibe históricos e dados de consumos a partir do PDF de  faturas digitais da CEMIG
 
 CEE versão 0.1: Relatório de Consumo de Energia Elétrica
 2019 Ramon Giovane 
