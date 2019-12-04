@@ -21,9 +21,9 @@ public:
 
 	string getCaminhoDoPrograma();
 
-	bool salvarCopiaArquivoTexto(const string & caminhoArquivo, const string & caminhoPrograma);
-
 	bool importarFaturaPDF(const string & caminhoArquivo);
+
+	bool salvarCopiaArquivoTexto(const string & caminhoArquivo);
 
 	bool importarFaturaTXT(const string & caminhoArquivo);
 
@@ -69,8 +69,6 @@ private:
 	bool obterNumeroClienteEInstalacao(const vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
 
 	bool extrairMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual);
-
-	bool obterHistoricoConsumo(const string & linha);
 
 
 

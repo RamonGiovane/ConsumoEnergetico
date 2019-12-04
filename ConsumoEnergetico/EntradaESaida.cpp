@@ -63,7 +63,6 @@ bool ES::obterArquivosDiretorio( const string  & caminhoDiretorio, vector<string
 	//Apaga o arquivo temp gerado
 	ES::removerArquivo(FILE_DIR_LIST);
 	
-	cout << "yo5";
 	//Se o vector estiver vazio, não há arquivos para ler
 	if (listaArquivos.empty()) return false;
 

@@ -89,6 +89,7 @@ const char STR_DE[] = " de ";
 //Constantes de strings e chars utilitários
 const char BARRA_N = '\n';
 const string SBARRA_N = "\n";
+const string BARRA_I = "/i";
 const string VAZIO = "";
 const string SNULL = "NULL";
 const string HASH_TAG = "#";
@@ -111,6 +112,10 @@ const char COM_MKDIR[] = "mkdir ";
 const char COM_DIR[] = "dir /b ";
 const char COM_CP[] = "copy %s %s %s";
 const char COM_PDF_TO_TXT[] = "%s%s -table \"%s\" \"%s\"%s";
+
+//Parâmetro para visualizar ajuda do programa
+const char HELP_COM1[] = "/h";
+const char HELP_COM2[] = "--help";
 
 //Tipo de arquivo em que a fatura se encontra
 const int TIPO_PDF = 0;
@@ -143,13 +148,14 @@ const int SIZE_STR = 1200;
 //Informações do programa e ajuda
 const string NO_PARAM_INFO = "\nO programa foi iniciado sem parâmetros. Logo, fará importações de faturas do diretório atual.\n" + string(ITEM_LINHA) +
 " Pressione ENTER para aceitar ou CTRL+C para cancelar." +
-"\n\nPara mais informações re-execute o programa utilizando o parâmetro -h ou --help.\n";
+"\n\nPara mais informações re-execute o programa utilizando o parâmetro /h ou --help.\n";
 
 const string PROG_INFO = "CEE versão 0.1: Relatório de Consumo de Energia Elétrica"  + SBARRA_N 
 + "2019 Ramon Giovane https://github.com/RamonGiovane"  + SBARRA_N 
 
 
-+ "uso:\n1. Importando uma fatura ou várias faturas da CEMIG\n\tcee <fatura> | <diretório> "  + SBARRA_N  + SBARRA_N 
++ "uso:\n1. Importando uma fatura ou várias faturas da CEMIG\n\tcee <fatura> | <diretório> "  +
+	"\n\tPara importar uma fatura de um arquivo texto, use o parâmetro /i.\n\tEsse método não suporta o uso de diretórios." + SBARRA_N  + SBARRA_N 
 + "2. Pesquisa de consumo\n\tcee <numeroCliente> [mês e ano referente]\n\tExemplos:\n\t\tcee 8005243542\n\t\tcee 8005243542 set/2019"  + SBARRA_N  + SBARRA_N 
 + "3. Exibir histórico de consumo\n\tcee <numeroCliente> <mesAnoIncial> <mesAnoFinal>"  + SBARRA_N  + SBARRA_N 
 + "4. Cálculo de consumo de energia\n\tcee <numeroCliente> <mesAno> <arquivo>"  + SBARRA_N  + SBARRA_N 

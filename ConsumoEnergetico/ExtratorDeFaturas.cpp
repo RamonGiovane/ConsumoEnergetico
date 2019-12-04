@@ -13,32 +13,22 @@ ExtratorDeFaturas::ExtratorDeFaturas(const string & caminhoPrograma) {
 	setCaminhoDoPrograma(caminhoPrograma);
 }
 
+/*Define o caminho absoluto em que o programa em execução sem encontra. 
+Isto é particularmente útil e se faz necessário aqui o trabalhar com versões de Debug e Release, onde o caminho relativo pode apontar para lugaraes distintos*/
 void ExtratorDeFaturas::setCaminhoDoPrograma(const string & caminhoPrograma) {
 	this->caminhoPrograma = caminhoPrograma;
 }
 
+/*Define o caminho absoluto em que o programa em execução sem encontra.
+Isto é particularmente útil e se faz necessário aqui ao trabalhar com versões de Debug e Release, onde o caminho relativo pode apontar para lugaraes distintos*/
 string ExtratorDeFaturas::getCaminhoDoPrograma() {
 	return caminhoPrograma;
 }
 
 
-bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo, const string & caminhoPrograma) {
-
-	char comando[SIZE_STR];
-	string filePath;
-	vector<string> files;
-	ES::quebrarTexto(files, caminhoArquivo, ARRAB);
-
-	string caminhoCopia = caminhoPrograma + DIR_FATURAS + files[files.size() - 1] + TXT;
-	if (files.empty() || !ES::copiarArquivo(caminhoPrograma + FILE_SAIDA_TMP, caminhoCopia))
-		cout << MSG_ARQ_TEXTO_FALHOU;
-	else cout << MSG_ARQ_TEXTO_SALVO + caminhoCopia;
-
-	return true;
-	
-}
-
-/*Se o caminho do programa estiver indefinido retorna false, sem definir uma mensagem de erro.*/
+/*Lê uma fatura em texto a partir de um caminho e salva os dados nos arquivos binários. Retorna true em caso de sucesso.
+Em caso de falha, registra a mensagem de erro e retorna false
+Se o caminho do programa estiver indefinido retorna false, sem definir uma mensagem de erro.*/
 bool ExtratorDeFaturas::importarFaturaPDF(const string& caminhoArquivo) {
 	Fatura fatura;
 
@@ -51,12 +41,27 @@ bool ExtratorDeFaturas::importarFaturaPDF(const string& caminhoArquivo) {
 		setMensagemErro(MSGE_ARQUIVO_NAO_LIDO);
 		return false;
 	}
-	salvarCopiaArquivoTexto(caminhoArquivo, caminhoPrograma);
+	salvarCopiaArquivoTexto(caminhoArquivo);
 
 	return importarFaturaTXT(caminhoArquivo);
 	
 }
 
+/*Salva uma cópia do arquivo de texto gerado pelo programa no momento da conversão de PDF para TXT, para o diretório "faturas", respeitando o
+nome do arquivo passado em "caminhoArquivo"*/
+bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo) {
+
+	vector<string> directory;
+	ES::quebrarTexto(directory, caminhoArquivo, ARRAB);
+
+	string caminhoCopia = caminhoPrograma + DIR_FATURAS + directory[directory.size() - 1] + TXT;
+	if (directory.empty() || !ES::copiarArquivo(caminhoPrograma + FILE_SAIDA_TMP, caminhoCopia))
+		cout << MSG_ARQ_TEXTO_FALHOU;
+	else cout << MSG_ARQ_TEXTO_SALVO + caminhoCopia;
+
+	return true;
+
+}
 string extrairPalavra(const string linha, size_t numeroItem = 0) {
 
 	vector<string> palavras;
@@ -67,6 +72,9 @@ string extrairPalavra(const string linha, size_t numeroItem = 0) {
 	return palavras[numeroItem];
 }
 
+/*Lê uma fatura em texto a partir de um caminho e salva os dados nos arquivos binários. Retorna true em caso de sucesso.
+Em caso de falha, registra a mensagem de erro e retorna false.
+Se o caminho do programa estiver indefinido retorna false, sem definir uma mensagem de erro.*/
 bool ExtratorDeFaturas::importarFaturaTXT(const string & caminhoArquivo) {
 	string conteudoConta;
 	vector<string> linhasArquivo;
@@ -126,6 +134,8 @@ bool ExtratorDeFaturas::extrairNomeEEndereco(Cliente & cliente, const vector<str
 	return erro(MSGE_DADOS_INCOMPLETOS_CLIENTE);
 }
 
+/*A partir de um vector com as linhas do arquivo e considerando a posicao inicial extrai e armazena todos os dados do cliente
+Retorna false em caso de falha e armazena uma mensagem erro contendo a causa*/
 bool ExtratorDeFaturas::extrairDadosCliente(const vector<string> & linhas) {
 	vector<string> palavras;
 	Cliente cliente;
@@ -150,7 +160,9 @@ bool ExtratorDeFaturas::extrairDadosCliente(const vector<string> & linhas) {
 	return true;
 }
 
-
+/*A partir de um vector com as linhas do arquivo e uma posicao de leitura, extrai e armazena em um objeto
+os campos de preço e consumo da energia.
+Retorna false em caso de falha e armazena uma mensagem erro contendo a causa*/
 bool ExtratorDeFaturas::obterPrecoEConsumo(ValoresFaturados & valores, const vector<string> & linhas, int & posicao) {
 
 	//Exemplo da linha sendo lida nesta função:
@@ -411,21 +423,4 @@ bool ExtratorDeFaturas::extrairMesVencimentoEValor(vector<string>& linhasArquivo
 
 }
 
-bool ExtratorDeFaturas::obterHistoricoConsumo(const string & linha) {
-	vector<string> dados;
-	ES::quebrarTexto(dados, linha, ' ');
-
-	if (dados.size() != 4) return false;
-
-	Consumo consumo;
-	if (!consumo.definirMesAno(dados[0])) return false;
-
-	consumo.setConsumoKWh(ES::strToInt(dados[1]));
-	consumo.setMediaConsumoDiario(ES::strToDouble(dados[2]));
-	consumo.setDias(ES::strToInt(dados[3]));
-
-	fatura.adicionarHistoricoConsumo(consumo);
-
-	return true;
-}
 

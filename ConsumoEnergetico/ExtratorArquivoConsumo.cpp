@@ -89,12 +89,12 @@ double ExtratorArquivoConsumo::obterValorConsumoEletrico(Consumo consumo, bool c
 	delete f;
 	return valor;
 }
-const char STR_CONSUMO_MENSAL[] = "\n  Consumo mensal: ";
-const char STR_CONSUMO_DIARIO[] = "\n  Consumo médio diário: ";
-const char STR_VALOR_CONSUMO[] = "\n  Valor do consumo elétrico: ";
-const char STR_NUMERO_DIAS[] = "\n  Número de dias: ";
-const char STR_DADOS_FATURA_EM[] = "\n >> Dados da fatura Cemig em ";
-const char STR_DADOS_CALCULADOS[] = "\n >> Dados calculados para ";
+const char STR_CONSUMO_MENSAL[] = "\n\t  Consumo mensal: ";
+const char STR_CONSUMO_DIARIO[] = "\n\t  Consumo médio diário: ";
+const char STR_VALOR_CONSUMO[] = "\n\t  Valor do consumo elétrico: ";
+const char STR_NUMERO_DIAS[] = "\n\t  Número de dias: ";
+const char STR_DADOS_FATURA_EM[] = "\n  >> Dados da fatura Cemig em ";
+const char STR_DADOS_CALCULADOS[] = "\n  >> Dados calculados para ";
 const char RS[] = "R$ ";
 
 
@@ -117,8 +117,8 @@ string ExtratorArquivoConsumo::gerarResultado(Consumo consumo, bool calcularCons
 	if (valorConsumo == -1)
 		return STR_SEM_DADOS;
 
-	return STR_CONSUMO_MENSAL + ES::doubleToStr(consumoKwH) + KWH +
-		STR_CONSUMO_DIARIO + ES::doubleToStr(consumo.getMediaConsumoDiario()) + KWH +
+	return STR_CONSUMO_MENSAL + ES::doubleToStr(consumoKwH) + STR_KWH +
+		STR_CONSUMO_DIARIO + ES::doubleToStr(consumo.getMediaConsumoDiario()) + STR_KWH +
 		STR_VALOR_CONSUMO  + RS + ES::doubleToStr(valorConsumo)  +
 		STR_NUMERO_DIAS + ES::intToStr(consumo.getDias());
 }

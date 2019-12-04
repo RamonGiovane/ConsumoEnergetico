@@ -38,7 +38,7 @@ string formatarCaminhoCompleto(const string & caminhoDiretorio, const string & n
 
 	string caminhoCompleto(caminhoDiretorio);
 
-	if (caminhoCompleto[caminhoCompleto.size() - 1] != '\\')
+	if (caminhoCompleto[caminhoCompleto.size() - 1] != ARRAB)
 		caminhoCompleto.append("\\");
 
 	caminhoCompleto.append(nomeArquivo);
@@ -53,7 +53,6 @@ int CEE::importarFaturas(vector<string> listaArquivos, string caminhoDiretorio) 
 
 	//Se o dietório passado é um ou vários esapços em branco 
 	if (std::all_of(caminhoDiretorio.begin(),caminhoDiretorio.end(),isspace)) caminhoDiretorio = caminhoPrograma;
-	cout << endl << "foda : [" << caminhoDiretorio << "]";
 	for (string arquivo : listaArquivos) {
 		caminhoCompleto = formatarCaminhoCompleto(caminhoDiretorio, arquivo);
 		if (importarFatura(caminhoCompleto))
@@ -105,13 +104,10 @@ int CEE::promptImportarFaturas() {
 	return interpretarUmParametro("");
 }
 
-//Parâmetro para visualizar ajuda do programa
-const char HELP_COM1[] = "-h";
-const char HELP_COM2[] = "--help";
 
 int CEE::interpretarUmParametro(char * parametro) {
 	string caminhoDiretorio = parametro;
-	cout << parametro;
+
 	if (string(parametro) == HELP_COM1 || string(parametro) == HELP_COM2) {
 		exibirInformacao();
 		return 1;
@@ -139,7 +135,7 @@ int CEE::interpretarTresParametros(char * parametro1, char * parametro2, char * 
 	return pesquisaHistoricoConsumo(parametro1, parametro2, parametro3);
 
 }
-const string BARRA_I = "/i";
+
 int CEE::interpretarDoisParametros(char * parametro1, char * parametro2) {
 	if (parametro1 == BARRA_I) 
 		return importarFatura(parametro2, true, TIPO_TEXTO);
