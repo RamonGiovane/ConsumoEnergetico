@@ -18,6 +18,8 @@ public:
 	void exibirInformacao();
 	int iniciar(int argc, char * argv[]);
 
+	void adicionarFaturaComFalha(const string & caminhoArquivo);
+
 	int importarFaturas(vector<string> listaArquivos, string caminhoDiretorio);
 
 	void relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados);
@@ -65,6 +67,8 @@ private:
 	Fatura conta;
 
 	ExtratorDeFaturas extrator;
+
+	string relatorioArquivosIgnorados;
 
 	string caminhoPrograma;
 };

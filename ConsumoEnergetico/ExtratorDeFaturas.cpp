@@ -35,15 +35,15 @@ bool ExtratorDeFaturas::importarFaturaPDF(const string& caminhoArquivo) {
 	if (caminhoPrograma.empty()) return false;
 
 	ES::criarDiretorio(caminhoPrograma + DIR_FATURAS);
-
+	string caminhoSaida = caminhoPrograma + FILE_SAIDA_TMP;
 	cout << MSG_CONVERTENDO_PDF;
-	if (!ES::PDFToTextTable(caminhoArquivo, caminhoPrograma, caminhoPrograma + FILE_SAIDA_TMP)) {
+	if (!ES::PDFToTextTable(caminhoArquivo, caminhoPrograma, caminhoSaida)) {
 		setMensagemErro(MSGE_ARQUIVO_NAO_LIDO);
 		return false;
 	}
 	salvarCopiaArquivoTexto(caminhoArquivo);
 
-	return importarFaturaTXT(caminhoArquivo);
+	return importarFaturaTXT(caminhoSaida);
 	
 }
 
@@ -55,6 +55,7 @@ bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo) {
 	ES::quebrarTexto(directory, caminhoArquivo, ARRAB);
 
 	string caminhoCopia = caminhoPrograma + DIR_FATURAS + directory[directory.size() - 1] + TXT;
+
 	if (directory.empty() || !ES::copiarArquivo(caminhoPrograma + FILE_SAIDA_TMP, caminhoCopia))
 		cout << MSG_ARQ_TEXTO_FALHOU;
 	else cout << MSG_ARQ_TEXTO_SALVO + caminhoCopia;
@@ -87,7 +88,10 @@ bool ExtratorDeFaturas::importarFaturaTXT(const string & caminhoArquivo) {
 
 	cout << MSG_OBTENDO_INFO;
 	ES::quebrarTexto(linhasArquivo, conteudoConta, BARRA_N);
+	
 	if (!importarFatura(linhasArquivo)) return false;
+	
+	
 
 	return true;
 }
@@ -306,12 +310,12 @@ bool ExtratorDeFaturas::importarFatura(vector<string> & linhas) {
 
 bool ExtratorDeFaturas::extrairMesAnoReferente(const vector<string>& linhasArquivo, int & posicaoAtual) {
 	string data = ES::procurarPadrao(linhasArquivo, posicaoAtual, REGEX_MES_REFERENTE);
-	if (data.empty() || !fatura.setMesAnoReferente(data)) { return erro("Não foi possível computar datas da fatura"); return false; }
+	if (data.empty() || !fatura.setMesAnoReferente(data)) { return erro(MSGE_DATAS_LEITURA); return false; }
 
 	return true;
 }
 
-const char MSGE_DATAS_LEITURA[] = "FALHA:\n Não foi possível computar as datas de leitura";
+
 bool ExtratorDeFaturas::extrairDatasDeLeitura(const vector<string>& linhasArquivo, int & posicaoAtual)
 {
 
@@ -422,5 +426,7 @@ bool ExtratorDeFaturas::extrairMesVencimentoEValor(vector<string>& linhasArquivo
 	return true;
 
 }
+
+
 
 

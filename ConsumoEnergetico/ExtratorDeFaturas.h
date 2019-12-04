@@ -21,6 +21,8 @@ public:
 
 	string getCaminhoDoPrograma();
 
+	string getRelatorioFaturasComFalha();
+
 	bool importarFaturaPDF(const string & caminhoArquivo);
 
 	bool salvarCopiaArquivoTexto(const string & caminhoArquivo);
@@ -69,9 +71,7 @@ private:
 	bool obterNumeroClienteEInstalacao(const vector<string>& linhasArquivo, Cliente & cliente, int & posicaoAtual);
 
 	bool extrairMesVencimentoEValor(vector<string>& linhasArquivo, int & posicaoAtual);
-
-
-
+	
 	Fatura fatura;
 
 	string caminhoPrograma;

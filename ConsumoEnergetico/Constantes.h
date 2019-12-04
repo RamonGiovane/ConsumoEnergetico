@@ -56,6 +56,7 @@ const char MSG_CLIENTE_NAO_LOCALIZADO[] = "\nCliente não localizado.\n";
 const char MSG_FATURA_JA_EXISTE[] = "AVISO: Esta fatura já foi importada anteriormente.";
 const char MSG_ARQ_TEXTO_FALHOU[] = "\nAVISO: Não foi possível guardar uma cópia do arquivo texto desta fatura.\nA conversão do PDF para texto falhou.";
 const char MSG_ARQ_TEXTO_SALVO[] = "\nA fatura foi salva como texto em\n\t";
+
 //Mensagem de erro a ser exibidada ao usuário
 const char MSGE_HISTORICO_NAO_ENCONTRADO[] = "\nFALHA: Dados de histórico de consumo não encontrados. ";
 const char MSGE_HISTORICO_INCONSISTENTE[] = "\nFALHA: Dados de histórico de consumo inconsistentes. ";
@@ -68,6 +69,8 @@ const char MSGE_ARQUIVO_NAO_LIDO[] = "\nFALHA: O arquivo não pôde ser lido nem g
 const char MSGE_ARQUIVO_CORROMPIDO[] = "Provavelmente o arquivo PDF está corrompido.";
 const char MSGE_FATURA_INVALIDA[] = "\nFALHA: O arquivo fornecido não corresponde a uma fatura CEMIG.";
 const string MSGE_DADOS_INCOMPLETOS_CLIENTE = "\nFALHA: Dados do cliente inconsistentes." + string(MSGE_ARQUIVO_CORROMPIDO);
+const char MSGE_DATAS_LEITURA[] = "FALHA:\n Não foi possível computar as datas de leitura";
+
 
 const string MSGE_MISSING_XPDF = "\nDependência não encontrada:\n\t" 
 										"> O arquivo " + string(PATH_XPDF) + " não pôde ser localizado.\n\nO programa não pode prosseguir.\n";
@@ -85,6 +88,18 @@ const char STR_VALOR_A_PAGAR[] = "Valor a pagar: R$ ";
 const char STR_DATA_VENC[] = " Data de Vencimento: ";
 const char STR_REFERENTE[] = "Referente a: ";
 const char STR_DE[] = " de ";
+const char SEM_DADOS_INPUT_FILE[] = "\nFALHA: Não há dados de consumo deste cliente para o mês/ano fornecidos no arquivo de entrada: ";
+const char SEM_DADOS_INPUT_SINTAX[] = "\nFALHA: Não há dados de consumo deste cliente para o mês/ano fornecidos nos parâmetros de entrada do programa: ";
+const char STR_CONSUMO_MENSAL[] = "\n\t  Consumo mensal: ";
+const char STR_CONSUMO_DIARIO[] = "\n\t  Consumo médio diário: ";
+const char STR_VALOR_CONSUMO[] = "\n\t  Valor do consumo elétrico: ";
+const char STR_NUMERO_DIAS[] = "\n\t  Número de dias: ";
+const char STR_DADOS_FATURA_EM[] = "\n  >> Dados da fatura Cemig em ";
+const char STR_DADOS_CALCULADOS[] = "\n  >> Dados calculados para ";
+const char STR_SEM_DADOS[] = "\n\t--- Sem dados de faturas para exibir para esta instalação neste mês/ano ---\n";
+const char STR_ARQUIVOS_FALHARAM[] = "\nOs seguintes arquivos falharam durante a leitura: ";
+const char PRECO_ENERGIA_INDISPONIVEL[] = "Dados de preço de energia indisponíveis para este mês/ano e instalação.";
+const char RS[] = "R$ ";
 
 //Constantes de strings e chars utilitários
 const char BARRA_N = '\n';
@@ -104,14 +119,16 @@ const char ITEM_LINHA[] = "\n\t >>";
 const char KWH[] = "kWh";
 const char H[] = "h";
 const char W[] = "w";
+const char VIRGULA_ESPACO[] = { VIRGULA, ESPACO, '\0' };
 
 //Comando do windows
 const char REDIRECTOR[] = " > ";
 const char NUL_REDIRECTOR[] = " >nul 2>nul";
 const char COM_MKDIR[] = "mkdir ";
 const char COM_DIR[] = "dir /b ";
-const char COM_CP[] = "copy %s %s %s";
+const char COM_CP[] = "copy /y %s %s %s";
 const char COM_PDF_TO_TXT[] = "%s%s -table \"%s\" \"%s\"%s";
+
 
 //Parâmetro para visualizar ajuda do programa
 const char HELP_COM1[] = "/h";
@@ -155,10 +172,11 @@ const string PROG_INFO = "CEE versão 0.1: Relatório de Consumo de Energia Elétri
 
 
 + "uso:\n1. Importando uma fatura ou várias faturas da CEMIG\n\tcee <fatura> | <diretório> "  +
-	"\n\tPara importar uma fatura de um arquivo texto, use o parâmetro /i.\n\tEsse método não suporta o uso de diretórios." + SBARRA_N  + SBARRA_N 
+	"\n\tNo momento da importação, se o arquivo for um PDF válido, uma cópia em TXT será guardada no\n\tdiretório \"faturas\" para outra tentativa de importação em caso de falha."
+	+ "\n\tPara importar uma fatura de um arquivo texto, use o parâmetro /i.\n\tEsse método não suporta o uso de diretórios." + SBARRA_N  + SBARRA_N 
 + "2. Pesquisa de consumo\n\tcee <numeroCliente> [mês e ano referente]\n\tExemplos:\n\t\tcee 8005243542\n\t\tcee 8005243542 set/2019"  + SBARRA_N  + SBARRA_N 
 + "3. Exibir histórico de consumo\n\tcee <numeroCliente> <mesAnoIncial> <mesAnoFinal>"  + SBARRA_N  + SBARRA_N 
-+ "4. Cálculo de consumo de energia\n\tcee <numeroCliente> <mesAno> <arquivo>"  + SBARRA_N  + SBARRA_N 
++ "4. Cálculo de consumo de energia\n\tcee <numeroCliente> <mesAno> <arquivo TXT com consumos>"  + SBARRA_N  + SBARRA_N 
 
 
 + "Mais informações em: https://github.com/RamonGiovane/ConsumoEnergetico"  + SBARRA_N ;

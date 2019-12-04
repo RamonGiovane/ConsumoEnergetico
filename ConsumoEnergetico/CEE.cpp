@@ -32,6 +32,25 @@ int CEE::iniciar(int numeroArgumentos, char * argumentos[]) {
 	return interpretarComando(numeroArgumentos, argumentos);
 }
 
+void CEE::adicionarFaturaComFalha(const string & caminhoArquivo)
+{
+	vector<string> v;
+	string nomeArquivo;
+
+	ES::quebrarTexto(v, caminhoArquivo, ARRAB);
+
+	if (v.empty()) nomeArquivo = caminhoArquivo;
+	else nomeArquivo = v[v.size() - 1];
+
+	if (relatorioArquivosIgnorados.empty())
+		relatorioArquivosIgnorados = STR_ARQUIVOS_FALHARAM;
+	else
+		relatorioArquivosIgnorados += VIRGULA_ESPACO;
+
+	relatorioArquivosIgnorados += nomeArquivo;
+
+}
+
 string formatarCaminhoCompleto(const string & caminhoDiretorio, const string & nomeArquivo) {
 
 	if (caminhoDiretorio == nomeArquivo) return caminhoDiretorio;
@@ -57,10 +76,11 @@ int CEE::importarFaturas(vector<string> listaArquivos, string caminhoDiretorio) 
 		caminhoCompleto = formatarCaminhoCompleto(caminhoDiretorio, arquivo);
 		if (importarFatura(caminhoCompleto))
 			arquivosLidos++;
-		else arquivosIgnorados++;
+		else { adicionarFaturaComFalha(arquivo); arquivosIgnorados++; }
 	}
 
 	relatorioImportacaoArquivos(arquivosLidos, arquivosIgnorados);
+	
 
 	return arquivosIgnorados;
 
@@ -71,6 +91,7 @@ void CEE::relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados) 
 
 	cout << MSG_FIM_LEITURA << arquivosLidos << (arquivosLidos == 1 ? MSG_ARQUIVO_LIDO : MSG_ARQUIVOS_LIDOS) << endl;
 	cout << arquivosIgnorados << (arquivosIgnorados == 1 ? MSG_ARQUIVO_IGNORADO : MSG_ARQUIVOS_IGNORADOS);
+	cout << endl << relatorioArquivosIgnorados;
 	cout << endl << endl;
 }
 
@@ -145,10 +166,14 @@ int CEE::interpretarDoisParametros(char * parametro1, char * parametro2) {
 bool CEE::calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * arquivoEntrada) {
 	ExtratorArquivoConsumo extrator;
 	Consumo consumo;
+
+	if (!pesquisarExibirCliente(numeroCliente)) return false;
+
 	if (!extrator.lerArquivoDeConsumo(numeroCliente, arquivoEntrada, mesAno)) {
 		cout << endl << extrator.getMensagemErro();
 		return false;
 	}
+
 	cout << endl << extrator.getConteudoResposta();
 	return true;
 }
@@ -367,5 +392,5 @@ void CEE::definirCaminhoPrograma(char * argv[]) {
 int main(int argc, char * argv[]) {
 	CEE().iniciar(argc, argv);
 	cout << endl; 
-	return system("pause");
+	return 0;
 }
