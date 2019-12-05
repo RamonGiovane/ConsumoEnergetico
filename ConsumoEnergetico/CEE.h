@@ -13,10 +13,12 @@ class CEE
 public:
 	CEE();
 
-	int interpretarComando(int numeroArgumentos, char * argumentos[]);
-	
-	void exibirInformacao();
 	int iniciar(int argc, char * argv[]);
+
+private:
+	int interpretarComando(int numeroArgumentos, char * argumentos[]);
+
+	void exibirInformacao();
 
 	void adicionarFaturaComFalha(const string & caminhoArquivo);
 
@@ -26,12 +28,10 @@ public:
 
 	bool importarFatura(const string & caminhoArquivo, bool printMensagemFinal = false, int tipoArquivo = TIPO_PDF);
 
-	//bool importarFatura(const string & caminhoArquivo, bool printMensagemFinal = false);
-
 	int promptImportarFaturas();
 
 	int interpretarUmParametro(char * paramtero);
-	
+
 	int interpretarTresParametros(char * paramtero1, char * paramtero2, char * paramtero3);
 
 	int interpretarDoisParametros(char * parametro1, char * parametro2);
@@ -41,7 +41,7 @@ public:
 	bool pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, char * mesAnoFinal);
 
 	bool exibirHistorico(const vector<Consumo>& historico, char * mesAnoInicial, char * mesAnoFinal);
-	
+
 	bool verificarXPDF();
 
 	bool pesquisaConsumo(char * numeroCliente, char * mesAno = NULL);
@@ -52,21 +52,10 @@ public:
 
 	bool pesquisarExibirCliente(const string & numeroCliente);
 
-
-
-private:
-
-
-	bool lerContaDigital(const string & caminhoArquivo, int tipoArquivo = TIPO_PDF);
-
-	bool salvarDados(Fatura fatura);
+	bool lerFaturaDigital(const string & caminhoArquivo, int tipoArquivo = TIPO_PDF);
 	
 	void definirCaminhoPrograma(char * argumentosMain[]);
 
-
-	Fatura conta;
-
-	ExtratorDeFaturas extrator;
 
 	string relatorioArquivosIgnorados;
 

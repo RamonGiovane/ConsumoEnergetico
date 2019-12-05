@@ -40,7 +40,7 @@ const char LINHA_HISTORICO[] = "Histórico ";
 
 //Mensagem a ser exibidada ao usuário
 const char MSG_DATA_INVALIDA[] ="\nParâmetro de data inválido.\n";
-const char MSG_DADOS_NAO_ENCONTRADOS[] = "\nNenhum dado de consumo foi encontrado para os termos pesquisados.\n";
+const char MSG_DADOS_NAO_ENCONTRADOS[] = "\nNenhum dado foi econtrado para os termos pesquisados.\n";
 const char MSG_ARQUIVO_LIDO[] = " arquivo lido com sucesso.";
 const char MSG_ARQUIVOS_LIDOS[] = " arquivos lidos com sucesso.";
 const char MSG_ARQUIVO_IGNORADO[] = " arquivo com falha ignorado.";

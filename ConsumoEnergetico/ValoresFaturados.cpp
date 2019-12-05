@@ -62,6 +62,7 @@ ValoresFaturados & ValoresFaturados::definirAdicionais(double bandeiraAmarela, d
 
 string ValoresFaturados::toString()
 {
+	//Não está sendo usado. Serve apenas para fins de teste
 	char str[500];
 	sprintf_s(str, 500,
 		"Preço da energia elétrica: R$%1.8f\nConsumo faturado este mês: %d kWh\nValor da fatura: R$% 1.2f\n"

@@ -20,8 +20,10 @@ CEE::CEE() { }
 void CEE::exibirInformacao() {
 	cout << PROG_INFO;
 }
+/*Inicia, interpreta os argumentos passados para o programa e executa a operação solicitada, se for válida.*/
 int CEE::iniciar(int numeroArgumentos, char * argumentos[]) {
 
+	
 	definirCaminhoPrograma(argumentos);
 
 	//Define a localização para o Brasil
@@ -29,6 +31,7 @@ int CEE::iniciar(int numeroArgumentos, char * argumentos[]) {
 
 	//Cria o diretório em que os arquivos binários ficarão
 	ES::criarDiretorio(DIR_DATA);
+	
 	return interpretarComando(numeroArgumentos, argumentos);
 }
 
@@ -88,7 +91,6 @@ int CEE::importarFaturas(vector<string> listaArquivos, string caminhoDiretorio) 
 
 void CEE::relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados) {
 	
-
 	cout << MSG_FIM_LEITURA << arquivosLidos << (arquivosLidos == 1 ? MSG_ARQUIVO_LIDO : MSG_ARQUIVOS_LIDOS) << endl;
 	cout << arquivosIgnorados << (arquivosIgnorados == 1 ? MSG_ARQUIVO_IGNORADO : MSG_ARQUIVOS_IGNORADOS);
 	cout << endl << relatorioArquivosIgnorados;
@@ -99,7 +101,7 @@ void CEE::relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados) 
 /*Lê uma fatura em PDF do caminho especificado. Exibe ao usuário os status da operações. Retorna true em caso de sucesso, false em falha.*/
 bool CEE::importarFatura(const string & caminhoArquivo, bool printMensagemFinal, int tipoArquivo) {
 	cout << MSG_LENDO + caminhoArquivo;
-	if (!lerContaDigital(caminhoArquivo, tipoArquivo)) {
+	if (!lerFaturaDigital(caminhoArquivo, tipoArquivo)) {
 		cout << MSG_IGNORANDO_ARQUIVO;
 		if (printMensagemFinal) relatorioImportacaoArquivos(0, 1);
 		return false;
@@ -115,7 +117,8 @@ bool CEE::importarFatura(const string & caminhoArquivo, bool printMensagemFinal,
 
 
 
-
+/*Executado quando o programa é iniciado sem parâmetros.
+  Exibe um prompt ao usuário, confirmando se ele realmente que realizar um import no diretório atual*/
 int CEE::promptImportarFaturas() {
 	
 	cout << NO_PARAM_INFO;
@@ -125,27 +128,34 @@ int CEE::promptImportarFaturas() {
 	return interpretarUmParametro("");
 }
 
-
+/*Interpreta a entrada do programa quando apenas um parâmetro é passado para ele. 
+  A operação realizada pode ser exibir uma ajuda ao usuário, importar faturas, ou pesquisar dados de consumo
+  do cliente passado
+*/
 int CEE::interpretarUmParametro(char * parametro) {
-	string caminhoDiretorio = parametro;
+	string strParametro = parametro;
 
-	if (string(parametro) == HELP_COM1 || string(parametro) == HELP_COM2) {
+	if (strParametro == HELP_COM1 || strParametro == HELP_COM2) {
 		exibirInformacao();
 		return 1;
 	}
 
 	vector<string> arquivos;
-	if (ES::obterArquivosDiretorio(caminhoDiretorio, arquivos)) {
+	if (ES::obterArquivosDiretorio(strParametro, arquivos)) {
 		if (!verificarXPDF()) return false;
 		if (arquivos.empty())
-			return importarFatura(caminhoDiretorio, true);
-		return importarFaturas(arquivos, caminhoDiretorio);
+			return importarFatura(strParametro, true);
+		return importarFaturas(arquivos, strParametro);
 
 	}
 	return pesquisaConsumo(parametro);
 
 }
-
+/* Interpreta a entrada do programa quando três parâmetros são passados para ele.
+   As possíveis operações para estes parâmetros são:
+     - calcular o consumo de energia de uma arquivo de aparelhos elétricos (se o parâmetro 3 for um arquivo);
+	 - pesquisar o historico de consumo das instalações do cliente fornecido 
+*/
 int CEE::interpretarTresParametros(char * parametro1, char * parametro2, char * parametro3)
 {
 	//Se o parametro tres é um arquivo...
@@ -156,13 +166,22 @@ int CEE::interpretarTresParametros(char * parametro1, char * parametro2, char * 
 	return pesquisaHistoricoConsumo(parametro1, parametro2, parametro3);
 
 }
-
+/* Interpreta a entrada do programa quando dois parâmetros são passados para ele.
+	As possíveis operações para estes parâmetros são:
+	- importar uma fatura em modo texto (se o parametro1 == "/i");
+	- pesquisar os dados de consumo das instalações do cliente fornecido
+*/
 int CEE::interpretarDoisParametros(char * parametro1, char * parametro2) {
 	if (parametro1 == BARRA_I) 
 		return importarFatura(parametro2, true, TIPO_TEXTO);
 	return pesquisaConsumo(parametro1, parametro2);
 }
 
+/*A partir do número de um cliente, de um mês/ano e o caminho de um arquivo texto com consumos passados na linha de comando,
+calcula o consumo em kWh do arquivo de aparelhos e exibe relatórios. Exibe também os dados de consumo do cliente para o mês/ano passados
+na linha de comando para fins de comparação.
+Retorna true em caso de sucesso, retorna false e exibe mensagens de erro se algum erro ocorrer ou parâmetros incorretos forem passados.
+*/
 bool CEE::calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * arquivoEntrada) {
 	ExtratorArquivoConsumo extrator;
 	Consumo consumo;
@@ -177,6 +196,8 @@ bool CEE::calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * a
 	cout << endl << extrator.getConteudoResposta();
 	return true;
 }
+/**A partir do número de um cliente, de um mês/ano inicial e final, pesquisa no arquivo binário de histórico, 
+todos os consumos de todas as instalações do cliente entre o intervalo de datas especificado*/
 bool CEE::pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, char * mesAnoFinal) {
 	int mesInicial, anoInicial, mesFinal, anoFinal;
 	
@@ -204,6 +225,7 @@ bool CEE::pesquisaHistoricoConsumo(char * numeroCliente, char * mesAnoInicial, c
 	return true;
 }
 
+/*Exibe o histórico de consumo de um cliente desde que os consumos estejam num intervalo entre os parâmetros mesInicial e mesFinal*/
 bool CEE::exibirHistorico(const vector<Consumo> & historico, char * mesAnoInicial, char * mesAnoFinal) {
 	
 	cout << TITLE_HISTORICO << mesAnoInicial << STR_A << mesAnoFinal << STR_D_PERIOD;
@@ -224,7 +246,7 @@ bool CEE::exibirHistorico(const vector<Consumo> & historico, char * mesAnoInicia
 }
 
 
-
+/*Verifica se a depêndencia xdpf (pdftotext.exe) se encontra em seu devido local (definido em "Constantes.h")*/
 bool CEE::verificarXPDF() {
 	if (!ES::arquivoExiste(caminhoPrograma + PATH_XPDF)) {
 		cout << MSGE_MISSING_XPDF;
@@ -272,6 +294,7 @@ bool CEE::pesquisaConsumo(char * numeroCliente, char * mesAno) {
 	return exibido;
 }
 
+/*Exibe os dados de uma fatura pesquisada.*/
 void CEE::exibirPesquisaConsumo(Fatura * fatura) {
 	cout << endl <<
 	STR_CONSUMO_INSTALACAO << fatura->getNumeroInstalacao() << STR_D_PERIOD
@@ -289,6 +312,8 @@ void CEE::exibirCliente(Cliente * cliente) {
 
 }
 
+/*Pesquisa os dados de um cliente no arquivo binário de cliente, a partir de seu número.
+Ao encontrar, exibe seus dados e retorna true. Do contrário, retorna false e exibe um alerta ao usuário*/
 bool CEE::pesquisarExibirCliente(const string & numeroCliente) {
 	ArquivoCliente arquivo;
 
@@ -304,6 +329,8 @@ bool CEE::pesquisarExibirCliente(const string & numeroCliente) {
 
 }
 
+/*Interpreta a quantidade de argumentos passados e redireciona a execução do programa para a função solicitada. de acordo
+com o que está especificado na constante PROG_INFO em "Constantes.h"*/
 int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 
 	switch (numeroArgumentos) {
@@ -329,7 +356,9 @@ int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 }
 
 
-bool CEE::lerContaDigital(const string & caminhoArquivo, int tipoArquivo) {
+/*Abre, lê e importa uma fatura digital a partir do caminho de seu arquivo e do tipo de arquivo: TIPO_TXT  ou TIPO_PDF, definido em "Constantes.h"
+Retorna true em sucesso. Em caso de falha, exibe o motivo da falha e retorna false*/
+bool CEE::lerFaturaDigital(const string & caminhoArquivo, int tipoArquivo) {
 
 	ExtratorDeFaturas extrator(caminhoPrograma);
 	bool status;
@@ -350,27 +379,9 @@ bool CEE::lerContaDigital(const string & caminhoArquivo, int tipoArquivo) {
 	}
 	return true;
 }
-bool CEE::salvarDados(Fatura fatura) {
 
-	ArquivoFatura arquivoFatura;
-	arquivoFatura.abrir(FILE_FATURA_DAT);
-
-	int registro = arquivoFatura.pesquisarFatura(fatura.getCliente().getNumero(),
-		fatura.getMesReferente(), fatura.getAnoReferente());
-	//verificar isso
-	if (registro != -1) {
-		cout << endl << MSG_FATURA_JA_EXISTE;
-
-		return true;
-	}
-	arquivoFatura.escreverObjeto(fatura);
-
-	arquivoFatura.fechar();
-
-	return true;
-
-}
-
+/*Define o caminho que se encontra o programa para que as dependências e demais arquivos possam ser localizados. 
+Isso é feito através dos argumenos passados pelo progama*/
 void CEE::definirCaminhoPrograma(char * argv[]) {
 
 	caminhoPrograma = argv[0];

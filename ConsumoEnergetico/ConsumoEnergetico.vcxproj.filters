@@ -54,9 +54,6 @@
     <ClCompile Include="EntradaESaida.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="ArquivoTexto\TestarArquivoTexto.cpp">
-      <Filter>Source Files\Util</Filter>
-    </ClCompile>
     <ClCompile Include="Fatura.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
@@ -102,9 +99,6 @@
       <Filter>Header Files\Arquivo</Filter>
     </ClInclude>
     <ClInclude Include="EntradaESaida.h">
-      <Filter>Header Files\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="ArquivoTexto\TestarArquivoTexto.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
     <ClInclude Include="Fatura.h">
