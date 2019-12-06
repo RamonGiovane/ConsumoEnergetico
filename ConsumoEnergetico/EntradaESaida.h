@@ -37,6 +37,7 @@ public:
 
 	static int strToInt(const string& str);
 	static double strToDouble(const string& str);
+	static string formatarDouble(const string & numero, int precision);
 	static string doubleToStr(const double & numero, int precision = 2);
 	static string intToStr(const int & numero);
 

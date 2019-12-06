@@ -378,7 +378,7 @@ bool CEE::lerFaturaDigital(const string & caminhoArquivo, int tipoArquivo) {
 		cout << extrator.getMensagemErro();
 		return false;
 	}
-	return true; ALTERAR PRECISAO NUMEROS STRTODOUBLE
+	return true; 
 }
 
 /*Define o caminho que se encontra o programa para que as dependências e demais arquivos possam ser localizados. 

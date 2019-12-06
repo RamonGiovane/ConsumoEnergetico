@@ -185,12 +185,31 @@ double ES::strToDouble(const string & str)
 	return str.empty() || !isNumber(str) ? 0 : stod(str);
 }
 
+string ES::formatarDouble(const string & numero, int precision) {
+	vector<string> fragmentos;
+	quebrarTexto(fragmentos, numero, PONTO);
+	
+	if (fragmentos.empty()) return numero;
+
+	string decimais;
+	
+	int i = 0;
+	for (char d : fragmentos.back()) {
+		if (i == precision) break;
+		decimais.push_back(d);
+		i++;
+	}
+
+	return fragmentos[0] + PONTO + decimais;
+
+}
+
 /*Converte e retorna um double para string. Uma precisão de números depois da vírgula pode ser definida*/
 string ES::doubleToStr(const double & numero, int precision)
 {
 	stringstream stream;
-	stream << fixed << setprecision(3) << setfill('0') << setw(2) << numero;
-	return stream.str(); //remover caracteres desse numero
+	stream << fixed << setprecision(3) << numero;
+	return formatarDouble(stream.str(), precision); //remover caracteres desse numero
 }
 
 /*Converte e retorna um int para string.*/
