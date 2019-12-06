@@ -47,7 +47,8 @@ bool ExtratorDeFaturas::importarFaturaPDF(const string& caminhoArquivo) {
 		return false;
 	}
 	salvarCopiaArquivoTexto(caminhoArquivo);
-
+	
+	
 	return importarFaturaTXT(caminhoSaida);
 	
 }
@@ -97,7 +98,7 @@ bool ExtratorDeFaturas::importarFaturaTXT(const string & caminhoArquivo) {
 	if (!importarFatura(linhasArquivo)) return false;
 	
 	
-
+	ES::removerArquivo(caminhoPrograma + FILE_SAIDA_TMP);
 	return true;
 }
 

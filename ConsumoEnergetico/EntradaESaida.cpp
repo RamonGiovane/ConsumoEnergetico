@@ -189,8 +189,8 @@ double ES::strToDouble(const string & str)
 string ES::doubleToStr(const double & numero, int precision)
 {
 	stringstream stream;
-	stream << fixed << setprecision(precision) << numero;
-	return stream.str();
+	stream << fixed << setprecision(3) << setfill('0') << setw(2) << numero;
+	return stream.str(); //remover caracteres desse numero
 }
 
 /*Converte e retorna um int para string.*/
