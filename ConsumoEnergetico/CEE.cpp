@@ -35,15 +35,9 @@ int CEE::iniciar(int numeroArgumentos, char * argumentos[]) {
 	return interpretarComando(numeroArgumentos, argumentos);
 }
 
-void CEE::adicionarFaturaComFalha(const string & caminhoArquivo)
+/*Registra o nome de uma fatura ou arquivo que falhou durante a importação*/
+void CEE::adicionarFaturaComFalha(const string & nomeArquivo)
 {
-	vector<string> v;
-	string nomeArquivo;
-
-	ES::quebrarTexto(v, caminhoArquivo, ARRAB);
-
-	if (v.empty()) nomeArquivo = caminhoArquivo;
-	else nomeArquivo = v[v.size() - 1];
 
 	if (relatorioArquivosIgnorados.empty())
 		relatorioArquivosIgnorados = STR_ARQUIVOS_FALHARAM;
@@ -54,13 +48,14 @@ void CEE::adicionarFaturaComFalha(const string & caminhoArquivo)
 
 }
 
-string formatarCaminhoCompleto(const string & caminhoDiretorio, const string & nomeArquivo) {
+/*Adiciona o nome de um arquivo ao caminho de de um diretório. Se o diretório não possuir um terminador de barra no final, a mesma será inserida*/
+string formatarCaminhoCompletoImportacao(const string & caminhoDiretorio, const string & nomeArquivo) {
 
 	if (caminhoDiretorio == nomeArquivo) return caminhoDiretorio;
 
 	string caminhoCompleto(caminhoDiretorio);
 
-	if (caminhoCompleto[caminhoCompleto.size() - 1] != ARRAB)
+	if (caminhoCompleto.back() != ARRAB)
 		caminhoCompleto.append("\\");
 
 	caminhoCompleto.append(nomeArquivo);
@@ -76,7 +71,7 @@ int CEE::importarFaturas(vector<string> listaArquivos, string caminhoDiretorio) 
 	//Se o dietório passado é um ou vários esapços em branco 
 	if (std::all_of(caminhoDiretorio.begin(),caminhoDiretorio.end(),isspace)) caminhoDiretorio = caminhoPrograma;
 	for (string arquivo : listaArquivos) {
-		caminhoCompleto = formatarCaminhoCompleto(caminhoDiretorio, arquivo);
+		caminhoCompleto = formatarCaminhoCompletoImportacao(caminhoDiretorio, arquivo);
 		if (importarFatura(caminhoCompleto))
 			arquivosLidos++;
 		else { adicionarFaturaComFalha(arquivo); arquivosIgnorados++; }
@@ -89,6 +84,7 @@ int CEE::importarFaturas(vector<string> listaArquivos, string caminhoDiretorio) 
 
 }
 
+/*Exibe um relatório de importação mostrando quantos arquivos foram lidos e quantos foram ignorados*/
 void CEE::relatorioImportacaoArquivos(int arquivosLidos, int arquivosIgnorados) {
 	
 	cout << MSG_FIM_LEITURA << arquivosLidos << (arquivosLidos == 1 ? MSG_ARQUIVO_LIDO : MSG_ARQUIVOS_LIDOS) << endl;
@@ -139,10 +135,12 @@ int CEE::interpretarUmParametro(char * parametro) {
 		exibirInformacao();
 		return 1;
 	}
-
+	
 	vector<string> arquivos;
 	if (ES::obterArquivosDiretorio(strParametro, arquivos)) {
+		
 		if (!verificarXPDF()) return false;
+	
 		if (arquivos.empty())
 			return importarFatura(strParametro, true);
 		return importarFaturas(arquivos, strParametro);
@@ -255,6 +253,8 @@ bool CEE::verificarXPDF() {
 	return true;
 }
 
+/*Pesquisa e exibe os dados de fatura de um cliente de um mês/ano específico. 
+Exibe um alerta ao usuário caso não sejam encontrados dados de cliente ou fatura.*/
 bool CEE::pesquisaConsumo(char * numeroCliente, char * mesAno) {
 
 	if (!pesquisarExibirCliente(numeroCliente)) return false;
@@ -359,8 +359,9 @@ int CEE::interpretarComando(int numeroArgumentos, char * argumentos[]) {
 /*Abre, lê e importa uma fatura digital a partir do caminho de seu arquivo e do tipo de arquivo: TIPO_TXT  ou TIPO_PDF, definido em "Constantes.h"
 Retorna true em sucesso. Em caso de falha, exibe o motivo da falha e retorna false*/
 bool CEE::lerFaturaDigital(const string & caminhoArquivo, int tipoArquivo) {
-
+	
 	ExtratorDeFaturas extrator(caminhoPrograma);
+	
 	bool status;
 	switch (tipoArquivo) {
 

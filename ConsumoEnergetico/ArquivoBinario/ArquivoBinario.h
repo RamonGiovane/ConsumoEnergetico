@@ -21,6 +21,9 @@ public:
 	// Obtém o nome do arquivo.
 	string getNomeArquivo();
 
+	// Reposiciona o arquivo para o inicio
+	void reposicionarArquivo();
+
 	// Obtém a referência do arquivoBinario.
 	fstream& getArquivoBinario();
 

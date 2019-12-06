@@ -25,6 +25,7 @@
     <ClCompile Include="ArquivoFatura.cpp" />
     <ClCompile Include="ArquivoHistorico.cpp" />
     <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp" />
+    <ClCompile Include="ArquivoX.cpp" />
     <ClCompile Include="Bandeira.cpp" />
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="Consumo.cpp" />
@@ -42,6 +43,7 @@
     <ClInclude Include="ArquivoFatura.h" />
     <ClInclude Include="ArquivoHistorico.h" />
     <ClInclude Include="ArquivoTexto\ArquivoTexto.h" />
+    <ClInclude Include="ArquivoX.h" />
     <ClInclude Include="Bandeira.h" />
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="Constantes.h" />

@@ -13,6 +13,11 @@ ExtratorDeFaturas::ExtratorDeFaturas(const string & caminhoPrograma) {
 	setCaminhoDoPrograma(caminhoPrograma);
 }
 
+ExtratorDeFaturas::~ExtratorDeFaturas()
+{
+	arquivoFatura.fechar();
+}
+
 /*Define o caminho absoluto em que o programa em execução sem encontra. 
 Isto é particularmente útil e se faz necessário aqui o trabalhar com versões de Debug e Release, onde o caminho relativo pode apontar para lugaraes distintos*/
 void ExtratorDeFaturas::setCaminhoDoPrograma(const string & caminhoPrograma) {
@@ -54,7 +59,7 @@ bool ExtratorDeFaturas::salvarCopiaArquivoTexto(const string & caminhoArquivo) {
 	vector<string> directory;
 	ES::quebrarTexto(directory, caminhoArquivo, ARRAB);
 
-	string caminhoCopia = caminhoPrograma + DIR_FATURAS + directory[directory.size() - 1] + TXT;
+	string caminhoCopia = caminhoPrograma + DIR_FATURAS + directory.back() + TXT;
 
 	if (directory.empty() || !ES::copiarArquivo(caminhoPrograma + FILE_SAIDA_TMP, caminhoCopia))
 		cout << MSG_ARQ_TEXTO_FALHOU;
@@ -209,9 +214,11 @@ bool ExtratorDeFaturas::extrairValoresFaturados(const vector<string> & linhas, i
 	fatura.setValoresFaturados(valores);
 	return true;
 }
+
+/*Guarda todos os dados extraídos do arquivo texto em arquivos binários*/
 bool ExtratorDeFaturas::salvarFatura() {
 
-	ArquivoFatura arquivoFatura;
+	
 	arquivoFatura.abrir(FILE_FATURA_DAT);
 
 	int registro = arquivoFatura.pesquisarFatura(fatura.getCliente().getNumero(),
@@ -223,8 +230,6 @@ bool ExtratorDeFaturas::salvarFatura() {
 		return true;
 	}
 	arquivoFatura.escreverObjeto(fatura);
-
-	arquivoFatura.fechar();
 
 	return true;
 }

@@ -232,37 +232,7 @@ Fatura ArquivoFatura::registroParaFatura(Fatura & fatura, const RegistroFatura &
 
 	return fatura;
 }
-/* Exclui um registro do arquivo. O primeiro registro é o número zero (0).
-* Retorna true se o registro foi excluído com sucesso e false caso contrário.
-*/
-bool ArquivoFatura::excluirRegistro(unsigned int numeroRegistro) {
-	// Obtém o número de registros do arquivo.
-	unsigned registros = numeroRegistros();
 
-	// Verifica se o número do registro é válido.
-	if (numeroRegistro >= 0 && numeroRegistro < registros) {
-		// Cria um novo arquivo que receberá o conteúdo do arquivo atual sem o registro a ser excluído.
-		ArquivoFatura arquivo(FILE_FATURA_TMP);
-
-		// Copia todos os registros do arquivo Fatura.dat para Fatura.tmp.
-		for (unsigned reg = 0; reg < registros; reg++)
-			if (reg != numeroRegistro)
-				arquivo.escreverObjeto(*lerObjeto(reg));
-
-		// Fecha os arquivos para que possam ser removido e renomeado.
-		arquivo.fechar();
-		fechar();
-
-		// Remove o arquivo com o registro a ser excluído e renomeia o novo arquivo.
-		_unlink(FILE_FATURA_DAT);
-		rename(FILE_FATURA_TMP, FILE_FATURA_DAT);
-
-		// Reabre o arquivo "Fatura.dat".
-		abrir(FILE_FATURA_DAT);
-		return true;
-	}
-	return false;
-}
 
 Fatura* ArquivoFatura::obterFatura(int mesReferente, int anoReferente, const string & numeroInstalacao) {
 	return lerObjeto(pesquisarFatura(mesReferente, anoReferente, VAZIO, numeroInstalacao));

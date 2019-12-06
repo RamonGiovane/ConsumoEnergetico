@@ -16,6 +16,7 @@ public:
 	int iniciar(int argc, char * argv[]);
 
 private:
+
 	int interpretarComando(int numeroArgumentos, char * argumentos[]);
 
 	void exibirInformacao();
@@ -60,6 +61,7 @@ private:
 	string relatorioArquivosIgnorados;
 
 	string caminhoPrograma;
+
 };
 
 

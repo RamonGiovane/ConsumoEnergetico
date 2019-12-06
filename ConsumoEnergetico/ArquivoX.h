@@ -1,6 +1,8 @@
+#pragma once
 #ifndef ARQUIVO_CLIENTE_H
 #define ARQUIVO_CLIENTE_H
 #include "ArquivoBinario\ArquivoBinario.h"
+#include "Arquivo.h"
 #include "Cliente.h"
 #include <string>
 #include "Constantes.h"
@@ -15,21 +17,10 @@ struct RegistroCliente {
 	char CPF[TAMANHO_CODIGOS];
 	char numero[TAMANHO_CODIGOS];
 };
-
-class ArquivoCliente 
+template<class Cliente>
+class ArquivoX : public Arquivo <Cliente>
 {
 public:
-	// Cria um objeto para manipular o arquivo binário com acesso aleatório.
-	ArquivoCliente();
-
-	/* Cria um objeto para manipular o arquivo binário com acesso aleatório cujo nome de arquivo está
-	* especificado em nomeArquivo. Em seguida, abre o arquivo para leitura e escrita.
-	*/
-	ArquivoCliente(string nomeArquivo);
-
-	// Exclui o objeto arquivo binário.
-	~ArquivoCliente();
-
 	/* Abre o arquivo com o nome especificado em nomeArquivo para escrita e leitura de dados.
 	* Retorna true se o arquivo foi aberto com sucesso e false caso contrário.
 	*/
@@ -68,8 +59,6 @@ public:
 	*/
 	int pesquisarCliente(string numero);
 
-private:
-	ArquivoBinario *arqBin;
 };
 
 #endif // !ARQUIVO_CLIENTE_H

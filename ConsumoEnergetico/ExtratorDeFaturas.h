@@ -4,6 +4,7 @@
 #include <vector>
 #include "Cliente.h"
 #include "ValoresFaturados.h"
+#include "ArquivoFatura.h"
 #include "Fatura.h"
 #include "RelatorDeErros.h"
 
@@ -17,11 +18,11 @@ public:
 
 	ExtratorDeFaturas(const string & caminhoPrograma);
 
+	~ExtratorDeFaturas();
+
 	void setCaminhoDoPrograma(const string & caminhoPrograma);
 
 	string getCaminhoDoPrograma();
-
-	string getRelatorioFaturasComFalha();
 
 	bool importarFaturaPDF(const string & caminhoArquivo);
 
@@ -31,33 +32,29 @@ public:
 
 private:
 
-	//new
 	bool extrairCEPCidade(Cliente & cliente, const string & linha);
 
-	//new
 	bool extrairNomeEEndereco(Cliente & cliente, const vector<string>& linhas, int & posicao);
 
-	//new
+	
 	bool extrairDadosCliente(const vector<string>& linhas);
-
-
-	//new 
+	 
 	bool obterPrecoEConsumo(ValoresFaturados & valores, const vector<string>& linhas, int & posicao);
 
-	//new
+	
 	bool extrairValoresFaturados(const vector<string>& linhas, int & posicao);
 
-	//new 
+	 
 	bool salvarFatura();
 
 	void popularConsumo(const vector<string>& itensLinha, const string & numeroInstalacao, int mes, int ano);
 
 	bool extrairHistoricoConsumo(const vector<string>& linhas, int & posicao, const string & numeroInstalacao);
 
-	//new
+	
 	bool importarFatura(vector<string>& linhas);
 
-	//new
+	
 	bool extrairMesAnoReferente(const vector<string>& linhasArquivo, int & posicaoAtual);
 
 	bool extrairDatasDeLeitura(const vector<string>& linhasArquivo, int & posicaoAtual);
@@ -74,7 +71,10 @@ private:
 	
 	Fatura fatura;
 
+	ArquivoFatura arquivoFatura;
+
 	string caminhoPrograma;
+
 
 };
 

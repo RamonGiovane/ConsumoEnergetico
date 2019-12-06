@@ -27,7 +27,7 @@ const char DIR_DATA[] = "data";
 const char DIR_FATURAS[] = "faturas\\";
 
 //Caminho de programa
-const char PATH_XPDF[] = "xpdf\\pdftotext.exe";
+const char PATH_XPDF[] = "pdftotext.exe";
 
 //Trecho de linha do arquivo texto das faturas
 const char STR_N_DO_CLIENTE[] = "Nº DO CLIENTE";

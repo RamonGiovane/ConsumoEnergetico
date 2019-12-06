@@ -156,7 +156,7 @@ bool ES::strMesAnoToInt(const string & mesAno, int & mes, int & ano) {
 
 	if (v.size() != 2) return false;
 
-	mes = ES::identificarMesAbreviado(v[0]);
+	mes = ES::identificarMesAbreviado(v.front());
 	ano = ES::strToInt(v[1]);
 
 	if (mes == 0 || ano == 0) return false;
@@ -362,7 +362,7 @@ string ES::procurarItem(const vector<string> & linhasArquivo, const string & ter
 
 	vector<string> linhasValores = ES::procurarLinha(linhasArquivo, termoPesquisado, posicaoAtual, termoFinal);
 	if (!linhasValores.empty())
-		return linhasValores[linhasValores.size() - 1];
+		return linhasValores.back();
 
 	return string();
 

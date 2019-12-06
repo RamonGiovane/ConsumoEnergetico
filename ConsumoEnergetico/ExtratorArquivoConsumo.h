@@ -35,8 +35,6 @@ private:
 
 	double obterValorConsumoEletrico(Consumo consumo, bool calcularConsumo);
 
-	double procurarPrecoEnergia(Consumo & consumo);
-
 	Fatura * procurarFatura(Consumo & consumo);
 
 	string gerarResultado(Consumo consumo, bool valorConsumoEnergia);

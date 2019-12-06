@@ -21,13 +21,7 @@ struct RegistroFatura {
 	double precoIluminacaoPublica;
 	double bandeiraAmarela, bandeiraVermelha;
 };
-//string numeroInstalacao;
-//string dataVencimento;
-//double valorAPagar;
-//int mesReferente, anoReferente;
-//Cliente cliente;
-//string dataDeLeitura, dataDeLeituraAnterior, proximaDataDeLeitura;
-//ValoresFaturados valoresFaturados;
+
 
 class ArquivoFatura
 {
@@ -67,7 +61,7 @@ public:
 
 	void objetoParaRegistro(Fatura & fatura, RegistroFatura & registro);
 
-	// Escreve o objeto Produto como um registro do arquivo.
+	// Escreve o objeto Fatura como um registro do arquivo.
 	bool escreverObjeto(Fatura fatura);
 	
 
@@ -76,18 +70,9 @@ public:
 	*/
 
 	Fatura * lerObjeto(unsigned int numeroRegistro, bool consultaDetalhada = true);
-
-	RegistroFatura * lerRegistro(unsigned int numeroRegistro);
-
-	Fatura registroParaFatura(Fatura & fatura, const RegistroFatura & registro, bool consultaDetalhada = true);
-
-
-	/* Exclui um registro do arquivo. O primeiro registro é o número zero (0).
-	* Retorna true se o registro foi excluído com sucesso e false caso contrário.
-	*/
-	bool excluirRegistro(unsigned int numeroRegistro);
-
+	
 	Fatura * obterFatura(int mesReferente, int anoReferente, const string & numeroInstalacao);
+	
 	Fatura * obterFatura(const string & numeroCliente, int mesReferente, int anoReferente);
 
 	/* Pesquisa uma fatura no arquivo. Em caso de sucesso retorna o número do registro
@@ -105,7 +90,12 @@ private:
 	bool posicionarNoFinal();
 
 	bool salvarCliente(const Cliente & cliente);
+	
 	bool salvarHistoricoConsumo(Fatura & fatura);
+
+	Fatura registroParaFatura(Fatura & fatura, const RegistroFatura & registro, bool consultaDetalhada = true);
+
+	RegistroFatura * lerRegistro(unsigned int numeroRegistro);
 };
 
 #endif // !ARQUIVO_FATURA_H
