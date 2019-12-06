@@ -2,6 +2,9 @@ Instruções de uso:
 	Execute o progrma usando o switch /h ou --help para informações
 	e modos de uso do programa.
 	
+	A dependência "pdftotext.exe" deve parmanecer no mesmo diretório em que
+	se encontra o executável do programa.
+	
 	Os dados de faturas importados se encontrarão na pasta "data" assim que
 	uma importação for realizada. Para evitar perda de dados, não apague ou
 	modifique nenhum conteúdo desta pasta.
