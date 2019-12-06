@@ -13,7 +13,7 @@ class ExtratorArquivoConsumo : public RelatorDeErros
 
 public:
 
-	bool lerArquivoDeConsumo(const string & numeroCliente, const string & caminhoArquivoEntrada, char * mesAno);
+	bool calcularExibirConsumosDoArquivo(const string & numeroCliente, const string & caminhoArquivoEntrada, char * mesAno);
 
 	inline string getConteudoResposta() {
 		return conteudoResposta;
@@ -27,7 +27,7 @@ public:
 private:
 	bool lerArquivoDeConsumo(const string & numeroCliente, const string & caminhoArquivoEntrada, int mesFatura, int anoFatura);
 
-	bool calcularConsumosArquivo(vector<Consumo>& consumos, double consumoArquivoCalculado, const string & numeroCliente, int mes, int ano);
+	bool calcularDadosParaConsumosArquivo(vector<Consumo>& consumos, double consumoArquivoCalculado, const string & numeroCliente, int mes, int ano);
 
 	bool interpretarArquivoDeConsumo(vector<string>& linhas, const string & numeroCliente, int mesFatura, int anoFatura);
 

@@ -9,12 +9,23 @@
 
 using namespace std;
 
-bool ExtratorArquivoConsumo::lerArquivoDeConsumo(const string & numeroCliente, const string & caminhoArquivoEntrada, char * mesAno) {
-	int mes, ano;
-	ES::strMesAnoToInt(mesAno, mes, ano);
 
-	return lerArquivoDeConsumo(numeroCliente, caminhoArquivoEntrada, mes, ano);
+/*Lê um arquivo de consumos de aparelhos elétricos, calcula o consumo total em kWh, a média e o valor da energia.
+  Gera uma sáida com os cálculos e dados de uma fatura para comparação. Requer:
+	- o número do cliente 
+	- o caminho da arquivo texto com os consumos
+	- o mês/ano da fatura/consumo a ser comparado com os cálculos.
+  Em caso de erro retorna false e seta o atributo mensagemErro com a causa. (use getMensagemErro()).
+  Do contrário true e seta o atributo conteudoResposta com os dados de saída em string. (use getConteudoResposta()).
+ */
+bool ExtratorArquivoConsumo::calcularExibirConsumosDoArquivo(const string & numeroCliente, const string & caminhoArquivoEntrada, char * mesAno) {
+	int mes, ano;
+	ES::strMesAnoToInt(mesAno, mes, ano); //converte o mes e ano para int 
+
+	return lerArquivoDeConsumo(numeroCliente, caminhoArquivoEntrada, mes, ano); //realmente começa os trabalhos aqui
 }
+
+/*Valida se o arquivo texto existe, lê e o transforma em vector<string>. Dá continuidade na proxima função*/
 bool ExtratorArquivoConsumo::lerArquivoDeConsumo(const string & numeroCliente, const string & caminhoArquivoEntrada, int mesFatura, int anoFatura) {
 	string textoArquivo;
 
@@ -30,7 +41,9 @@ bool ExtratorArquivoConsumo::lerArquivoDeConsumo(const string & numeroCliente, c
 	return interpretarArquivoDeConsumo(linhas, numeroCliente, mesFatura, anoFatura);
 }
 
-bool ExtratorArquivoConsumo::calcularConsumosArquivo(vector<Consumo> & consumos, double consumoArquivoCalculado, const string & numeroCliente, int mes, int ano) {
+/*Procura os consumos de cada instalação do cliente no mês/ano informado no arquivo. Define uma mensagem de erro se nao achar nenhum.
+*Retorna os consumos em um vector com a quantidade consumida em kWh e  média de consumo calculada para cada um deles*/
+bool ExtratorArquivoConsumo::calcularDadosParaConsumosArquivo(vector<Consumo> & consumos, double consumoArquivoCalculado, const string & numeroCliente, int mes, int ano) {
 	
 	if (!procurarConsumosDoCliente(consumos, numeroCliente, mes, ano))
 		return erro( SEM_DADOS_INPUT_FILE + ES::mesToStr(mes)  + BARRA + ES::intToStr(ano) + BARRA_N);
@@ -43,7 +56,8 @@ bool ExtratorArquivoConsumo::calcularConsumosArquivo(vector<Consumo> & consumos,
 
 	
 }
-
+/*  A partir das linhas do arquivo do consumo,  valida a integridade do mesmo, se a sintaxe do cabeçalho está correta, assim como das demais linhas*.
+	Fazendo também o calculo do consumo em kWh dos aparelhos do arquivo de consumo*/
 bool ExtratorArquivoConsumo::interpretarArquivoDeConsumo(vector<string> & linhas, const string & numeroCliente, int mesFatura, int anoFatura) {
 	int mesArquivo, anoArquivo;
 	
@@ -56,8 +70,8 @@ bool ExtratorArquivoConsumo::interpretarArquivoDeConsumo(vector<string> & linhas
 	if (consumoCalculado == -1) return false;
 
 	
-	//Procurando consumos do mês e ano fornecidos no arquivo de entrada
-	if (!calcularConsumosArquivo(consumosMesAnoArquivo, consumoCalculado, numeroCliente, mesArquivo, anoArquivo))
+	//Procura os dados para e calcula os consumos do mês e ano fornecidos no arquivo de entrada
+	if (!calcularDadosParaConsumosArquivo(consumosMesAnoArquivo, consumoCalculado, numeroCliente, mesArquivo, anoArquivo))
 		return false;
 	
 	
@@ -72,10 +86,13 @@ bool ExtratorArquivoConsumo::interpretarArquivoDeConsumo(vector<string> & linhas
 
 }
 
+/*Cálcula a média diária de consumo. Trata a possibilidade de uma divisão por zero.*/
 double ExtratorArquivoConsumo::calcularMediaDiaria(double consumo, int diasFaturados) {
 	return diasFaturados == 0 ? 0 : consumo / diasFaturados;
 }
 
+/*Procura o preço da energia no mês/ano do consumo informado. Calcula o valor em reias do consumo se existir dados de preços
+para esses parâmetros. Senão retorna -1*/
 double ExtratorArquivoConsumo::obterValorConsumoEletrico(Consumo consumo, bool calcularConsumo) {
 	
 	Fatura *f = procurarFatura(consumo);
@@ -92,6 +109,7 @@ double ExtratorArquivoConsumo::obterValorConsumoEletrico(Consumo consumo, bool c
 	return valor;
 }
 
+/*Procura uma fatura no arquivo binário a partir de um consumo*/
 Fatura * ExtratorArquivoConsumo::procurarFatura(Consumo & consumo) {
 
 	arquivoFatura.abrir(FILE_FATURA_DAT);
@@ -102,10 +120,13 @@ Fatura * ExtratorArquivoConsumo::procurarFatura(Consumo & consumo) {
 	
 }
 
-string ExtratorArquivoConsumo::gerarResultado(Consumo consumo, bool calcularConsumo = false) {
+/*Gera a sáida do programa para um consumo específico. Há a opção de pular o cálculo do valor da energia e utilizar 
+o valor referenciado na fatura do mês/ano fornecido.
+Se não houver dados de energia para esse parâmetro, exibe um alerta ao usuario no lugar*/
+string ExtratorArquivoConsumo::gerarResultado(Consumo consumo, bool calcularValorConsumo = false) {
 	double consumoKwH = consumo.getConsumoKWh();
 	int dias = consumo.getDias();
-	double valorConsumo =  obterValorConsumoEletrico(consumo, calcularConsumo);
+	double valorConsumo =  obterValorConsumoEletrico(consumo, calcularValorConsumo);
 	string valorConsumoStr;
 	if (valorConsumo == -1)
 		valorConsumoStr = PRECO_ENERGIA_INDISPONIVEL;
@@ -116,10 +137,8 @@ string ExtratorArquivoConsumo::gerarResultado(Consumo consumo, bool calcularCons
 		STR_VALOR_CONSUMO  + valorConsumoStr +
 		STR_NUMERO_DIAS + ES::intToStr(consumo.getDias());
 }
-bool compararConsumos(Consumo c1, Consumo c2) {
-	return c1.getNumeroInstalacao() == c1.getNumeroInstalacao() && c1.getAno() == c2.getAno() && c1.getMes() == c2.getMes();
-}
 
+/*Gera o resultado para dois arquivos distintos, se algum deles for NULL. Define um alerta mostrando que os dados não foram encontrados */
 string ExtratorArquivoConsumo::gerarStringResultado(Consumo *consumoFatura, Consumo *consumoArquivo) {
 
 	string r;

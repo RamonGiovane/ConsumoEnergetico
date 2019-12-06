@@ -186,7 +186,7 @@ bool CEE::calcularConsumoDeEnergia(char * numeroCliente, char * mesAno, char * a
 
 	if (!pesquisarExibirCliente(numeroCliente)) return false;
 
-	if (!extrator.lerArquivoDeConsumo(numeroCliente, arquivoEntrada, mesAno)) {
+	if (!extrator.calcularExibirConsumosDoArquivo(numeroCliente, arquivoEntrada, mesAno)) {
 		cout << endl << extrator.getMensagemErro();
 		return false;
 	}
