@@ -4,7 +4,7 @@
 #include <iostream>
 #include <filesystem>
 #include <regex>
-#include "ArquivoTexto\ArquivoTexto.h"
+#include "ArquivoTexto.h"
 #include "Constantes.h"
 #include "Consumo.h"
 

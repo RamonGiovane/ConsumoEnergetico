@@ -2,7 +2,7 @@
 #define ARQUIVO_HISTORICO_H
 
 #include "Consumo.h"
-#include "ArquivoBinario\ArquivoBinario.h"
+#include "ArquivoBinario.h"
 #include <string>
 #include <vector>
 #include "Constantes.h"

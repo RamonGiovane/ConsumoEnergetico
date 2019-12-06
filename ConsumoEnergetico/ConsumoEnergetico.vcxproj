@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp" />
+    <ClCompile Include="ArquivoBinario.cpp" />
     <ClCompile Include="ArquivoCliente.cpp" />
     <ClCompile Include="ArquivoFatura.cpp" />
     <ClCompile Include="ArquivoHistorico.cpp" />
-    <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp" />
+    <ClCompile Include="ArquivoTexto.cpp" />
     <ClCompile Include="Bandeira.cpp" />
     <ClCompile Include="Cliente.cpp" />
     <ClCompile Include="Consumo.cpp" />
@@ -35,11 +35,11 @@
     <ClCompile Include="ValoresFaturados.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ArquivoBinario\ArquivoBinario.h" />
+    <ClInclude Include="ArquivoBinario.h" />
     <ClInclude Include="ArquivoCliente.h" />
     <ClInclude Include="ArquivoFatura.h" />
     <ClInclude Include="ArquivoHistorico.h" />
-    <ClInclude Include="ArquivoTexto\ArquivoTexto.h" />
+    <ClInclude Include="ArquivoTexto.h" />
     <ClInclude Include="Bandeira.h" />
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="Constantes.h" />

@@ -3,7 +3,7 @@
 #include <string>
 #include "Fatura.h"
 #include "Constantes.h"
-#include "ArquivoBinario\ArquivoBinario.h"
+#include "ArquivoBinario.h"
 
 
 using namespace std;

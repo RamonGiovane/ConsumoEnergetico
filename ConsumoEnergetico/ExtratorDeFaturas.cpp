@@ -1,6 +1,6 @@
 #include "ExtratorDeFaturas.h"
 #include "Fatura.h"
-#include "ArquivoTexto\ArquivoTexto.h"
+#include "ArquivoTexto.h"
 #include "EntradaESaida.h"
 #include "ArquivoHistorico.h"
 #include "ArquivoFatura.h"

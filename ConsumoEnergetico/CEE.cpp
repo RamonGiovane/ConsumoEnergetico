@@ -1,7 +1,7 @@
 #include "ExtratorDeFaturas.h"
 #include "CEE.h"
 #include "EntradaESaida.h"
-#include "ArquivoTexto\ArquivoTexto.h"
+#include "ArquivoTexto.h"
 #include "ArquivoCliente.h"
 #include "ArquivoFatura.h"
 #include "Cliente.h"

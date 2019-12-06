@@ -42,12 +42,6 @@
     <ClCompile Include="Consumo.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
-    <ClCompile Include="ArquivoBinario\ArquivoBinario.cpp">
-      <Filter>Source Files\Arquivo</Filter>
-    </ClCompile>
-    <ClCompile Include="ArquivoTexto\ArquivoTexto.cpp">
-      <Filter>Source Files\Arquivo</Filter>
-    </ClCompile>
     <ClCompile Include="ValoresFaturados.cpp">
       <Filter>Source Files\Modelo</Filter>
     </ClCompile>
@@ -75,6 +69,12 @@
     <ClCompile Include="ExtratorArquivoConsumo.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
+    <ClCompile Include="ArquivoBinario.cpp">
+      <Filter>Source Files\Arquivo</Filter>
+    </ClCompile>
+    <ClCompile Include="ArquivoTexto.cpp">
+      <Filter>Source Files\Arquivo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bandeira.h">
@@ -88,12 +88,6 @@
     </ClInclude>
     <ClInclude Include="ValoresFaturados.h">
       <Filter>Header Files\Modelo</Filter>
-    </ClInclude>
-    <ClInclude Include="ArquivoTexto\ArquivoTexto.h">
-      <Filter>Header Files\Arquivo</Filter>
-    </ClInclude>
-    <ClInclude Include="ArquivoBinario\ArquivoBinario.h">
-      <Filter>Header Files\Arquivo</Filter>
     </ClInclude>
     <ClInclude Include="EntradaESaida.h">
       <Filter>Header Files\Util</Filter>
@@ -124,6 +118,12 @@
     </ClInclude>
     <ClInclude Include="ExtratorArquivoConsumo.h">
       <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoBinario.h">
+      <Filter>Header Files\Arquivo</Filter>
+    </ClInclude>
+    <ClInclude Include="ArquivoTexto.h">
+      <Filter>Header Files\Arquivo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

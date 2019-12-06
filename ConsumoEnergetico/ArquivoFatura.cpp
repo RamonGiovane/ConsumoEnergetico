@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <io.h>
-#include "ArquivoBinario\ArquivoBinario.h"
+#include "ArquivoBinario.h"
 #include "ArquivoFatura.h"
 #include "ArquivoCliente.h"
 #include "ArquivoHistorico.h"

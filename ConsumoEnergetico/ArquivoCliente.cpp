@@ -1,6 +1,6 @@
 #include "ArquivoHistorico.h"
 #include "ArquivoCliente.h"
-#include "ArquivoBinario\ArquivoBinario.h"
+#include "ArquivoBinario.h"
 #include "ArquivoCliente.h"
 #include "Constantes.h"
 #include <iostream>

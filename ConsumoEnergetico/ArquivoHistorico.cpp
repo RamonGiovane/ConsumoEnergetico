@@ -1,5 +1,5 @@
 #include "ArquivoHistorico.h"
-#include "ArquivoBinario\ArquivoBinario.h"
+#include "ArquivoBinario.h"
 #include "ArquivoHistorico.h"
 #include "Constantes.h"
 #include <iostream>
