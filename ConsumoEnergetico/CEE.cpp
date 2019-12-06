@@ -140,7 +140,7 @@ int CEE::interpretarUmParametro(char * parametro) {
 	if (ES::obterArquivosDiretorio(strParametro, arquivos)) {
 		
 		if (!verificarXPDF()) return false;
-	
+		
 		if (arquivos.empty())
 			return importarFatura(strParametro, true);
 		return importarFaturas(arquivos, strParametro);

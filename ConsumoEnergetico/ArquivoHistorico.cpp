@@ -6,52 +6,7 @@
 #include <vector>
 #include <io.h>
 
-// Cria um objeto para manipular o arquivo binário com acesso aleatório.
-ArquivoHistorico::ArquivoHistorico() {
-	arqBin = new ArquivoBinario();
-}
 
-/* Cria um objeto para manipular o arquivo binário com acesso aleatório cujo nome de arquivo está
-* especificado em nomeArquivo. Em seguida, abre o arquivo para leitura e escrita.
-*/
-ArquivoHistorico::ArquivoHistorico(string nomeArquivo) {
-	arqBin = new ArquivoBinario();
-	arqBin->abrir(nomeArquivo);
-}
-
-// Exclui o objeto arquivo binário.
-ArquivoHistorico::~ArquivoHistorico() {
-	delete arqBin;
-}
-
-/* Abre o arquivo com o nome especificado em nomeArquivo para escrita e leitura de dados.
-* Retorna true se o arquivo foi aberto com sucesso e false caso contrário.
-*/
-bool ArquivoHistorico::abrir(string nomeArquivo) {
-	if (!arqBin->getArquivoBinario().is_open())
-		return arqBin->abrir(nomeArquivo);
-	return true;
-}
-
-// Fecha o arquivo.
-void ArquivoHistorico::fechar() {
-	arqBin->fechar();
-}
-
-// Obtém o nome do arquivo.
-string ArquivoHistorico::getNomeArquivo() {
-	return arqBin->getNomeArquivo();
-}
-
-// Obtém o tamanho do arquivo em bytes.
-unsigned long ArquivoHistorico::tamanhoArquivo() {
-	return arqBin->tamanhoArquivo();
-}
-
-// Obtém o número de registros do arquivo.
-unsigned int ArquivoHistorico::numeroRegistros() {
-	return tamanhoArquivo() / tamanhoRegistro();
-}
 
 /* Obtém o tamanho do registro em bytes.
 * 20 bytes da descrição do consumo com 20 caracteres (1 byte por caractere);
@@ -85,10 +40,10 @@ void ArquivoHistorico::escreverObjeto(Consumo consumo, const string & numeroClie
 	objetoParaRegistro(consumo, registro, numeroCliente);
 
 	// Posiciona no fim do arquivo.
-	arqBin->getArquivoBinario().seekp(0, ios::end);
+	getArquivoBinario().seekp(0, ios::end);
 
 	// Escreve os dados do consumo no arquivo usando a estrutura RegistroConsumo.
-	arqBin->getArquivoBinario().write(reinterpret_cast<const char *>(&registro), tamanhoRegistro());
+	getArquivoBinario().write(reinterpret_cast<const char *>(&registro), tamanhoRegistro());
 }
 
 Consumo* ArquivoHistorico::lerObjeto(unsigned int numeroRegistro) {
@@ -105,15 +60,15 @@ RegistroConsumo* ArquivoHistorico::lerRegistro(unsigned int numeroRegistro) {
 	RegistroConsumo registro;
 
 	// Posiciona no registro a ser lido.
-	arqBin->getArquivoBinario().seekg(numeroRegistro * tamanhoRegistro());
+	getArquivoBinario().seekg(numeroRegistro * tamanhoRegistro());
 
 	// Lê o registro e armazena os dados no objeto consumo.
-	arqBin->getArquivoBinario().read(reinterpret_cast<char *>(&registro), tamanhoRegistro());
+	getArquivoBinario().read(reinterpret_cast<char *>(&registro), tamanhoRegistro());
 
 	/* Se a leitura não falhar o objeto Consumo será retornado com os dados lidos do arquivo.
 	Cria um objeto Consumo com os dados recuperados do arquivo e armazenados na estrutura registro.
 	*/
-	if (arqBin->getArquivoBinario())
+	if (getArquivoBinario())
 		return new RegistroConsumo(registro);
 	else return NULL;
 }

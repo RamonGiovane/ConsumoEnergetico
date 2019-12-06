@@ -6,53 +6,11 @@
 #include <iostream>
 #include <io.h>
 
-// Cria um objeto para manipular o arquivo binário com acesso aleatório.
-ArquivoCliente::ArquivoCliente() {
-	arqBin = new ArquivoBinario();
-}
 
-/* Cria um objeto para manipular o arquivo binário com acesso aleatório cujo nome de arquivo está
-* especificado em nomeArquivo. Em seguida, abre o arquivo para leitura e escrita.
-*/
-ArquivoCliente::ArquivoCliente(string nomeArquivo) {
-	arqBin = new ArquivoBinario();
-	arqBin->abrir(nomeArquivo);
-}
 
-// Exclui o objeto arquivo binário.
-ArquivoCliente::~ArquivoCliente() {
-	fechar();
-	delete arqBin;
-}
+ArquivoCliente::ArquivoCliente() {}
 
-/* Abre o arquivo com o nome especificado em nomeArquivo para escrita e leitura de dados.
-* Retorna true se o arquivo foi aberto com sucesso e false caso contrário.
-*/
-bool ArquivoCliente::abrir(string nomeArquivo) {
-	if (!arqBin->getArquivoBinario().is_open())
-		return arqBin->abrir(nomeArquivo);
-	return true;
-}
-
-// Fecha o arquivo.
-void ArquivoCliente::fechar() {
-	arqBin->fechar();
-}
-
-// Obtém o nome do arquivo.
-string ArquivoCliente::getNomeArquivo() {
-	return arqBin->getNomeArquivo();
-}
-
-// Obtém o tamanho do arquivo em bytes.
-unsigned long ArquivoCliente::tamanhoArquivo() {
-	return arqBin->tamanhoArquivo();
-}
-
-// Obtém o número de registros do arquivo.
-unsigned int ArquivoCliente::numeroRegistros() {
-	return tamanhoArquivo() / tamanhoRegistro();
-}
+ArquivoCliente::ArquivoCliente(string nomeArquivo) : ArquivoBinario(nomeArquivo) {}
 
 /* Obtém o tamanho do registro em bytes.
 * 20 bytes da descrição do cliente com 20 caracteres (1 byte por caractere);
@@ -77,10 +35,10 @@ void ArquivoCliente::escreverObjeto(Cliente cliente) {
 	strncpy_s(registro.numero, TAMANHO_CODIGOS, cliente.getNumero().c_str(), cliente.getNumero().length());
 
 	// Posiciona no fim do arquivo.
-	arqBin->getArquivoBinario().seekp(0, ios::end);
+	getArquivoBinario().seekp(0, ios::end);
 
 	// Escreve os dados do cliente no arquivo usando a estrutura RegistroCliente.
-	arqBin->getArquivoBinario().write(reinterpret_cast<const char *>(&registro), tamanhoRegistro());
+	getArquivoBinario().write(reinterpret_cast<const char *>(&registro), tamanhoRegistro());
 }
 
 /* Lê os dados de um registro do arquivo e armazena-os no objeto Cliente.
@@ -90,50 +48,19 @@ Cliente* ArquivoCliente::lerObjeto(unsigned int numeroRegistro) {
 	RegistroCliente registro;
 
 	// Posiciona no registro a ser lido.
-	arqBin->getArquivoBinario().seekg(numeroRegistro * tamanhoRegistro());
+	getArquivoBinario().seekg(numeroRegistro * tamanhoRegistro());
 
 	// Lê o registro e armazena os dados no objeto cliente.
-	arqBin->getArquivoBinario().read(reinterpret_cast<char *>(&registro), tamanhoRegistro());
+	getArquivoBinario().read(reinterpret_cast<char *>(&registro), tamanhoRegistro());
 
 	/* Se a leitura não falhar o objeto Cliente será retornado com os dados lidos do arquivo.
 	Cria um objeto Cliente com os dados recuperados do arquivo e armazenados na estrutura registro.
 	*/
-	if (arqBin->getArquivoBinario())
+	if (getArquivoBinario())
 		return new Cliente(registro.numero, registro.nome, registro.CPF, registro.rua, registro.bairro, registro.CEP, registro.cidade);
 	else return NULL;
 }
 
-/* Exclui um registro do arquivo. O primeiro registro é o número zero (0).
-* Retorna true se o registro foi excluído com sucesso e false caso contrário.
-*/
-bool ArquivoCliente::excluirRegistro(unsigned int numeroRegistro) {
-	// Obtém o número de registros do arquivo.
-	unsigned registros = numeroRegistros();
-
-	// Verifica se o número do registro é válido.
-	if (numeroRegistro >= 0 && numeroRegistro < registros) {
-		// Cria um novo arquivo que receberá o conteúdo do arquivo atual sem o registro a ser excluído.
-		ArquivoCliente arquivo(FILE_CLIENTE_TMP);
-
-		// Copia todos os registros do arquivo Cliente.dat para Cliente.tmp.
-		for (unsigned reg = 0; reg < registros; reg++)
-			if (reg != numeroRegistro)
-				arquivo.escreverObjeto(*lerObjeto(reg));
-
-		// Fecha os arquivos para que possam ser removido e renomeado.
-		arquivo.fechar();
-		fechar();
-
-		// Remove o arquivo com o registro a ser excluído e renomeia o novo arquivo.
-		_unlink(FILE_CLIENTE_DAT);
-		rename(FILE_CLIENTE_TMP, FILE_CLIENTE_DAT);
-
-		// Reabre o arquivo "Cliente.dat".
-		abrir(FILE_CLIENTE_DAT);
-		return true;
-	}
-	return false;
-}
 
 /* Pesquisa o número de um cliente no arquivo. Em caso de sucesso retorna o número do registro
 * onde o cliente está armazenado, caso contrário, retorna -1.

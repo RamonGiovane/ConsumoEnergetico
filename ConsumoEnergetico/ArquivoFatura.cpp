@@ -9,53 +9,7 @@
 #include "ArquivoHistorico.h"
 #include "Constantes.h"
 
-// Cria um objeto para manipular o arquivo binário com acesso aleatório.
-ArquivoFatura::ArquivoFatura() {
-	arqBin = new ArquivoBinario();
-}
 
-/* Cria um objeto para manipular o arquivo binário com acesso aleatório cujo nome de arquivo está
-* especificado em nomeArquivo. Em seguida, abre o arquivo para leitura e escrita.
-*/
-ArquivoFatura::ArquivoFatura(string nomeArquivo) {
-	arqBin = new ArquivoBinario();
-	arqBin->abrir(nomeArquivo);
-}
-
-// Exclui o objeto arquivo binário.
-ArquivoFatura::~ArquivoFatura() {
-	fechar();
-	delete arqBin;
-}
-
-/* Abre o arquivo com o nome especificado em nomeArquivo para escrita e leitura de dados.
-* Retorna true se o arquivo foi aberto com sucesso e false caso contrário.
-*/
-bool ArquivoFatura::abrir(string nomeArquivo) {
-	if (!arqBin->getArquivoBinario().is_open())
-		return arqBin->abrir(nomeArquivo);
-	return true;
-}
-
-// Fecha o arquivo.
-void ArquivoFatura::fechar() {
-	arqBin->fechar();
-}
-
-// Obtém o nome do arquivo.
-string ArquivoFatura::getNomeArquivo() {
-	return arqBin->getNomeArquivo();
-}
-
-// Obtém o tamanho do arquivo em bytes.
-unsigned long ArquivoFatura::tamanhoArquivo() {
-	return arqBin->tamanhoArquivo();
-}
-
-// Obtém o número de registros do arquivo.
-unsigned int ArquivoFatura::numeroRegistros() {
-	return tamanhoArquivo() / tamanhoRegistro();
-}
 
 /* Obtém o tamanho do registro em bytes.
 * 20 bytes da descrição do fatura com 20 caracteres (1 byte por caractere);
@@ -63,18 +17,18 @@ unsigned int ArquivoFatura::numeroRegistros() {
 *  4 bytes do preço.
 */
 unsigned int ArquivoFatura::tamanhoRegistro() {
-	return (TAMANHO_STRING * sizeof(char) * 6) + (sizeof(int) * 2) + (sizeof(double) * 5);
+	return (TAMANHO_CODIGOS * sizeof(char) * 6) + (sizeof(int) * 2) + (sizeof(double) * 5);
 }
 
 void ArquivoFatura::objetoParaRegistro(Fatura & fatura, RegistroFatura & registro) {
 	
 	// Copiando os atributos do objeto Fatura para a estrutura RegistroFatura.
-	strncpy_s(registro.numeroCliente, TAMANHO_STRING, fatura.getCliente().getNumero().c_str(), fatura.getCliente().getNumero().length());
-	strncpy_s(registro.numeroInstalacao, TAMANHO_STRING, fatura.getNumeroInstalacao().c_str(), fatura.getNumeroInstalacao().length());
-	strncpy_s(registro.dataVencimento, TAMANHO_STRING, fatura.getDataVencimento().c_str(), fatura.getDataVencimento().length());
-	strncpy_s(registro.dataDeLeitura, TAMANHO_STRING, fatura.getDataDeLeitura().c_str(), fatura.getDataDeLeitura().length());
-	strncpy_s(registro.dataDeLeituraAnterior, TAMANHO_STRING, fatura.getDataDeLeituraAnterior().c_str(), fatura.getDataDeLeituraAnterior().length());
-	strncpy_s(registro.proximaDataDeLeitura, TAMANHO_STRING, fatura.getProximaDataDeLeitura().c_str(), fatura.getProximaDataDeLeitura().length());
+	strncpy_s(registro.numeroCliente, TAMANHO_CODIGOS, fatura.getCliente().getNumero().c_str(), fatura.getCliente().getNumero().length());
+	strncpy_s(registro.numeroInstalacao, TAMANHO_CODIGOS, fatura.getNumeroInstalacao().c_str(), fatura.getNumeroInstalacao().length());
+	strncpy_s(registro.dataVencimento, TAMANHO_CODIGOS, fatura.getDataVencimento().c_str(), fatura.getDataVencimento().length());
+	strncpy_s(registro.dataDeLeitura, TAMANHO_CODIGOS, fatura.getDataDeLeitura().c_str(), fatura.getDataDeLeitura().length());
+	strncpy_s(registro.dataDeLeituraAnterior, TAMANHO_CODIGOS, fatura.getDataDeLeituraAnterior().c_str(), fatura.getDataDeLeituraAnterior().length());
+	strncpy_s(registro.proximaDataDeLeitura, TAMANHO_CODIGOS, fatura.getProximaDataDeLeitura().c_str(), fatura.getProximaDataDeLeitura().length());
 
 	registro.mesReferente = fatura.getMesReferente();
 	registro.anoReferente = fatura.getAnoReferente();
@@ -101,24 +55,22 @@ bool ArquivoFatura::escreverObjeto(Fatura fatura) {
 	if(!salvarHistoricoConsumo(fatura)) return false;
 
 	// Posiciona no fim do arquivo.
-	arqBin->getArquivoBinario().seekp(0, ios::end);
+	getArquivoBinario().seekp(0, ios::end);
 
 	// Escreve os dados do fatura no arquivo usando a estrutura RegistroFatura.
-	arqBin->getArquivoBinario().write(reinterpret_cast<const char *>(&registro), tamanhoRegistro());
+	getArquivoBinario().write(reinterpret_cast<const char *>(&registro), tamanhoRegistro());
 
 	return true;
 }
 
 
 bool ArquivoFatura::posicionarNoInicio() {
-	if (arqBin == NULL) return false;
-	arqBin->getArquivoBinario().seekp(0, ios::beg);
+	getArquivoBinario().seekp(0, ios::beg);
 	return true;
 }
 
 bool ArquivoFatura::posicionarNoFinal() {
-	if (arqBin == NULL) return false;
-	arqBin->getArquivoBinario().seekp(0, ios::end);
+	getArquivoBinario().seekp(0, ios::end);
 	return true;
 }
 
@@ -159,15 +111,15 @@ Fatura* ArquivoFatura::lerObjeto(unsigned int numeroRegistro, bool consultaDetal
 	RegistroFatura registro;
 
 	// Posiciona no registro a ser lido.
-	arqBin->getArquivoBinario().seekg(numeroRegistro * tamanhoRegistro());
+	getArquivoBinario().seekg(numeroRegistro * tamanhoRegistro());
 
 	// Lê o registro e armazena os dados no objeto fatura.
-	arqBin->getArquivoBinario().read(reinterpret_cast<char *>(&registro), tamanhoRegistro());
+	getArquivoBinario().read(reinterpret_cast<char *>(&registro), tamanhoRegistro());
 
 	/* Se a leitura não falhar o objeto Fatura será retornado com os dados lidos do arquivo.
 	Cria um objeto Fatura com os dados recuperados do arquivo e armazenados na estrutura registro.
 	*/
-	if (arqBin->getArquivoBinario()) {
+	if (getArquivoBinario()) {
 		Fatura* fatura = new Fatura();
 		registroParaFatura(*fatura, registro);
 		return fatura;
@@ -179,15 +131,15 @@ RegistroFatura* ArquivoFatura::lerRegistro(unsigned int numeroRegistro) {
 	RegistroFatura registro;
 
 	// Posiciona no registro a ser lido.
-	arqBin->getArquivoBinario().seekg(numeroRegistro * tamanhoRegistro());
+	getArquivoBinario().seekg(numeroRegistro * tamanhoRegistro());
 
 	// Lê o registro e armazena os dados no objeto fatura.
-	arqBin->getArquivoBinario().read(reinterpret_cast<char *>(&registro), tamanhoRegistro());
+	getArquivoBinario().read(reinterpret_cast<char *>(&registro), tamanhoRegistro());
 
 	/* Se a leitura não falhar o objeto Fatura será retornado com os dados lidos do arquivo.
 	Cria um objeto Fatura com os dados recuperados do arquivo e armazenados na estrutura registro.
 	*/
-	if (arqBin->getArquivoBinario()) {
+	if (getArquivoBinario()) {
 		return new RegistroFatura(registro);
 	}
 	else return NULL;

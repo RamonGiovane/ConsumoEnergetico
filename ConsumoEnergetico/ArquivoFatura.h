@@ -2,15 +2,16 @@
 #define ARQUIVO_FATURA_H
 #include <string>
 #include "Fatura.h"
+#include "Constantes.h"
 #include "ArquivoBinario\ArquivoBinario.h"
 
-#define TAMANHO_STRING 25
+
 using namespace std;
 struct RegistroFatura {
-	char numeroCliente[TAMANHO_STRING];
-	char numeroInstalacao[TAMANHO_STRING];
-	char dataVencimento[TAMANHO_STRING];
-	char dataDeLeitura[TAMANHO_STRING], dataDeLeituraAnterior[TAMANHO_STRING], proximaDataDeLeitura[TAMANHO_STRING];
+	char numeroCliente[TAMANHO_CODIGOS];
+	char numeroInstalacao[TAMANHO_CODIGOS];
+	char dataVencimento[TAMANHO_CODIGOS];
+	char dataDeLeitura[TAMANHO_CODIGOS], dataDeLeituraAnterior[TAMANHO_CODIGOS], proximaDataDeLeitura[TAMANHO_CODIGOS];
 	
 	int mesReferente, anoReferente;
 	double valorAPagar;
@@ -23,38 +24,19 @@ struct RegistroFatura {
 };
 
 
-class ArquivoFatura
+class ArquivoFatura : public ArquivoBinario
 {
 
 
 public:
 	// Cria um objeto para manipular o arquivo binário com acesso aleatório.
-	ArquivoFatura();
+	inline ArquivoFatura() : ArquivoBinario() {};
 
 	/* Cria um objeto para manipular o arquivo binário com acesso aleatório cujo nome de arquivo está
 	* especificado em nomeArquivo. Em seguida, abre o arquivo para leitura e escrita.
 	*/
-	ArquivoFatura(string nomeArquivo);
+	inline ArquivoFatura(string nomeArquivo) : ArquivoBinario(nomeArquivo) {};
 
-	// Exclui o objeto arquivo binário.
-	~ArquivoFatura();
-
-	/* Abre o arquivo com o nome especificado em nomeArquivo para escrita e leitura de dados.
-	* Retorna true se o arquivo foi aberto com sucesso e false caso contrário.
-	*/
-	bool abrir(string nomeArquivo);
-
-	// Fecha o arquivo.
-	void fechar();
-
-	// Obtém o nome do arquivo.
-	string getNomeArquivo();
-
-	// Obtém o tamanho do arquivo em bytes.
-	unsigned long tamanhoArquivo();
-
-	// Obtém o número de registros do arquivo.
-	unsigned int numeroRegistros();
 
 	// Obtém o tamanho do registro em bytes.
 	unsigned int tamanhoRegistro();
@@ -65,7 +47,7 @@ public:
 	bool escreverObjeto(Fatura fatura);
 	
 
-	/* Lê os dados de um registro do arquivo e armazena-os no objeto Produto.
+	/* Lê os dados de um registro do arquivo e armazena-os no objeto Fatura.
 	* Retorna o objeto Produto. Em caso de erro retorna NULL.
 	*/
 
@@ -83,7 +65,6 @@ public:
 
 
 private:
-	ArquivoBinario *arqBin;
 
 	bool posicionarNoInicio();
 

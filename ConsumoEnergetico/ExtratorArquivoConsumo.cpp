@@ -33,7 +33,7 @@ bool ExtratorArquivoConsumo::lerArquivoDeConsumo(const string & numeroCliente, c
 bool ExtratorArquivoConsumo::calcularConsumosArquivo(vector<Consumo> & consumos, double consumoArquivoCalculado, const string & numeroCliente, int mes, int ano) {
 	
 	if (!procurarConsumosDoCliente(consumos, numeroCliente, mes, ano))
-		return erro( SEM_DADOS_INPUT_FILE + ES::mesToStr(mes)  + BARRA + ES::intToStr(ano));
+		return erro( SEM_DADOS_INPUT_FILE + ES::mesToStr(mes)  + BARRA + ES::intToStr(ano) + BARRA_N);
 
 	for (Consumo & c : consumos) {
 		c.setConsumoKWh(consumoArquivoCalculado);
@@ -63,7 +63,7 @@ bool ExtratorArquivoConsumo::interpretarArquivoDeConsumo(vector<string> & linhas
 	
 	//Procurando consumos do mês e ano fornecidos na sintaxe do programa
 	if (!procurarConsumosDoCliente(consumosMesAnoFaturas, numeroCliente, mesFatura, anoFatura))
-		return erro(SEM_DADOS_INPUT_SINTAX + ES::mesToStr(mesFatura) + BARRA + ES::intToStr(anoFatura));
+		return erro(SEM_DADOS_INPUT_SINTAX + ES::mesToStr(mesFatura) + BARRA + ES::intToStr(anoFatura) + BARRA_N);
 
 	ES::organizarConsumos(consumosMesAnoFaturas);
 	ES::organizarConsumos(consumosMesAnoArquivo);

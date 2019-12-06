@@ -21,6 +21,12 @@ bool ArquivoBinario::abrir(string nomeArquivo) {
 	return arquivoBinario ? true : false;
 }
 
+
+// Obtém o número de registros do arquivo.
+unsigned int ArquivoBinario::numeroRegistros() {
+	return tamanhoArquivo() / tamanhoRegistro();
+}
+
 // Fecha o arquivo.
 void ArquivoBinario::fechar() {
 	if (arquivoBinario.is_open()) arquivoBinario.close();

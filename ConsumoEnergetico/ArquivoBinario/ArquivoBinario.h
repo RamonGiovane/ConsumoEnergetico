@@ -8,28 +8,47 @@
 using namespace std;
 
 class ArquivoBinario {
+
 public:
+
+	inline ArquivoBinario(){}
+
+	inline ArquivoBinario(string nomeArquivo) {
+		this->nomeArquivo = nomeArquivo;
+		abrir(nomeArquivo);
+	}
+
+	inline ~ArquivoBinario() {
+		fechar();
+	}
+
 	/* Abre o arquivo com o nome especificado em nomeArquivo para escrita e leitura de dados.
 	 * Se o arquivo não existir ele será criado.
 	 * Retorna true se o arquivo foi aberto com sucesso e false caso contrário.
 	 */
-	bool abrir(string nomeArquivo);
+	virtual bool abrir(string nomeArquivo);
+	
+	// Obtém o número de registros do arquivo.
+	unsigned int numeroRegistros();
 
 	// Fecha o arquivo.
-	void fechar();
+	virtual void fechar();
 
 	// Obtém o nome do arquivo.
-	string getNomeArquivo();
+	virtual string getNomeArquivo();
 
+protected:
 	// Reposiciona o arquivo para o inicio
-	void reposicionarArquivo();
+	virtual void reposicionarArquivo();
 
 	// Obtém a referência do arquivoBinario.
-	fstream& getArquivoBinario();
+	virtual fstream& getArquivoBinario();
 
 	// Obtém o tamanho do arquivo em bytes.
-	unsigned long tamanhoArquivo();
+	virtual unsigned long tamanhoArquivo();
 
+	// Obtém o tamanho do registro em bytes.
+	virtual unsigned int tamanhoRegistro() = 0;
 
 private:
 	string nomeArquivo;
